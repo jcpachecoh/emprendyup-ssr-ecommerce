@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 import Image from "next/image";
 
 import Navbar from "../components/navbar";
@@ -7,10 +6,9 @@ import Footer from "../components/footer";
 import Switcher from "../components/switcher";
 import ScrollToTop from "../components/scroll-to-top";
 
-import contactImg from '../assets/images/contact.svg'
-
 import {FiPhone, FiMail, FiMapPin } from '../assets/icons/vander'
 import ContactModal from "../components/contact-modal";
+import Link from "next/link";
 
 export default function Contact(){
     return(

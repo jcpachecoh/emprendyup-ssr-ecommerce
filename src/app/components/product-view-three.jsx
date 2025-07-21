@@ -1,6 +1,5 @@
 'use client'
 import React from "react";
-import Link from "next/link";
 import dynamic from "next/dynamic";
 
 const TinySlider = dynamic(()=>import('tiny-slider-react'),{ssr:false})

@@ -8,14 +8,14 @@ import Footer from "../components/footer";
 import Switcher from "../components/switcher";
 import ScrollToTop from "../components/scroll-to-top";
 
-import {FiHelpCircle} from '../assets/icons/vander'
+import {FiHelpCircle} from "../assets/icons/vander"
 
 export default function Helpcenter(){
     return(
         <>
        <Navbar navClass="defaultscroll is-sticky" navlight={true}/>
 
-        <section className="relative table w-full py-36 bg-[url('/images/hero/pages.jpg')] bg-center bg-no-repeat bg-cover">
+        <section className="relative table w-full py-36 bg-[url(/images/hero/pages.jpg)] bg-center bg-no-repeat bg-cover">
             <div className="absolute inset-0 bg-black opacity-80"></div>
             <div className="container relative">
                 <div className="grid grid-cols-1 pb-8 text-center mt-10">
@@ -62,7 +62,7 @@ export default function Helpcenter(){
                         <FiHelpCircle className="fea icon-ex-md text-orange-500 me-3 size-5 mt-1"></FiHelpCircle>
                         <div className="flex-1">
                             <h5 className="mb-2 text-xl font-semibold"> What is the main process open account ?</h5>
-                            <p className="text-slate-400">If the distribution of letters and 'words' is random, the reader will not be distracted from making a neutral judgement on the visual impact</p>
+                            <p className="text-slate-400">If the distribution of letters and words is random, the reader will not be distracted from making a neutral judgement on the visual impact</p>
                         </div>
                     </div>
                     
@@ -78,7 +78,7 @@ export default function Helpcenter(){
                         <FiHelpCircle className="fea icon-ex-md text-orange-500 me-3 size-5 mt-1"></FiHelpCircle>
                         <div className="flex-1">
                             <h5 className="mb-2 text-xl font-semibold"> Is <span className="text-orange-500">Cartzio</span> safer to use with my account ?</h5>
-                            <p className="text-slate-400">The most well-known dummy text is the 'Lorem Ipsum', which is said to have originated in the 16th century. Lorem Ipsum is composed in a pseudo-Latin language which more or less corresponds to 'proper' Latin.</p>
+                            <p className="text-slate-400">The most well-known dummy text is the Lorem Ipsum, which is said to have originated in the 16th century. Lorem Ipsum is composed in a pseudo-Latin language which more or less corresponds to proper Latin.</p>
                         </div>
                     </div>
                 </div>

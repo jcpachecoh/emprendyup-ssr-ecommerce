@@ -21,7 +21,7 @@ export default function Error(){
                         <div className="title-heading text-center my-auto">
                             <Image src='/images/error.svg' width={288} height={219} className="mx-auto w-72" alt=""/>
                             <h1 className="mt-8 mb-6 md:text-5xl text-3xl font-bold">Page Not Found?</h1>
-                            <p className="text-slate-400">Whoops, this is embarassing. <br/> Looks like the page you were looking for wasn't found.</p>
+                            <p className="text-slate-400">Whoops, this is embarassing. <br/> Looks like the page you were looking for wasn&apos;t found.</p>
                             
                             <div className="mt-4">
                                 <Link href="/" className="py-2 px-5 inline-block font-semibold tracking-wide border align-middle duration-500 text-base text-center bg-orange-500 hover:bg-orange-600 border-orange-500 hover:border-orange-600 text-white rounded-md">Back to Home</Link>

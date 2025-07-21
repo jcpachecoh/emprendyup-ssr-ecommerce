@@ -1,12 +1,10 @@
 'use client'
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import {FiMoon, FiSun} from '../assets/icons/vander'
 
 export default function Switcher(){
-    let [visible, setVisible] = useState(false) 
-
-    const changeTheme = (e) => {
+    const changeTheme = () => {
         let htmlTag = document.getElementsByTagName("html")[0]
         if (htmlTag.className.includes("dark")) {
             htmlTag.className = 'light'
@@ -36,7 +34,7 @@ export default function Switcher(){
         <>
         <div className="fixed top-1/4 -left-2 z-50">
             <span className="relative inline-block rotate-90">
-                <input type="checkbox" className="checkbox opacity-0 absolute" id="chk" onChange={(e)=>changeTheme(e)}/>
+                <input type="checkbox" className="checkbox opacity-0 absolute" id="chk" onChange={changeTheme}/>
                 <label className="label bg-slate-900 dark:bg-white shadow dark:shadow-gray-800 cursor-pointer rounded-full flex justify-between items-center p-1 w-14 h-8" htmlFor="chk">
                     <FiMoon className="w-[18px] h-[18px] text-yellow-500"></FiMoon>
                     <FiSun className="w-[18px] h-[18px] text-yellow-500"></FiSun>

@@ -7,7 +7,7 @@ import Footer from "../components/footer";
 import Switcher from "../components/switcher";
 import ScrollToTop from "../components/scroll-to-top";
 
-import {FiLink, FiMapPin, FiMail, FiPhone} from '../assets/icons/vander'
+import {FiLink, FiMapPin, FiMail, FiPhone} from "../assets/icons/vander"
 
 export default function UserInvoice(){
     return(
@@ -117,7 +117,7 @@ export default function UserInvoice(){
                                                 1
                                             </td>
                                             <th scope="row" className="text-start px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                                Apple MacBook Pro 17"
+                                                Apple MacBook Pro 17
                                             </th>
                                             <td className="text-center px-6 py-4">
                                                 1

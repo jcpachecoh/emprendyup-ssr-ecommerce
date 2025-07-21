@@ -8,7 +8,7 @@ import BackToHome from "../components/back-to-home"
 export default function Login(){
     return(
         <>
-         <section className="md:h-screen py-36 flex items-center bg-orange-500/10 dark:bg-orange-500/20 bg-[url('/images/hero/bg-shape.png')] bg-center bg-no-repeat bg-cover">
+         <section className="md:h-screen py-36 flex items-center bg-orange-500/10 dark:bg-orange-500/20 bg-[url(/images/hero/bg-shape.png)] bg-center bg-no-repeat bg-cover">
             <div className="container relative">
                 <div className="grid grid-cols-1">
                     <div className="relative overflow-hidden rounded-md shadow dark:shadow-gray-700 bg-white dark:bg-slate-900">
@@ -20,8 +20,8 @@ export default function Login(){
                             <div className="p-8 lg:px-20">
                                 <div className="text-center">
                                     <Link href="/">
-                                        <Image src='/images/logo-dark.png' width={114} height={22} className="mx-auto block dark:hidden" alt=""/>
-                                        <Image src='/images/logo-light.png' width={114} height={22} className="mx-auto hidden dark:block" alt=""/>
+                                        <Image src="/images/logo-dark.png" width={114} height={22} className="mx-auto block dark:hidden" alt=""/>
+                                        <Image src="/images/logo-light.png" width={114} height={22} className="mx-auto hidden dark:block" alt=""/>
                                     </Link>
                                 </div>
 
@@ -50,7 +50,7 @@ export default function Login(){
                                         </div>
         
                                         <div className="text-center">
-                                            <span className="text-slate-400 me-2">Don't have an account ?</span> <Link href="/signup" className="text-black dark:text-white font-bold inline-block">Sign Up</Link>
+                                            <span className="text-slate-400 me-2">Dont have an account ?</span> <Link href="/signup" className="text-black dark:text-white font-bold inline-block">Sign Up</Link>
                                         </div>
                                     </div>
                                 </form>

@@ -1,0 +1,28 @@
+# <type>(<scope>): <short summary>
+# |<---- Using a maximum of 50 characters ---->|
+# 
+# Example types: feat, fix, docs, style, refactor, test, chore
+# Example scopes: auth, cart, product, checkout, ui, etc.
+# 
+# - Use the present tense ("add feature" not "added feature")
+# - Use the imperative mood ("move cursor to..." not "moves cursor to...")
+# - Do not capitalize the first letter
+# - Do not add a period (.) at the end
+# 
+# <BLANK LINE>
+# <body>
+# |<---- Using a maximum of 72 characters per line ---->|
+# 
+# Explain the problem that this commit is solving. Focus on why you
+# are making this change as opposed to how. Are there side effects
+# or other unintuitive consequences of this change?
+# 
+# <BLANK LINE>
+# <footer>
+# 
+# Include any of the following if applicable:
+# 
+# BREAKING CHANGE: <description of the breaking change>
+# Closes #<issue number>
+# 
+# Co-authored-by: name <email>

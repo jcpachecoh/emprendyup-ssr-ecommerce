@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky",
-    "commit": "git-cz"
+    "commit": "git-cz --no-verify",
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.9",

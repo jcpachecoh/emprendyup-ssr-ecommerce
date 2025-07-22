@@ -1,0 +1,15 @@
+# 1.0.0 (2025-07-22)
+
+### Bug Fixes
+
+- build ([68e8a79](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/68e8a795435b9cb1502f925a4b666b038a9bfe97))
+- build ([153b815](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/153b815f8a159989577ffc2baebbeb693a322158))
+- user setting ts ([162e2b2](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/162e2b2e498650193325b39cf8a7c42c276d35ca))
+
+### Features
+
+- **a:** a ([02e47e7](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/02e47e750056690d15f64cfa9a68e606bae139c9))
+- **feat:** build ([3bd20ad](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/3bd20adeb95cd67ca932cbd0b62c52b2316ff419))
+- **fix:** build and file ([7e8268b](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/7e8268b7be305c7f5e5baa90b36c0e4f04fdceec))
+- lint ([b3395a1](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/b3395a1747f05b8c89b88e8fde8eb356626837b9))
+- **semantic:** add semantic release configuration ([343ac60](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/343ac6096142ac7c7dc4f737cc43a90fa113f26b))

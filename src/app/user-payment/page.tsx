@@ -16,7 +16,7 @@ import { FiTrash2 } from '../assets/icons/vander';
 export default function UserPayment() {
   return (
     <>
-      <Navbar navClass="defaultscroll is-sticky" navlight />
+      <Navbar navClass="defaultscroll is-sticky" navlight={false} />
       <section className="relative lg:pb-24 pb-16 md:mt-[84px] mt-[70px]">
         <div className="md:container container-fluid relative">
           <div className="relative overflow-hidden md:rounded-md shadow dark:shadow-gray-700 h-52 bg-[url('/images/hero/pages.jpg')] bg-center bg-no-repeat bg-cover"></div>

@@ -8,7 +8,7 @@ import ScrollToTop from '../components/scroll-to-top';
 export default function UserNotification() {
   return (
     <>
-      <Navbar navClass="defaultscroll is-sticky" navlight />
+      <Navbar navClass="defaultscroll is-sticky" navlight={false} />
 
       <section className="relative lg:pb-24 pb-16 md:mt-[84px] mt-[70px]">
         <div className="md:container container-fluid relative">

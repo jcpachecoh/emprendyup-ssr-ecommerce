@@ -87,7 +87,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                 alt=""
               />
               <Image
-                src="/images/logo-light.png"
+                src="/images/logo-blanco.png"
                 width={114}
                 height={22}
                 className="l-light"
@@ -95,7 +95,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
               />
             </span>
             <Image
-              src="/images/logo-light.png"
+              src="/images/logo-blanco.png"
               width={114}
               height={22}
               className="hidden dark:inline-block"
@@ -369,7 +369,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                 href="#"
                 onClick={() => setSubmenu(menu === '/index-item' ? '' : '/index-item')}
               >
-                Hero
+                Inicio
               </Link>
               <span className="menu-arrow"></span>
               <ul
@@ -405,7 +405,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                 href="#"
                 onClick={() => setSubmenu(menu === '/product-item' ? '' : '/product-item')}
               >
-                Products
+                Productos
               </Link>
               <span className="menu-arrow"></span>
 
@@ -645,7 +645,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                 onClick={() => setSubmenu(submenu === '/shop-item' ? '' : '/shop-item')}
               >
                 {' '}
-                Shop{' '}
+                Tienda{' '}
               </Link>
               <span className="menu-arrow"></span>
               <ul
@@ -783,7 +783,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
               className={`has-submenu parent-parent-menu-item ${['/aboutus', '/user-account', '/user-billing', '/user-payment', '/user-invoice', '/user-social', '/user-notification', '/user-setting', '/page-item', '/user-item', '/email-item', '/email-confirmation', '/email-cart', '/email-offers', '/email-order-success', '/email-gift-voucher', '/email-reset-password', '/email-item-review', '/blog-item', '/blogs', '/blog-detail', '/help-item', '/helpcenter', '/helpcenter-faqs', '/helpcenter-guides', '/helpcenter-support', '/auth-item', '/login', '/signup', '/forgot-password', '/lock-screen', '/utility-item', '/terms', '/privacy', '/comingsoon', '/maintenance', '/error', '/special-item', '/multi-item', '/multi-item2', '/multi-item3', '/career'].includes(menu) ? 'active' : ''}`}
             >
               <Link href="#" onClick={() => setSubmenu(menu === '/page-item' ? '' : '/page-item')}>
-                Pages
+                Paginas
               </Link>
               <span className="menu-arrow"></span>
               <ul
@@ -1135,7 +1135,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
 
             <li className={`${menu === '/sale' ? 'active' : ''}`}>
               <Link href="/sale" className="sub-menu-item">
-                Sale
+                Descuentos
               </Link>
             </li>
 

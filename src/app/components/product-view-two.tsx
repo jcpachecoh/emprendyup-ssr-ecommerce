@@ -28,7 +28,7 @@ export default function ProductViewTwo() {
     },
   ];
 
-  const imageShow = (index) => {
+  const imageShow = (index: number) => {
     setActiveImage(index);
   };
   return (

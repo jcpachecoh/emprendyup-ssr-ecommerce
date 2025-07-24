@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -9,11 +10,14 @@ import ScrollToTop from '@/app/components/scroll-to-top';
 
 import { blogData, social } from '../../data/data';
 import { FiCalendar, FiClock } from '../../assets/icons/vander';
+import { useParams } from 'next/navigation';
 
-export default function BlogDetail({ params }: { params: { id: string } }) {
+export default function BlogDetail() {
   // Find the blog data based on the id from params
-  let id = params.id;
-  let data = blogData.find((blog) => blog.id === parseInt(id));
+
+  const { id } = useParams();
+  const data = blogData.find((blog) => blog.id === parseInt(id as string, 10));
+
   return (
     <>
       <Navbar navClass="defaultscroll is-sticky" navlight={false} />

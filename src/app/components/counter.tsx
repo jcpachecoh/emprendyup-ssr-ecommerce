@@ -1,7 +1,16 @@
 'use client';
 import React, { useState } from 'react';
 
-export default function Counter({ qtn }) {
+/**
+ * Counter component to increment and decrement a quantity.
+ * @param {Object} props - Component properties.
+ * @param {number} props.qtn - Initial quantity.
+ */
+type CounterProps = {
+  qtn: number;
+};
+
+export default function Counter({ qtn }: CounterProps) {
   let [count, setCount] = useState(qtn);
 
   const increment = () => {

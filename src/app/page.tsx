@@ -11,6 +11,7 @@ import Switcher from './components/switcher';
 import ScrollToTop from './components/scroll-to-top';
 import { collections, newProduct } from './data/data';
 import { FiHeart, FiEye, FiBookmark } from './assets/icons/vander';
+import HeroSection from './components/hero';
 
 export default function Home() {
   return (
@@ -18,7 +19,7 @@ export default function Home() {
       <Tagline />
       <Navbar navClass="defaultscroll is-sticky tagline-height" navlight={false} />
       <section
-        className="relative flex items-center justify-between w-full md:h-screen py-36 overflow-hidden bg-white"
+        className="flex items-center justify-between w-full md:h-screen pt-32 overflow-hidden bg-white dark:bg-slate-900"
         style={{ position: 'relative' }}
       >
         {/* Elementos flotantes tipo cuadrado */}
@@ -37,45 +38,7 @@ export default function Home() {
         ))}
 
         {/* Contenido izquierdo */}
-        <div className="container relative z-10">
-          <div className="grid grid-cols-1 text-left max-w-xl">
-            <h1 className="text-4xl font-bold text-slate-900 mb-4">Emprendy Up</h1>
-            <div className="text-xl font-medium text-slate-600 flex items-center">
-              Especialistas en
-              <span className="text-slate-900 font-bold animate-fadeWords">
-                <span className="word">Networking</span>
-                <span className="word">Ecommerce</span>
-                <span className="word">Coaching</span>
-                <span className="word">Eventos</span>
-                <span className="word">AI</span>
-              </span>
-            </div>
-
-            <div className="mt-8 flex gap-4">
-              <Link href="#contact">
-                <button className="bg-slate-900 text-white px-6 py-2 rounded-md font-medium shadow hover:bg-slate-700">
-                  Contáctanos
-                </button>
-              </Link>
-              <Link href="#about">
-                <button className="text-slate-900 font-semibold hover:underline">
-                  Sobre nosotros
-                </button>
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Imagen a la derecha */}
-        <div className="hidden md:block absolute right-0 bottom-0 z-0">
-          <Image
-            src="/images/hero/bg3.png"
-            alt="emprendedor"
-            width={500}
-            height={500}
-            className="rounded-lg object-cover"
-          />
-        </div>
+        <HeroSection />
       </section>
 
       <section className="relative md:py-24 py-16">

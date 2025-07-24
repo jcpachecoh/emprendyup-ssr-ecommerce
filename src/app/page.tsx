@@ -12,6 +12,7 @@ import ScrollToTop from './components/scroll-to-top';
 import { collections, newProduct } from './data/data';
 import { FiHeart, FiEye, FiBookmark } from './assets/icons/vander';
 import HeroSection from './components/hero';
+import FloatingSquares from './components/FloatingSquares';
 
 export default function Home() {
   return (
@@ -23,19 +24,7 @@ export default function Home() {
         style={{ position: 'relative' }}
       >
         {/* Elementos flotantes tipo cuadrado */}
-        {[...Array(10)].map((_, i) => (
-          <div
-            key={i}
-            className={`absolute w-6 h-6 rounded-md`}
-            style={{
-              top: `${Math.random() * 90}%`,
-              left: `${Math.random() * 90}%`,
-              backgroundColor: ['#f87171', '#60a5fa', '#34d399', '#facc15', '#f472b6'][i % 5],
-              opacity: 0.2,
-              animation: `float ${6 + i}s ease-in-out infinite alternate`,
-            }}
-          ></div>
-        ))}
+        <FloatingSquares />
 
         {/* Contenido izquierdo */}
         <HeroSection />

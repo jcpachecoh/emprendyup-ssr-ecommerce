@@ -2,4 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  100% {
+    transform: translateY(-20px);
+  }
+}
 
+@layer utilities {
+  .animate-fadeWords .word {
+    display: none;
+    animation: fadeWord 25s infinite;
+  }
+  .animate-fadeWords .word:nth-child(1) {
+    display: inline-block;
+    animation-delay: 0s;
+  }
+  .animate-fadeWords .word:nth-child(2) {
+    display: inline-block;
+    animation-delay: 5s;
+  }
+  .animate-fadeWords .word:nth-child(3) {
+    display: inline-block;
+    animation-delay: 10s;
+  }
+  .animate-fadeWords .word:nth-child(4) {
+    display: inline-block;
+    animation-delay: 15s;
+  }
+  .animate-fadeWords .word:nth-child(5) {
+    display: inline-block;
+    animation-delay: 20s;
+  }
+}
+
+@keyframes fadeWord {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  5%,
+  20% {
+    opacity: 1;
+  }
+}

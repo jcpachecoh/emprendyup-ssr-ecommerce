@@ -1,6 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import RotatingWords from './RotatingWords';
+import Link from 'next/link';
 
 const HeroSection = () => {
   return (
@@ -35,15 +36,16 @@ const HeroSection = () => {
         <RotatingWords />
       </motion.div>
 
-      <motion.a
-        href="#registro"
+      <motion.div
         className="inline-block bg-primary text-gray-900 bg-white font-semibold py-3 px-6 rounded-xl shadow-md hover:scale-105 transition-transform duration-300"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 0.4 }}
       >
-        Únete gratis
-      </motion.a>
+        <Link href="/registro" className="text-base">
+          Únete gratis
+        </Link>
+      </motion.div>
     </div>
   );
 };

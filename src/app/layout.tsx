@@ -13,11 +13,14 @@ export const metadata = {
 };
 
 import { ReactNode } from 'react';
+import ApolloWrapper from './components/ApolloWrapper';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="light scroll-smooth dm_sans" dir="ltr">
-      <body className={`${dm_sans.variable} dark:bg-slate-900`}>{children}</body>
+      <body className={`${dm_sans.variable} dark:bg-slate-900`}>
+        <ApolloWrapper>{children}</ApolloWrapper>
+      </body>
     </html>
   );
 }

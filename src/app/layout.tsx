@@ -8,7 +8,7 @@ const dm_sans = DM_Sans({
 });
 
 export const metadata = {
-  title: 'Cartzio - Next Js Fashion Store eCommerce Tailwind CSS Landing Template',
+  title: 'EmprendyUp - Next Js Fashion Store eCommerce Tailwind CSS Landing Template',
   description: 'Next Js Fashion Store eCommerce Tailwind CSS Landing Template',
 };
 

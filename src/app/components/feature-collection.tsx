@@ -25,7 +25,7 @@ export default function FeaturedCollection() {
                 className="h-full w-full object-cover xl:h-[738.66px] lg:h-[614.66px] rounded-md group-hover:scale-110 duration-500"
                 alt=""
               />
-              <span className="bg-white dark:bg-slate-900 group-hover:text-orange-500 py-2 px-4 rounded-md shadow dark:shadow-gray-800 absolute mx-4 bottom-4 text-lg font-medium">
+              <span className="bg-white dark:bg-slate-900 group-hover:text-fourth-base py-2 px-4 rounded-md shadow dark:shadow-gray-800 absolute mx-4 bottom-4 text-lg font-medium">
                 Ladies Wear
               </span>
             </Link>
@@ -45,7 +45,7 @@ export default function FeaturedCollection() {
                   className="group-hover:scale-110 duration-500"
                   alt=""
                 />
-                <span className="bg-white dark:bg-slate-900 group-hover:text-orange-500 py-2 px-4 rounded-md shadow dark:shadow-gray-800 absolute mx-4 bottom-4 text-lg font-medium">
+                <span className="bg-white dark:bg-slate-900 group-hover:text-fourth-base py-2 px-4 rounded-md shadow dark:shadow-gray-800 absolute mx-4 bottom-4 text-lg font-medium">
                   Chappal & Shoes
                 </span>
               </Link>
@@ -62,7 +62,7 @@ export default function FeaturedCollection() {
                   className="group-hover:scale-110 duration-500"
                   alt=""
                 />
-                <span className="bg-white dark:bg-slate-900 group-hover:text-orange-500 py-2 px-4 rounded-md shadow dark:shadow-gray-800 absolute mx-4 bottom-4 text-lg font-medium">
+                <span className="bg-white dark:bg-slate-900 group-hover:text-fourth-base py-2 px-4 rounded-md shadow dark:shadow-gray-800 absolute mx-4 bottom-4 text-lg font-medium">
                   Sunglasses
                 </span>
               </Link>
@@ -82,7 +82,7 @@ export default function FeaturedCollection() {
                 className="h-full w-full object-cover xl:h-[738.66px] lg:h-[614.66px] rounded-md group-hover:scale-110 duration-500"
                 alt=""
               />
-              <span className="bg-white dark:bg-slate-900 group-hover:text-orange-500 py-2 px-4 rounded-md shadow dark:shadow-gray-800 absolute mx-4 bottom-4 text-lg font-medium">
+              <span className="bg-white dark:bg-slate-900 group-hover:text-fourth-base py-2 px-4 rounded-md shadow dark:shadow-gray-800 absolute mx-4 bottom-4 text-lg font-medium">
                 Mens Wear
               </span>
             </Link>

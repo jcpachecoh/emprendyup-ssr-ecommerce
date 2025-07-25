@@ -21,14 +21,15 @@ export default function MobileApp() {
         </div>
 
         <div className="lg:col-span-7 md:col-span-6">
-          <span className="bg-orange-500/5 text-orange-500 text-xs font-bold px-2.5 py-0.5 rounded h-5">
-            Mobile Apps
+          <span className="bg-fourth-400/5 text-fourth-400 text-xs font-bold px-2.5 py-0.5 rounded h-5">
+            iOS y Android
           </span>
           <h4 className="font-semibold text-3xl leading-normal my-4">
-            Available for your <br /> Smartphones
+            Disponible para tus <br /> Smartphones
           </h4>
           <p className="text-slate-400 max-w-xl mb-0">
-            Upgrade your style with our curated sets. Choose confidence, embrace your unique look.
+            Mejora tu estilo con nuestros conjuntos seleccionados. Elige confianza, abraza tu
+            aspecto único.
           </p>
           <div className="my-5">
             <Link href="">
@@ -54,11 +55,13 @@ export default function MobileApp() {
 
           <div className="inline-block">
             <div className="pt-4 flex items-center border-t border-gray-100 dark:border-gray-800">
-              <FiSmartphone className="me-2 text-orange-500 h-10 w-10"></FiSmartphone>
+              <FiSmartphone className="me-2 text-fourth-400 h-10 w-10"></FiSmartphone>
               <div className="content">
-                <h6 className="text-base font-medium">Install app now on your cellphones</h6>
-                <Link href="" className="text-orange-500">
-                  Learn More <i className="mdi mdi-arrow-right"></i>
+                <h6 className="text-base font-medium">
+                  Instala la app ahora en tus teléfonos móviles
+                </h6>
+                <Link href="" className="text-fourth-400">
+                  Aprende más <i className="mdi mdi-arrow-right"></i>
                 </Link>
               </div>
             </div>

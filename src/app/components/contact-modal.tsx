@@ -14,7 +14,7 @@ export default function ContactModal() {
           scroll={false}
           onClick={() => setModal(true)}
           data-type="iframe"
-          className="video-play-icon read-more lightbox text-orange-500 font-medium"
+          className="video-play-icon read-more lightbox text-fourth-base font-medium"
         >
           View on Google map
         </Link>

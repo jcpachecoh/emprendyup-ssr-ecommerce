@@ -22,7 +22,7 @@ export default function Footer() {
               <div className="grid md:grid-cols-12 grid-cols-1 gap-6">
                 <div className="lg:col-span-3 md:col-span-12">
                   <Link href="#" className="text-[22px] focus:outline-none">
-                    <Image src="/images/logo-blanco.png" width={20} height={22} alt="" />
+                    <Image src="/images/logo.svg" width={48} height={48} alt="" />
                   </Link>
                   <p className="mt-6 text-gray-300">
                     Upgrade your style with our curated sets. Choose confidence, embrace your unique
@@ -36,7 +36,7 @@ export default function Footer() {
                           <Link
                             href={item.link}
                             target="_blank"
-                            className="size-8 inline-flex items-center justify-center tracking-wide align-middle text-base border border-gray-800 dark:border-slate-800 rounded-md hover:text-orange-500 dark:hover:text-orange-500 text-slate-300"
+                            className="size-8 inline-flex items-center justify-center tracking-wide align-middle text-base border border-gray-800 dark:border-slate-800 rounded-md hover:text-fourth-base dark:hover:text-fourth-base text-slate-300"
                           >
                             <Icon className="h-4 w-4 align-middle" title="Buy Now"></Icon>
                           </Link>
@@ -128,7 +128,7 @@ export default function Footer() {
                         type="submit"
                         id="submitsubscribe"
                         name="send"
-                        className="py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-orange-500 text-white rounded-md"
+                        className="py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-fourth-base text-black rounded-md"
                       >
                         Subscribe
                       </button>
@@ -161,7 +161,7 @@ export default function Footer() {
           <div className="grid md:grid-cols-2 items-center">
             <div className="md:text-start text-center">
               <p className="mb-0">
-                © {new Date().getFullYear()} Cartzio. Design & Develop with{' '}
+                © {new Date().getFullYear()} EmprendyUp. Design & Develop with{' '}
                 <i className="mdi mdi-heart text-red-600"></i> by{' '}
                 <Link href="https://shreethemes.in/" target="_blank" className="text-reset">
                   Shreethemes

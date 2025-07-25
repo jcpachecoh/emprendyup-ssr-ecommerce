@@ -43,7 +43,17 @@ export default function RegistroPage() {
 
   return (
     <Layout>
-      <div className="max-w-xl mx-auto py-16 px-2 sm:px-4">
+      <section className="relative table w-full items-center pt-36 pb-52 bg-primary bg-[url('/images/hero/bg-shape.png')] bg-center bg-no-repeat bg-cover">
+        <div className="container relative">
+          <h1 className="text-4xl font-bold text-white text-center mb-4">
+            Conecta, crece y emprende
+          </h1>
+          <p className="text-lg text-white text-center mb-8">
+            Únete a nuestra comunidad de emprendedores completando el formulario.
+          </p>
+        </div>
+      </section>
+      <div className=" relative z-2 max-w-xl mx-auto mt-[-150px] pb-16 px-2 sm:px-4">
         <div className="bg-white/90 dark:bg-slate-900/90 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 p-8 sm:p-10">
           <h1 className="text-3xl font-extrabold mb-2 text-center text-slate-900 dark:text-white tracking-tight">
             Registra tu Emprendimiento
@@ -197,7 +207,7 @@ export default function RegistroPage() {
             </div>
             <button
               type="submit"
-              className="w-full py-3 px-6 bg-gradient-to-r from-orange-500 to-orange-400 text-white font-bold rounded-xl shadow hover:from-orange-600 hover:to-orange-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="w-full py-3 px-6 bg-gradient-to-r from-primary-base to-primary-300 text-white font-bold rounded-xl shadow hover:from-primary-400 hover:to-primary-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400"
             >
               {loading ? 'Enviando...' : 'Registrar'}
             </button>

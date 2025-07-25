@@ -74,7 +74,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
   };
 
   return (
-    <nav id="topnav" className={`${navClass} ${scrolling ? 'nav-sticky' : ''}`}>
+    <nav id="topnav" className={`${navClass}  nav-sticky`}>
       <div className="container relative flex items-center justify-between gap-4 flex-">
         <Link className="logo flex items-center" href="/">
           <Image
@@ -104,22 +104,22 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                 >
                   <li className={`ms-0 ${menu === '/' ? 'active' : ''}`}>
                     <Link href="/" className="sub-menu-item">
-                      Fashion One
+                      Moda Uno
                     </Link>
                   </li>
                   <li className={`ms-0 ${menu === '/index-fashion-two' ? 'active' : ''}`}>
                     <Link href="/index-fashion-two" className="sub-menu-item">
-                      Fashion Two
+                      Moda Dos
                     </Link>
                   </li>
                   <li className={`ms-0 ${menu === '/index-fashion-three' ? 'active' : ''}`}>
                     <Link href="/index-fashion-three" className="sub-menu-item">
-                      Fashion Three
+                      Moda Tres
                     </Link>
                   </li>
                   <li className={`ms-0 ${menu === '/index-fashion-four' ? 'active' : ''}`}>
                     <Link href="/index-fashion-four" className="sub-menu-item">
-                      Fashion Four
+                      Moda Cuatro
                     </Link>
                   </li>
                 </ul>
@@ -154,7 +154,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                       </li>
                       <li className="ms-0">
                         <Link href="#!" className="sub-menu-item">
-                          Sticky Add To Cart
+                          Sticky Añadir al carrito
                         </Link>
                       </li>
                       <li className="ms-0">
@@ -354,7 +354,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                       <li className="text-center">
                         <Link
                           href="#!"
-                          className="py-2 px-5 inline-block font-medium tracking-wide align-middle duration-500 text-base text-center bg-orange-500/10 text-orange-500 rounded-md me-2 mt-2"
+                          className="py-2 px-5 inline-block font-medium tracking-wide align-middle duration-500 text-base text-center bg-fourth-base/10 text-fourth-baserounded-md me-2 mt-2"
                         >
                           <i className="mdi mdi-cart-outline"></i> Shop Now
                         </Link>
@@ -364,7 +364,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                 </ul>
               </li>
 
-              <li
+              {/* <li
                 className={`has-submenu parent-parent-menu-item ${['/shop-grid', '/shop-grid-left-sidebar', '/shop-grid-right-sidebar', '/shop-list', '/shop-list-left-sidebar', '/shop-list-right-sidebar', '/product-detail-one', '/product-detail-two', '/product-detail-three', '/shop-cart', '/shop-checkout', '/our-store', '/brands', '/compare-product', '/recently-viewed-product', '/shop-item', '/list-item', '/detail-item', '/grid-item'].includes(menu) ? 'active' : ''}`}
               >
                 <Link
@@ -386,7 +386,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                       onClick={() => setSubmenu(menu === '/grid-item' ? '' : '/grid-item')}
                     >
                       {' '}
-                      Shop Grid{' '}
+                      Cuadrícula de Tienda{' '}
                     </Link>
                     <span className="submenu-arrow"></span>
                     <ul
@@ -394,17 +394,17 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                     >
                       <li className={`ms-0 ${menu === '/shop-grid' ? 'active' : ''}`}>
                         <Link href="/shop-grid" className="sub-menu-item">
-                          Shop Grid
+                          Cuadrícula de Tienda
                         </Link>
                       </li>
                       <li className={`ms-0 ${menu === '/shop-grid-left-sidebar' ? 'active' : ''}`}>
                         <Link href="/shop-grid-left-sidebar" className="sub-menu-item">
-                          Grid Left Sidebar
+                          Cuadrícula Izquierda
                         </Link>
                       </li>
                       <li className={`ms-0 ${menu === '/shop-grid-right-sidebar' ? 'active' : ''}`}>
                         <Link href="/shop-grid-right-sidebar" className="sub-menu-item">
-                          Grid Right Sidebar
+                          Cuadrícula Derecha
                         </Link>
                       </li>
                     </ul>
@@ -418,7 +418,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                       onClick={() => setSubmenu(menu === '/list-item' ? '' : '/list-item')}
                     >
                       {' '}
-                      Shop List{' '}
+                      Lista de Tienda{' '}
                     </Link>
                     <span className="submenu-arrow"></span>
                     <ul
@@ -426,17 +426,17 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                     >
                       <li className={`ms-0 ${menu === '/shop-list' ? 'active' : ''}`}>
                         <Link href="/shop-list" className="sub-menu-item">
-                          Shop List
+                          Lista de Tienda
                         </Link>
                       </li>
                       <li className={`ms-0 ${menu === '/shop-list-left-sidebar' ? 'active' : ''}`}>
                         <Link href="/shop-list-left-sidebar" className="sub-menu-item">
-                          List Left Sidebar
+                          Lista Izquierda
                         </Link>
                       </li>
                       <li className={`ms-0 ${menu === '/shop-list-right-sidebar' ? 'active' : ''}`}>
                         <Link href="/shop-list-right-sidebar" className="sub-menu-item">
-                          List Right Sidebar
+                          Lista Derecha
                         </Link>
                       </li>
                     </ul>
@@ -450,7 +450,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                       onClick={() => setSubmenu(menu === '/detail-item' ? '' : '/detail-item')}
                     >
                       {' '}
-                      Shop Detail{' '}
+                      Detalle de Tienda{' '}
                     </Link>
                     <span className="submenu-arrow"></span>
                     <ul
@@ -458,55 +458,55 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                     >
                       <li className={`ms-0 ${menu === '/product-detail-one' ? 'active' : ''}`}>
                         <Link href="/product-detail-one" className="sub-menu-item">
-                          Product Detail One
+                          Detalle Producto Uno
                         </Link>
                       </li>
                       <li className={`ms-0 ${menu === '/product-detail-two' ? 'active' : ''}`}>
                         <Link href="/product-detail-two" className="sub-menu-item">
-                          Product Detail Two
+                          Detalle Producto Dos
                         </Link>
                       </li>
                       <li className={`ms-0 ${menu === '/product-detail-three' ? 'active' : ''}`}>
                         <Link href="/product-detail-three" className="sub-menu-item">
-                          Product Detail Three
+                          Detalle Producto Tres
                         </Link>
                       </li>
                     </ul>
                   </li>
                   <li className={`ms-0 ${menu === '/shop-cart' ? 'active' : ''}`}>
                     <Link href="/shop-cart" className="sub-menu-item">
-                      Shop Cart
+                      Carrito
                     </Link>
                   </li>
                   <li className={`ms-0 ${menu === '/shop-checkout' ? 'active' : ''}`}>
                     <Link href="/shop-checkout" className="sub-menu-item">
-                      Checkout
+                      Pagar
                     </Link>
                   </li>
                   <li className={`ms-0 ${menu === '/our-store' ? 'active' : ''}`}>
                     <Link href="/our-store" className="sub-menu-item">
-                      Our Store
+                      Nuestra Tienda
                     </Link>
                   </li>
                   <li className={`ms-0 ${menu === '/brands' ? 'active' : ''}`}>
                     <Link href="/brands" className="sub-menu-item">
-                      Brands
+                      Marcas
                     </Link>
                   </li>
                   <li className={`ms-0 ${menu === '/compare-product' ? 'active' : ''}`}>
                     <Link href="/compare-product" className="sub-menu-item">
-                      Compare Product
+                      Comparar Producto
                     </Link>
                   </li>
                   <li className={`ms-0 ${menu === '/recently-viewed-product' ? 'active' : ''}`}>
                     <Link href="/recently-viewed-product" className="sub-menu-item">
-                      Recently Viewed Products
+                      Vistos Recientemente
                     </Link>
                   </li>
                 </ul>
-              </li>
+              </li> */}
 
-              <li
+              {/* <li
                 className={`has-submenu parent-parent-menu-item ${['/aboutus', '/user-account', '/user-billing', '/user-payment', '/user-invoice', '/user-social', '/user-notification', '/user-setting', '/page-item', '/user-item', '/email-item', '/email-confirmation', '/email-cart', '/email-offers', '/email-order-success', '/email-gift-voucher', '/email-reset-password', '/email-item-review', '/blog-item', '/blogs', '/blog-detail', '/help-item', '/helpcenter', '/helpcenter-faqs', '/helpcenter-guides', '/helpcenter-support', '/auth-item', '/login', '/signup', '/forgot-password', '/lock-screen', '/utility-item', '/terms', '/privacy', '/comingsoon', '/maintenance', '/error', '/special-item', '/multi-item', '/multi-item2', '/multi-item3', '/career'].includes(menu) ? 'active' : ''}`}
               >
                 <Link
@@ -863,7 +863,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                     </ul>
                   </li>
                 </ul>
-              </li>
+              </li> */}
 
               <li className={`${menu === '/sale' ? 'active' : ''}`}>
                 <Link href="/sale" className="sub-menu-item">
@@ -888,11 +888,10 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
               >
                 {navlight === true ? (
                   <>
-                    <FiSearch className="size-5 dark-icon"></FiSearch>
-                    <FiSearch className="size-5 white-icon text-white"></FiSearch>
+                    <FiSearch className="size-5  text-white"></FiSearch>
                   </>
                 ) : (
-                  <FiSearch className="size-5"></FiSearch>
+                  <FiSearch className="size-5 "></FiSearch>
                 )}
               </button>
               {isOpen && (
@@ -916,7 +915,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
             <li className="dropdown inline-block relative ps-0.5" ref={cartRef}>
               <button
                 data-dropdown-toggle="dropdown"
-                className="dropdown-toggle size-9 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-base text-center rounded-full bg-orange-500 border border-orange-500 text-white"
+                className="dropdown-toggle size-9 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-base text-center rounded-full bg-fourth-base border border-fourth-base text-black"
                 type="button"
                 onClick={() => setCartmenu(!cartmenu)}
               >
@@ -996,13 +995,13 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                       <span className="text-center block">
                         <Link
                           href="#"
-                          className="py-[5px] px-4 inline-block font-semibold tracking-wide align-middle duration-500 text-sm text-center rounded-md bg-orange-500 border border-orange-500 text-white me-1"
+                          className="py-[5px] px-4 inline-block font-semibold tracking-wide align-middle duration-500 text-sm text-center rounded-md bg-fourth-base border border-fourth-base text-white me-1"
                         >
                           View Cart
                         </Link>
                         <Link
                           href="#"
-                          className="py-[5px] px-4 inline-block font-semibold tracking-wide align-middle duration-500 text-sm text-center rounded-md bg-orange-500 border border-orange-500 text-white"
+                          className="py-[5px] px-4 inline-block font-semibold tracking-wide align-middle duration-500 text-sm text-center rounded-md bg-fourth-base border border-fourth-base text-white"
                         >
                           Checkout
                         </Link>
@@ -1017,7 +1016,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
             <li className="inline-block ps-0.5">
               <Link
                 href="#"
-                className="size-9 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-base text-center rounded-full bg-orange-500 text-white"
+                className="size-9 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-base text-center rounded-full bg-fourth-base text-black"
               >
                 <FiHeart data-feather="heart" className="h-4 w-4"></FiHeart>
               </Link>
@@ -1033,7 +1032,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                   setUsermenu((prev) => !prev);
                 }}
               >
-                <span className="size-9 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-base text-center rounded-full border border-orange-500 bg-orange-500 text-white">
+                <span className="size-9 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-base text-center rounded-full border border-fourth-basebg-fourth-basetext-black">
                   <Image
                     src="/images/client/16.jpg"
                     width={34}
@@ -1052,13 +1051,13 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                     <li className="ms-0">
                       <p className="flex items-center font-medium py-2 px-4">
                         <FiDollarSign className="h-4 w-4 me-2" /> Balance:{' '}
-                        <span className="text-orange-500 ms-2">$ 245.10</span>
+                        <span className="text-fourth-basems-2">$ 245.10</span>
                       </p>
                     </li>
                     <li className="ms-0">
                       <Link
                         href="/user-account"
-                        className="flex items-center font-medium py-2 px-4 dark:text-white/70 hover:text-orange-500 dark:hover:text-white"
+                        className="flex items-center font-medium py-2 px-4 dark:text-white/70 hover:text-fourth-basedark:hover:text-white"
                       >
                         <FiUser className="h-4 w-4 me-2" />
                         Account
@@ -1067,7 +1066,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                     <li className="ms-0">
                       <Link
                         href="/helpcenter"
-                        className="flex items-center font-medium py-2 px-4 dark:text-white/70 hover:text-orange-500 dark:hover:text-white"
+                        className="flex items-center font-medium py-2 px-4 dark:text-white/70 hover:text-fourth-basedark:hover:text-white"
                       >
                         <FiHelpCircle className="h-4 w-4 me-2" />
                         Helpcenter
@@ -1076,7 +1075,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                     <li className="ms-0">
                       <Link
                         href="/user-setting"
-                        className="flex items-center font-medium py-2 px-4 dark:text-white/70 hover:text-orange-500 dark:hover:text-white"
+                        className="flex items-center font-medium py-2 px-4 dark:text-white/70 hover:text-fourth-basedark:hover:text-white"
                       >
                         <FiSettings className="h-4 w-4 me-2" />
                         Settings
@@ -1086,7 +1085,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                     <li className="ms-0">
                       <Link
                         href="/login"
-                        className="flex items-center font-medium py-2 px-4 dark:text-white/70 hover:text-orange-500 dark:hover:text-white"
+                        className="flex items-center font-medium py-2 px-4 dark:text-white/70 hover:text-fourth-basedark:hover:text-white"
                       >
                         <FiLogOut className="h-4 w-4 me-2" />
                         Logout

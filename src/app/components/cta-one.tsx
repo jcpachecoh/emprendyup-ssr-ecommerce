@@ -27,7 +27,7 @@ export default function CtaOne() {
       <div className="container-fluid relative md:mt-24 mt-16">
         <div className="grid grid-cols-1">
           <div
-            className="relative overflow-hidden py-24 px-4 md:px-10 bg-orange-600 bg-center bg-no-repeat bg-cover"
+            className="relative overflow-hidden py-24 px-4 md:px-10 bg-secondary-500 bg-center bg-no-repeat bg-cover"
             style={{ backgroundImage: "url('/images/hero/bg3.png')" }}
           >
             <div
@@ -74,7 +74,7 @@ export default function CtaOne() {
               <div className="mt-4">
                 <Link
                   href="/sale"
-                  className="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-center bg-white text-orange-500 rounded-md"
+                  className="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-center bg-white text-fourth-base rounded-md"
                 >
                   <i className="mdi mdi-cart-outline"></i> Shop Now
                 </Link>

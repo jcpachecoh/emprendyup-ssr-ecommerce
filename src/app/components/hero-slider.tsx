@@ -31,7 +31,7 @@ export default function HeroSlider() {
                     <div className="mt-6">
                       <Link
                         href=""
-                        className="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-center bg-slate-900 dark:bg-orange-500 text-white rounded-md"
+                        className="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-center bg-slate-900 dark:bg-fourth-base text-black rounded-md"
                       >
                         Shop Now <i className="mdi mdi-arrow-right"></i>
                       </Link>
@@ -56,7 +56,7 @@ export default function HeroSlider() {
                     <div className="mt-6">
                       <Link
                         href=""
-                        className="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-center bg-slate-900 dark:bg-orange-500 text-white rounded-md"
+                        className="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-center bg-slate-900 dark:bg-fourth-base text-black rounded-md"
                       >
                         View Collection <i className="mdi mdi-arrow-right"></i>
                       </Link>

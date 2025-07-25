@@ -7,12 +7,12 @@ export default function Filter() {
   return (
     <div className="lg:col-span-3 md:col-span-4">
       <div className="rounded shadow dark:shadow-gray-800 p-4 sticky top-20">
-        <h5 className="text-xl font-medium">Filter</h5>
+        <h5 className="text-xl font-medium">Filtros</h5>
 
         <form className="mt-4">
           <div>
             <label htmlFor="searchname" className="font-medium">
-              Search:
+              Buscar:
             </label>
             <div className="relative mt-2">
               <FiSearch className="absolute size-4 top-[9px] end-4"></FiSearch>
@@ -21,14 +21,14 @@ export default function Filter() {
                 className="h-9 pe-10 rounded px-3 border border-gray-100 dark:border-gray-800 focus:ring-0 outline-none bg-white dark:bg-slate-900"
                 name="s"
                 id="searchItem"
-                placeholder="Search..."
+                placeholder="Buscar..."
               />
             </div>
           </div>
         </form>
 
         <div className="mt-4">
-          <h5 className="font-medium">Colors:</h5>
+          <h5 className="font-medium">Colores:</h5>
           <ul className="list-none mt-2 space-x-1">
             {colorFilter.map((item, index) => {
               return (
@@ -45,13 +45,13 @@ export default function Filter() {
         </div>
 
         <div className="mt-4">
-          <h5 className="font-medium">Brands:</h5>
+          <h5 className="font-medium">Marcas:</h5>
           <ul className="list-none mt-2">
             {brandFilter.map((item, index) => {
               return (
                 <li key={index} className="ms-0">
                   <Link href="" className="text-slate-400 dark:text-gray-100">
-                    <i className="mdi mdi-shopping-outline text-orange-500 me-2"></i>
+                    <i className="mdi mdi-shopping-outline text-fourth-base me-2"></i>
                     {item}
                   </Link>
                 </li>
@@ -61,7 +61,7 @@ export default function Filter() {
         </div>
 
         <div className="mt-4">
-          <h5 className="font-medium">Sizes:</h5>
+          <h5 className="font-medium">Tallas:</h5>
           <ul className="list-none mt-2 space-x-1">
             {sizeFilter.map((item, index) => {
               return (

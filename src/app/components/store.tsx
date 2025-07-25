@@ -23,7 +23,7 @@ export default function Store() {
                 alt=""
               />
 
-              <h5 className="font-semibold text-xl leading-normal my-4">Cartzio, U.S.A.</h5>
+              <h5 className="font-semibold text-xl leading-normal my-4">EmprendyUp, U.S.A.</h5>
 
               <p className="text-slate-400">
                 268 St, South New York/NY 98944, <br /> United States
@@ -33,7 +33,7 @@ export default function Store() {
                 <FiPhone className="w-6 h-6 me-4"></FiPhone>
                 <div className="">
                   <h5 className="title font-bold mb-0">Phone</h5>
-                  <Link href="tel:+152534-468-854" className="tracking-wide text-orange-500">
+                  <Link href="tel:+152534-468-854" className="tracking-wide text-fourth-base">
                     +152 534-468-854
                   </Link>
                 </div>
@@ -61,7 +61,7 @@ export default function Store() {
                 alt=""
               />
 
-              <h5 className="font-semibold text-xl leading-normal my-4">Cartzio, U.S.A.</h5>
+              <h5 className="font-semibold text-xl leading-normal my-4">EmprendyUp, U.S.A.</h5>
 
               <p className="text-slate-400">
                 268 St, South New York/NY 98944, <br /> United States
@@ -71,7 +71,7 @@ export default function Store() {
                 <FiPhone className="w-6 h-6 me-4"></FiPhone>
                 <div className="">
                   <h5 className="title font-bold mb-0">Phone</h5>
-                  <Link href="tel:+152534-468-854" className="tracking-wide text-orange-500">
+                  <Link href="tel:+152534-468-854" className="tracking-wide text-fourth-base">
                     +152 534-468-854
                   </Link>
                 </div>
@@ -99,7 +99,7 @@ export default function Store() {
                 alt=""
               />
 
-              <h5 className="font-semibold text-xl leading-normal my-4">Cartzio, U.S.A.</h5>
+              <h5 className="font-semibold text-xl leading-normal my-4">EmprendyUp, U.S.A.</h5>
 
               <p className="text-slate-400">
                 268 St, South New York/NY 98944, <br /> United States
@@ -112,7 +112,7 @@ export default function Store() {
                   <Link
                     href="tel:+152534-468-854"
                     scroll={false}
-                    className="tracking-wide text-orange-500"
+                    className="tracking-wide text-fourth-base"
                   >
                     +152 534-468-854
                   </Link>

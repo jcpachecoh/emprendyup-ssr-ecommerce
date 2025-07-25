@@ -8,21 +8,21 @@ import BackToHome from '../components/back-to-home';
 export default function Error() {
   return (
     <>
-      <section className="relative bg-orange-500/5">
+      <section className="relative bg-fourth-base/5">
         <div className="container-fluid relative">
           <div className="grid grid-cols-1">
             <div className="flex flex-col min-h-screen justify-center md:px-10 py-10 px-4">
               <div className="text-center">
                 <Link href="/">
                   <Image
-                    src="/images/logo-dark.png"
+                    src="/images/logo.svg"
                     width={114}
                     height={22}
                     className="mx-auto block dark:hidden"
                     alt=""
                   />
                   <Image
-                    src="/images/logo-blanco.png"
+                    src="/images/logo.svg"
                     width={114}
                     height={22}
                     className="mx-auto hidden dark:block"
@@ -47,7 +47,7 @@ export default function Error() {
                 <div className="mt-4">
                   <Link
                     href="/"
-                    className="py-2 px-5 inline-block font-semibold tracking-wide border align-middle duration-500 text-base text-center bg-orange-500 hover:bg-orange-600 border-orange-500 hover:border-orange-600 text-white rounded-md"
+                    className="py-2 px-5 inline-block font-semibold tracking-wide border align-middle duration-500 text-base text-center bg-fourth-base hover:bg-fourth-200 border-fourth-base hover:border-fourth-200 text-white rounded-md"
                   >
                     Back to Home
                   </Link>
@@ -55,7 +55,7 @@ export default function Error() {
               </div>
               <div className="text-center">
                 <p className="mb-0 text-slate-400">
-                  © {new Date().getFullYear()} Cartzio. Design & Develop with{' '}
+                  © {new Date().getFullYear()} EmprendyUp. Design & Develop with{' '}
                   <i className="mdi mdi-heart text-red-600"></i> by{' '}
                   <Link href="https://shreethemes.in/" target="_blank" className="text-reset">
                     Shreethemes

@@ -55,7 +55,7 @@ export default function IndexTwo() {
                         href="/shop-cart"
                         className="py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-slate-900 text-white w-full rounded-md"
                       >
-                        Add to Cart
+                        Añadir al carrito
                       </Link>
                     </div>
 
@@ -123,7 +123,7 @@ export default function IndexTwo() {
                   <div className="mt-4">
                     <Link
                       href={`/product-detail-one/${item.id}`}
-                      className="hover:text-orange-500 text-lg font-medium"
+                      className="hover:text-fourth-base text-lg font-medium"
                     >
                       {item.name}
                     </Link>
@@ -166,7 +166,7 @@ export default function IndexTwo() {
             </div>
 
             <div className="md:text-end hidden md:block">
-              <Link href="/shop-grid" className="text-slate-400 hover:text-orange-500">
+              <Link href="/shop-grid" className="text-slate-400 hover:text-fourth-base">
                 See More Items <i className="mdi mdi-arrow-right"></i>
               </Link>
             </div>
@@ -192,7 +192,7 @@ export default function IndexTwo() {
                         href="/shop-cart"
                         className="py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-slate-900 text-white w-full rounded-md"
                       >
-                        Add to Cart
+                        Añadir al carrito
                       </Link>
                     </div>
 
@@ -260,7 +260,7 @@ export default function IndexTwo() {
                   <div className="mt-4">
                     <Link
                       href={`/product-detail-one/${item.id}`}
-                      className="hover:text-orange-500 text-lg font-medium"
+                      className="hover:text-fourth-base text-lg font-medium"
                     >
                       {item.name}
                     </Link>
@@ -293,7 +293,7 @@ export default function IndexTwo() {
           </div>
           <div className="grid grid-cols-1 mt-6">
             <div className="text-center md:hidden block">
-              <Link href="/shop-grid" className="text-slate-400 hover:text-orange-500">
+              <Link href="/shop-grid" className="text-slate-400 hover:text-fourth-base">
                 See More Items <i className="mdi mdi-arrow-right"></i>
               </Link>
             </div>

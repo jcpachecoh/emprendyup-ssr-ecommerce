@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.1.0...v1.2.0) (2025-07-25)
+
+### Features
+
+- apollo animations ([b844049](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/b8440492f1f1f5ec68c1dfba11b914afe0bfcdec))
+- **her:** moving squares ([f648279](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/f6482795a5113c8a5fe9027065c540b396ebff53))
+
 # [1.1.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.0.0...v1.1.0) (2025-07-24)
 
 ### Features

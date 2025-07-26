@@ -33,7 +33,7 @@ export default function ArrivalItem() {
                     href="/shop-cart"
                     className="py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-slate-900 text-white w-full rounded-md"
                   >
-                    Add to Cart
+                    Añadir al carrito
                   </Link>
                 </div>
 
@@ -81,7 +81,7 @@ export default function ArrivalItem() {
               <div className="mt-4">
                 <Link
                   href={`/product-detail-one/${item.id}`}
-                  className="hover:text-orange-500 text-lg font-medium"
+                  className="hover:text-fourth-base text-lg font-medium"
                 >
                   {item.name}
                 </Link>

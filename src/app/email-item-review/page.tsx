@@ -177,7 +177,7 @@ export default function EmailItemReview() {
                     <tr>
                       <td style={{ textAlign: 'center' }}>
                         <p style={{ margin: '4px 0 10px' }}>
-                          © {new Date().getFullYear()} Cartzio. Designed by{' '}
+                          © {new Date().getFullYear()} EmprendyUp. Designed by{' '}
                           <Link
                             href="https://shreethemes.in/"
                             target="_blank"

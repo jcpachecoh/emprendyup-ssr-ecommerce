@@ -15,10 +15,10 @@ export default function ProductDetail() {
   };
   return (
     <div className="sticky top-20">
-      <h5 className="text-2xl font-semibold">Mens Brown Jecket</h5>
+      <h5 className="text-2xl font-semibold">Chaqueta Marrón para Hombre</h5>
       <div className="mt-2">
         <span className="text-slate-400 font-semibold me-1">
-          $16USD <del className="text-red-600">$21USD</del>
+          $45.000 <del className="text-red-600">$60.000</del>
         </span>
 
         <ul className="list-none inline-block text-orange-400">
@@ -42,24 +42,23 @@ export default function ProductDetail() {
       </div>
 
       <div className="mt-4">
-        <h5 className="text-lg font-semibold">Overview :</h5>
+        <h5 className="text-lg font-semibold">Reseña :</h5>
         <p className="text-slate-400 mt-2">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero exercitationem, unde
-          molestiae sint quae inventore atque minima natus fugiat nihil quisquam voluptates ea
-          omnis. Modi laborum soluta tempore unde accusantium.
+          Chaqueta marrón para hombre, hecha de cuero de alta calidad. Perfecta para ocasiones
+          casuales y formales. Disponible en varias tallas y colores.
         </p>
 
         <ul className="list-none text-slate-400 mt-4">
           <li className="mb-1 flex ms-0">
-            <i className="mdi mdi-check-circle-outline text-orange-500 text-xl me-2"></i> Digital
-            Marketing Solutions for Tomorrow
+            <i className="mdi mdi-check-circle-outline text-fourth-base text-xl me-2"></i> Digital
+            Agency &amp; Marketing Solutions
           </li>
           <li className="mb-1 flex ms-0">
-            <i className="mdi mdi-check-circle-outline text-orange-500 text-xl me-2"></i> Our
+            <i className="mdi mdi-check-circle-outline text-fourth-base text-xl me-2"></i> Our
             Talented & Experienced Marketing Agency
           </li>
           <li className="mb-1 flex ms-0">
-            <i className="mdi mdi-check-circle-outline text-orange-500 text-xl me-2"></i> Create
+            <i className="mdi mdi-check-circle-outline text-fourth-base text-xl me-2"></i> Create
             your own skin to match your brand
           </li>
         </ul>
@@ -67,29 +66,29 @@ export default function ProductDetail() {
 
       <div className="grid lg:grid-cols-2 grid-cols-1 gap-6 mt-4">
         <div className="flex items-center">
-          <h5 className="text-lg font-semibold me-2">Size:</h5>
+          <h5 className="text-lg font-semibold me-2">Talla:</h5>
           <div className="space-x-1">
             <Link
               href=""
-              className="size-9 inline-flex items-center justify-center tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white"
+              className="size-9 inline-flex items-center justify-center tracking-wide align-middle text-base text-center rounded-md bg-fourth-base/5 hover:bg-fourth-base text-fourth-base hover:text-white"
             >
               S
             </Link>
             <Link
               href=""
-              className="size-9 inline-flex items-center justify-center tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white"
+              className="size-9 inline-flex items-center justify-center tracking-wide align-middle text-base text-center rounded-md bg-fourth-base/5 hover:bg-fourth-base text-fourth-base hover:text-white"
             >
               M
             </Link>
             <Link
               href=""
-              className="size-9 inline-flex items-center justify-center tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white"
+              className="size-9 inline-flex items-center justify-center tracking-wide align-middle text-base text-center rounded-md bg-fourth-base/5 hover:bg-fourth-base text-fourth-base hover:text-white"
             >
               L
             </Link>
             <Link
               href=""
-              className="size-9 inline-flex items-center justify-center tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white"
+              className="size-9 inline-flex items-center justify-center tracking-wide align-middle text-base text-center rounded-md bg-fourth-base/5 hover:bg-fourth-base text-fourth-base hover:text-white"
             >
               XL
             </Link>
@@ -97,11 +96,11 @@ export default function ProductDetail() {
         </div>
 
         <div className="flex items-center">
-          <h5 className="text-lg font-semibold me-2">Quantity:</h5>
+          <h5 className="text-lg font-semibold me-2">Cantidad:</h5>
           <div className="qty-icons ms-3 space-x-0.5">
             <button
               onClick={() => decrements()}
-              className="size-9 inline-flex items-center justify-center tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white minus"
+              className="size-9 inline-flex items-center justify-center tracking-wide align-middle text-base text-center rounded-md bg-fourth-base/5 hover:bg-fourth-base text-fourth-base hover:text-white minus"
             >
               -
             </button>
@@ -111,11 +110,11 @@ export default function ProductDetail() {
               value={count}
               onChange={() => {}}
               type="number"
-              className="h-9 inline-flex items-center justify-center tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white pointer-events-none w-16 ps-4 quantity"
+              className="h-9 inline-flex items-center justify-center tracking-wide align-middle text-base text-center rounded-md bg-fourth-base/5 hover:bg-fourth-base text-fourth-base hover:text-white pointer-events-none w-16 ps-4 quantity"
             />
             <button
               onClick={() => increments()}
-              className="size-9 inline-flex items-center justify-center tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white plus"
+              className="size-9 inline-flex items-center justify-center tracking-wide align-middle text-base text-center rounded-md bg-fourth-base/5 hover:bg-fourth-base text-fourth-base hover:text-white plus"
             >
               +
             </button>
@@ -123,7 +122,7 @@ export default function ProductDetail() {
         </div>
 
         <div className="flex items-center">
-          <h5 className="text-lg font-semibold me-2">Colors:</h5>
+          <h5 className="text-lg font-semibold me-2">Colores:</h5>
           <div className="space-x-2">
             <Link
               href=""
@@ -152,15 +151,15 @@ export default function ProductDetail() {
       <div className="mt-4 space-x-1">
         <Link
           href=""
-          className="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-orange-500 text-white rounded-md mt-2"
+          className="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-fourth-base text-black rounded-md mt-2"
         >
-          Shop Now
+          Comprar ahora
         </Link>
         <Link
           href=""
-          className="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white mt-2"
+          className="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center rounded-md bg-fourth-base/5 hover:bg-fourth-base text-fourth-base hover:text-white mt-2"
         >
-          Add to Cart
+          Añadir al carrito
         </Link>
       </div>
     </div>

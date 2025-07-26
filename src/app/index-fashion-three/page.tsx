@@ -33,7 +33,7 @@ export default function IndexThree() {
                   className="group-hover:scale-110 duration-500"
                   alt=""
                 />
-                <span className="bg-white dark:bg-slate-900 group-hover:text-orange-500 py-2 px-6 rounded-full shadow dark:shadow-gray-800 absolute bottom-4 mx-4 text-lg font-medium">
+                <span className="bg-white dark:bg-slate-900 group-hover:text-fourth-base py-2 px-6 rounded-full shadow dark:shadow-gray-800 absolute bottom-4 mx-4 text-lg font-medium">
                   Ladies Wear
                 </span>
               </Link>
@@ -50,7 +50,7 @@ export default function IndexThree() {
                   className="group-hover:scale-110 duration-500"
                   alt=""
                 />
-                <span className="bg-white dark:bg-slate-900 group-hover:text-orange-500 py-2 px-6 rounded-full shadow dark:shadow-gray-800 absolute bottom-4 mx-4 text-lg font-medium">
+                <span className="bg-white dark:bg-slate-900 group-hover:text-fourth-base py-2 px-6 rounded-full shadow dark:shadow-gray-800 absolute bottom-4 mx-4 text-lg font-medium">
                   Kids Wear
                 </span>
               </Link>
@@ -67,7 +67,7 @@ export default function IndexThree() {
                   className="group-hover:scale-110 duration-500"
                   alt=""
                 />
-                <span className="bg-white dark:bg-slate-900 group-hover:text-orange-500 py-2 px-6 rounded-full shadow dark:shadow-gray-800 absolute bottom-4 mx-4 text-lg font-medium">
+                <span className="bg-white dark:bg-slate-900 group-hover:text-fourth-base py-2 px-6 rounded-full shadow dark:shadow-gray-800 absolute bottom-4 mx-4 text-lg font-medium">
                   Gents Wear
                 </span>
               </Link>
@@ -87,7 +87,7 @@ export default function IndexThree() {
             </div>
 
             <div className="md:text-end hidden md:block">
-              <Link href="/shop-grid" className="text-slate-400 hover:text-orange-500">
+              <Link href="/shop-grid" className="text-slate-400 hover:text-fourth-base">
                 See More Items <i className="mdi mdi-arrow-right"></i>
               </Link>
             </div>
@@ -113,7 +113,7 @@ export default function IndexThree() {
                         href="/shop-cart"
                         className="py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-slate-900 text-white w-full rounded-md"
                       >
-                        Add to Cart
+                        Añadir al carrito
                       </Link>
                     </div>
 
@@ -181,7 +181,7 @@ export default function IndexThree() {
                   <div className="mt-4">
                     <Link
                       href={`/product-detail-one/${item.id}`}
-                      className="hover:text-orange-500 text-lg font-medium"
+                      className="hover:text-fourth-base text-lg font-medium"
                     >
                       {item.name}
                     </Link>
@@ -215,7 +215,7 @@ export default function IndexThree() {
 
           <div className="grid grid-cols-1 mt-6">
             <div className="text-center md:hidden block">
-              <Link href="/shop-grid" className="text-slate-400 hover:text-orange-500">
+              <Link href="/shop-grid" className="text-slate-400 hover:text-fourth-base">
                 See More Items <i className="mdi mdi-arrow-right"></i>
               </Link>
             </div>
@@ -237,7 +237,7 @@ export default function IndexThree() {
             <div className="mt-6">
               <Link
                 href="/sale"
-                className="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-center bg-white text-orange-500 rounded-md"
+                className="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-center bg-white text-fourth-base rounded-md"
               >
                 <i className="mdi mdi-cart-outline"></i> Shop Now
               </Link>
@@ -275,7 +275,7 @@ export default function IndexThree() {
                         href="/shop-cart"
                         className="py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-slate-900 text-white w-full rounded-md"
                       >
-                        Add to Cart
+                        Añadir al carrito
                       </Link>
                     </div>
 
@@ -343,7 +343,7 @@ export default function IndexThree() {
                   <div className="mt-4">
                     <Link
                       href={`/product-detail-one/${item.id}`}
-                      className="hover:text-orange-500 text-lg font-medium"
+                      className="hover:text-fourth-base text-lg font-medium"
                     >
                       {item.name}
                     </Link>

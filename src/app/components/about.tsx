@@ -25,23 +25,23 @@ export default function About() {
 
           <div className="lg:col-span-7 md:col-span-6">
             <div className="lg:ms-8">
-              <h6 className="text-orange-500 font-semibold uppercase text-lg">Our Shop</h6>
-              <h5 className="font-semibold text-3xl leading-normal my-4">
-                Focusing on Quality <br /> Material, Good Design
+              <h6 className="text-fourth-base font-semibold uppercase text-lg">Nuestra Tienda</h6>
+              <h5 className="font-semibold text-2xl leading-normal my-4">
+                Impulsamos Emprendimientos <br /> con Propósito y Potencial
               </h5>
               <p className="text-slate-400 max-w-xl">
-                Donec non interdum nisl. Sed ut est ac lacus sodales convallis. Nam non velit justo.
-                Mauris vel ultrices tortor. Proin bibendum magna porttitor porttitor suscipit.
-                Praesent sit amet consequat eros. Quisque ullamcorper ornare vulputate. Nam sodales
-                sem id diam sollicitudin, id lobortis tellus tincidunt.
+                En EmprendyUp creemos que cada idea tiene el poder de transformar realidades. Nos
+                enfocamos en brindar herramientas, formación y visibilidad a emprendedores
+                comprometidos con generar impacto. Diseñamos soluciones con propósito, pensando
+                siempre en el crecimiento sostenible y auténtico de nuestra comunidad.
               </p>
 
               <div className="flex items-center mt-6">
                 <FiPhone className="w-6 h-6 me-4"></FiPhone>
                 <div className="">
-                  <h5 className="title font-bold mb-0">Phone</h5>
-                  <Link href="tel:+152534-468-854" className="tracking-wide text-orange-500">
-                    +152 534-468-854
+                  <h5 className="title font-bold mb-0">Telefono</h5>
+                  <Link href="tel:+152534-468-854" className="tracking-wide text-fourth-base">
+                    +57 123 456 789
                   </Link>
                 </div>
               </div>
@@ -54,7 +54,7 @@ export default function About() {
                     href="#"
                     scroll={false}
                     onClick={() => setModal(true)}
-                    className="text-orange-500"
+                    className="text-fourth-base"
                   >
                     View on Google map
                   </Link>

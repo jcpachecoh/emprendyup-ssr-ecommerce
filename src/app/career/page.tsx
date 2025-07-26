@@ -20,7 +20,7 @@ export default function Career() {
         <div className="container relative">
           <div className="grid grid-cols-1 pb-8 text-center mt-12">
             <h3 className="text-4xl leading-normal tracking-wider font-semibold text-white">
-              Job Opening
+              Vacantes Disponibles
             </h3>
           </div>
         </div>
@@ -28,7 +28,7 @@ export default function Career() {
         <div className="absolute text-center z-10 bottom-5 start-0 end-0 mx-3">
           <ul className="tracking-[0.5px] mb-0 inline-block">
             <li className="inline-block uppercase text-[13px] font-bold duration-500 ease-in-out text-white/50 hover:text-white">
-              <Link href="/">Cartzio</Link>
+              <Link href="/">EmprendyUp</Link>
             </li>
             <li className="inline-block text-base text-white/50 mx-0.5 ltr:rotate-0 rtl:rotate-180">
               <i className="mdi mdi-chevron-right"></i>
@@ -37,11 +37,12 @@ export default function Career() {
               className="inline-block uppercase text-[13px] font-bold duration-500 ease-in-out text-white"
               aria-current="page"
             >
-              Job Opening
+              Vacantes
             </li>
           </ul>
         </div>
       </section>
+
       <section className="relative md:py-24 py-16">
         <div className="container relative">
           <div className="grid md:grid-cols-12 grid-cols-1 items-center gap-6">
@@ -88,24 +89,22 @@ export default function Career() {
 
             <div className="lg:col-span-7 md:col-span-6">
               <div className="lg:ms-5">
-                <h3 className="mb-6 font-semibold text-3xl leading-normal">
-                  We are Largest Job <br /> Site in The World
+                <h3 className="mb-6 font-semibold text-2xl leading-normal">
+                  Únete a nuestro equipo y <br /> transforma el mundo emprendedor
                 </h3>
 
                 <p className="text-slate-400 max-w-xl mb-2">
-                  Upgrade your style with our curated sets. Choose confidence, embrace your unique
-                  look.
+                  En EmprendyUp estamos construyendo el futuro del emprendimiento digital en LATAM.
+                  Buscamos personas apasionadas, creativas y comprometidas con generar impacto real.
                 </p>
                 <p className="text-slate-400 max-w-xl">
-                  It seems that only fragments of the original text remain in the Lorem Ipsum texts
-                  used today. One may speculate that over the course of time certain letters were
-                  added or deleted at various positions within the text. This might also explain why
-                  one can now find slightly different versions.
+                  Trabaja con un equipo diverso, ágil y enfocado en la innovación. Valoramos las
+                  ideas, el trabajo colaborativo y la capacidad de aprender y crecer constantemente.
                 </p>
 
                 <div className="mt-6">
-                  <Link href="" className="text-orange-500">
-                    Read More <i className="mdi mdi-chevron-right align-middle"></i>
+                  <Link href="/" className="text-fourth-base">
+                    Conoce más <i className="mdi mdi-chevron-right align-middle"></i>
                   </Link>
                 </div>
               </div>
@@ -118,11 +117,12 @@ export default function Career() {
         <div className="container relative md:mt-24 mt-16">
           <div className="grid grid-cols-1 pb-8 text-center">
             <h3 className="mb-4 md:text-[26px] md:leading-normal text-2xl leading-normal font-semibold">
-              Job Openings
+              Oportunidades Laborales
             </h3>
 
             <p className="text-slate-400 max-w-xl mx-auto">
-              Upgrade your style with our curated sets. Choose confidence, embrace your unique look.
+              Encuentra el rol ideal para ti y crece junto a una comunidad que transforma ideas en
+              impacto.
             </p>
           </div>
 
@@ -135,7 +135,7 @@ export default function Career() {
                     key={index}
                   >
                     <div>
-                      <Link href="/" className="text-lg font-semibold hover:text-orange-500">
+                      <Link href="/" className="text-lg font-semibold hover:text-fourth-base">
                         {item.name}
                       </Link>
                       <p className="text-slate-400 mt-1">{item.openings}</p>
@@ -143,9 +143,9 @@ export default function Career() {
 
                     <Link
                       href="/"
-                      className="py-2 px-5 inline-block font-semibold tracking-wide border align-middle duration-500 text-base text-center bg-transparent hover:bg-orange-500 border-gray-100 dark:border-gray-800 hover:border-orange-500 dark:hover:border-orange-500 text-slate-900 dark:text-white hover:text-white rounded-full md:mt-0 mt-4"
+                      className="py-2 px-5 inline-block font-semibold tracking-wide border align-middle duration-500 text-white text-center bg-transparent hover:bg-fourth-base border-gray-100 dark:border-gray-800 hover:border-fourth-base dark:hover:border-fourth-base text-slate-900 dark:text-white hover:text-black rounded-full md:mt-0 mt-4"
                     >
-                      Apply now
+                      Postúlate ahora
                     </Link>
                   </div>
                 );

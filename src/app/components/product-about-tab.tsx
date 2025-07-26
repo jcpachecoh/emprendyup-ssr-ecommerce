@@ -20,26 +20,26 @@ export default function ProductAboutTab() {
           >
             <li className="ms-0">
               <button
-                className={`px-4 py-2 text-start text-base font-semibold rounded-md w-full hover:text-orange-500 duration-500 ${activeTab === 1 ? 'text-white bg-orange-500 hover:text-white' : ''}`}
+                className={`px-4 py-2 text-start text-base font-semibold rounded-md w-full hover:text-fourth-base duration-500 ${activeTab === 1 ? 'text-white bg-fourth-base hover:text-white' : ''}`}
                 onClick={() => setActiveTab(1)}
               >
-                Description
+                Descripción
               </button>
             </li>
             <li className="ms-0">
               <button
-                className={`px-4 py-2 text-start text-base font-semibold rounded-md w-full hover:text-orange-500 duration-500 ${activeTab === 2 ? 'text-white bg-orange-500 hover:text-white' : ''}`}
+                className={`px-4 py-2 text-start text-base font-semibold rounded-md w-full hover:text-fourth-base duration-500 ${activeTab === 2 ? 'text-white bg-fourth-base hover:text-white' : ''}`}
                 onClick={() => setActiveTab(2)}
               >
-                Additional Information
+                Información Adicional
               </button>
             </li>
             <li className="ms-0">
               <button
-                className={`px-4 py-2 text-start text-base font-semibold rounded-md w-full hover:text-orange-500 duration-500 ${activeTab === 3 ? 'text-white bg-orange-500 hover:text-white' : ''}`}
+                className={`px-4 py-2 text-start text-base font-semibold rounded-md w-full hover:text-fourth-base duration-500 ${activeTab === 3 ? 'text-white bg-fourth-base hover:text-white' : ''}`}
                 onClick={() => setActiveTab(3)}
               >
-                Review
+                Reseñas
               </button>
             </li>
           </ul>
@@ -54,13 +54,8 @@ export default function ProductAboutTab() {
           {activeTab === 1 && (
             <div>
               <p className="text-slate-400">
-                Due to its widespread use as filler text for layouts, non-readability is of great
-                importance: human perception is tuned to recognize certain patterns and repetitions
-                in texts. If the distribution of letters and &apos;words&apos; is random, the reader
-                will not be distracted from making a neutral judgement on the visual impact and
-                readability of the typefaces (typography), or the distribution of text on the page
-                (layout or type area). For this reason, dummy text usually consists of a more or
-                less random series of words or syllables.
+                Chaqueta marrón para hombre, hecha de cuero de alta calidad. Perfecta para ocasiones
+                casuales y formales. Disponible en varias tallas y colores.
               </p>
             </div>
           )}
@@ -77,11 +72,11 @@ export default function ProductAboutTab() {
 
                   <tr className="bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-gray-700">
                     <td className="font-semibold py-4">Material</td>
-                    <td className="text-slate-400 py-4">Cotton</td>
+                    <td className="text-slate-400 py-4">Algodón</td>
                   </tr>
 
                   <tr className="bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-gray-700">
-                    <td className="font-semibold pt-4">Size</td>
+                    <td className="font-semibold pt-4">Talla</td>
                     <td className="text-slate-400 pt-4">S, M, L, XL, XXL</td>
                   </tr>
                 </tbody>
@@ -106,7 +101,7 @@ export default function ProductAboutTab() {
                         <div className="ms-3 flex-1">
                           <Link
                             href=""
-                            className="text-lg font-semibold hover:text-orange-500 duration-500"
+                            className="text-lg font-semibold hover:text-fourth-base duration-500"
                           >
                             {item.name}
                           </Link>
@@ -116,7 +111,7 @@ export default function ProductAboutTab() {
 
                       <Link
                         href=""
-                        className="text-slate-400 hover:text-orange-500 duration-500 ms-5"
+                        className="text-slate-400 hover:text-fourth-base duration-500 ms-5"
                       >
                         <i className="mdi mdi-reply"></i> Reply
                       </Link>
@@ -148,14 +143,14 @@ export default function ProductAboutTab() {
               })}
 
               <div className="p-6 rounded-md shadow dark:shadow-gray-800 mt-8">
-                <h5 className="text-lg font-semibold">Leave A Comment:</h5>
+                <h5 className="text-lg font-semibold">Deja un comentario:</h5>
 
                 <form className="mt-8">
                   <div className="grid lg:grid-cols-12 lg:gap-6">
                     <div className="lg:col-span-6 mb-5">
                       <div className="text-start">
                         <label htmlFor="name" className="font-semibold">
-                          Your Name:
+                          Nombre:
                         </label>
                         <div className="form-icon relative mt-2">
                           <FiUser className="w-4 h-4 absolute top-3 start-4"></FiUser>
@@ -164,7 +159,7 @@ export default function ProductAboutTab() {
                             id="name"
                             type="text"
                             className="ps-11 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-100 dark:border-gray-800 focus:ring-0"
-                            placeholder="Name :"
+                            placeholder="Nombre"
                           />
                         </div>
                       </div>
@@ -173,7 +168,7 @@ export default function ProductAboutTab() {
                     <div className="lg:col-span-6 mb-5">
                       <div className="text-start">
                         <label htmlFor="email" className="font-semibold">
-                          Your Email:
+                          Correo Electrónico:
                         </label>
                         <div className="form-icon relative mt-2">
                           <FiMail className="w-4 h-4 absolute top-3 start-4"></FiMail>
@@ -182,7 +177,7 @@ export default function ProductAboutTab() {
                             id="email"
                             type="email"
                             className="ps-11 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-100 dark:border-gray-800 focus:ring-0"
-                            placeholder="Email :"
+                            placeholder="nombre@gmail.com"
                           />
                         </div>
                       </div>
@@ -193,7 +188,7 @@ export default function ProductAboutTab() {
                     <div className="mb-5">
                       <div className="text-start">
                         <label htmlFor="comments" className="font-semibold">
-                          Your Comment:
+                          Tu Comentario:
                         </label>
                         <div className="form-icon relative mt-2">
                           <FiMessageCircle className="w-4 h-4 absolute top-3 start-4"></FiMessageCircle>
@@ -201,7 +196,7 @@ export default function ProductAboutTab() {
                             name="comments"
                             id="comments"
                             className="ps-11 w-full py-2 px-3 h-28 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-100 dark:border-gray-800 focus:ring-0"
-                            placeholder="Message :"
+                            placeholder="Escribe tu mensaje aquí..."
                           ></textarea>
                         </div>
                       </div>
@@ -211,9 +206,9 @@ export default function ProductAboutTab() {
                     type="submit"
                     id="submit"
                     name="send"
-                    className="py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-orange-500 text-white rounded-md w-full"
+                    className="py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-fourth-base text-black rounded-md w-full"
                   >
-                    Send Message
+                    Enviar Mensaje
                   </button>
                 </form>
               </div>

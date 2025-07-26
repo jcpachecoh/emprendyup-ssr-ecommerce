@@ -14,7 +14,7 @@ const HeroSection = () => {
       >
         El marketplace para emprendedores
         <br />
-        donde los <span className="text-primary">clientes son nuestra prioridad</span>
+        donde los <span className="text-fourth-base">clientes son nuestra prioridad</span>
       </motion.h1>
 
       <motion.p
@@ -37,12 +37,12 @@ const HeroSection = () => {
       </motion.div>
 
       <motion.div
-        className="inline-block bg-primary text-gray-900 bg-white font-semibold py-3 px-6 rounded-xl shadow-md hover:scale-105 transition-transform duration-300"
+        className="inline-block text-gray-900 bg-fourth-base font-semibold py-3 px-6 rounded-xl shadow-md hover:scale-105 transition-transform duration-300"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 0.4 }}
       >
-        <Link href="/registro" className="text-base">
+        <Link href="/registro" className="text-black">
           Únete gratis
         </Link>
       </motion.div>

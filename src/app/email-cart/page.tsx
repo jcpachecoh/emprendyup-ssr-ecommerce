@@ -50,7 +50,7 @@ export default function MailCart() {
                   textAlign: 'center',
                 }}
               >
-                <h2 style={{ fontWeight: '600', fontSize: '24px' }}>Cartzio Shopcart</h2>
+                <h2 style={{ fontWeight: '600', fontSize: '24px' }}>EmprendyUp Shopcart</h2>
               </td>
             </tr>
 
@@ -300,7 +300,7 @@ export default function MailCart() {
                     <tr>
                       <td style={{ textAlign: 'center' }}>
                         <p style={{ margin: '4px 0 10px' }}>
-                          © {new Date().getFullYear()} Cartzio. Designed by{' '}
+                          © {new Date().getFullYear()} EmprendyUp. Designed by{' '}
                           <Link
                             href="https://shreethemes.in/"
                             target="_blank"

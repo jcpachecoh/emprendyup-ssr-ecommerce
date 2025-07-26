@@ -98,7 +98,7 @@ export default function EmailResetPassword() {
             <tr>
               <td style={{ padding: '16px' }}>
                 <p style={{ margin: '0', fontSize: '18px', fontWeight: '500' }}>
-                  Cartzio <br /> Support Team
+                  EmprendyUp <br /> Support Team
                 </p>
               </td>
             </tr>
@@ -149,7 +149,7 @@ export default function EmailResetPassword() {
                     <tr>
                       <td style={{ textAlign: 'center' }}>
                         <p style={{ margin: '4px 0 10px' }}>
-                          © {new Date().getFullYear()} Cartzio. Designed by{' '}
+                          © {new Date().getFullYear()} EmprendyUp. Designed by{' '}
                           <Link
                             href="https://shreethemes.in/"
                             target="_blank"

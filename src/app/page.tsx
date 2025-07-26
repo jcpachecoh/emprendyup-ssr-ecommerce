@@ -33,16 +33,16 @@ export default function Home() {
       <section className="relative md:py-24 py-16">
         <div className="container relative">
           <div className="grid grid-cols-1 justify-center text-center mb-6">
-            <h5 className="font-semibold text-3xl leading-normal mb-4">Shop The Collections</h5>
+            <h5 className="font-semibold text-3xl leading-normal mb-4">Explora las Colecciones</h5>
             <p className="text-slate-400 max-w-xl mx-auto">
-              Shop the latest products from the most popular collections
+              Explora los últimos productos de las colecciones más populares
             </p>
           </div>
 
           <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 grid-cols-2 pt-6 gap-6">
             {collections.map((item, index) => {
               return (
-                <Link href="" className="text-center hover:text-orange-500" key={index}>
+                <Link href="" className="text-center hover:text-fourth-base" key={index}>
                   <Image
                     src={item.image}
                     width={0}
@@ -61,9 +61,9 @@ export default function Home() {
 
         <div className="container relative md:mt-24 mt-16">
           <div className="grid grid-cols-1 justify-center text-center mb-6">
-            <h5 className="font-semibold text-3xl leading-normal mb-4">New Arrival Products</h5>
+            <h5 className="font-semibold text-3xl leading-normal mb-4">Nuevos productos</h5>
             <p className="text-slate-400 max-w-xl mx-auto">
-              Shop the latest products from the most popular collections
+              Explora los últimos productos de las colecciones más populares
             </p>
           </div>
 
@@ -87,7 +87,7 @@ export default function Home() {
                         href="/shop-cart"
                         className="py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-slate-900 text-white w-full rounded-md"
                       >
-                        Add to Cart
+                        Añadir al carrito
                       </Link>
                     </div>
 
@@ -155,7 +155,7 @@ export default function Home() {
                   <div className="mt-4">
                     <Link
                       href={`/product-detail-one/${item.id}`}
-                      className="hover:text-orange-500 text-lg font-medium"
+                      className="hover:text-fourth-base text-lg font-medium"
                     >
                       {item.name}
                     </Link>
@@ -193,13 +193,13 @@ export default function Home() {
         <div className="container relative md:mt-24 mt-16">
           <div className="grid items-end md:grid-cols-2 mb-6">
             <div className="md:text-start text-center">
-              <h5 className="font-semibold text-3xl leading-normal mb-4">Popular Items</h5>
-              <p className="text-slate-400 max-w-xl">Popular items in this week</p>
+              <h5 className="font-semibold text-3xl leading-normal mb-4">Artículos populares</h5>
+              <p className="text-slate-400 max-w-xl">Artículos populares en esta semana</p>
             </div>
 
             <div className="md:text-end hidden md:block">
-              <Link href="/shop-grid" className="text-slate-400 hover:text-orange-500">
-                See More Items <i className="mdi mdi-arrow-right"></i>
+              <Link href="/shop-grid" className="text-slate-400 hover:text-fourth-base">
+                Ver más artículos <i className="mdi mdi-arrow-right"></i>
               </Link>
             </div>
           </div>
@@ -224,7 +224,7 @@ export default function Home() {
                         href="/shop-cart"
                         className="py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-slate-900 text-white w-full rounded-md"
                       >
-                        Add to Cart
+                        Añadir al carrito
                       </Link>
                     </div>
 
@@ -262,7 +262,7 @@ export default function Home() {
                             href="#"
                             className="bg-red-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded h-5"
                           >
-                            New
+                            Nuevo
                           </Link>
                         </li>
                       )}
@@ -272,7 +272,7 @@ export default function Home() {
                   <div className="mt-4">
                     <Link
                       href={`/product-detail-one/${item.id}`}
-                      className="hover:text-orange-500 text-lg font-medium"
+                      className="hover:text-fourth-base text-lg font-medium"
                     >
                       {item.name}
                     </Link>
@@ -306,8 +306,8 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 mt-6">
             <div className="text-center md:hidden block">
-              <Link href="/shop-grid" className="text-slate-400 hover:text-orange-500">
-                See More Items <i className="mdi mdi-arrow-right"></i>
+              <Link href="/shop-grid" className="text-slate-400 hover:text-fourth-base">
+                Ver más artículos <i className="mdi mdi-arrow-right"></i>
               </Link>
             </div>
           </div>

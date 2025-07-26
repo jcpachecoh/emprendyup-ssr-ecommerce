@@ -2,280 +2,280 @@
 /*         Menu                  */
 /*===============================*/
 #topnav {
-    @apply fixed start-0 end-0 top-0 z-999 bg-transparent border-0 transition-all duration-500 ease-in-out;
-    .logo {
-        @apply ltr:float-left rtl:float-right text-black dark:text-white #{!important};
-        .l-dark {
-            @apply hidden;
-        }
-        .l-light {
-            @apply inline-block;
-        }
-        &:focus {
-          @apply outline-none;
-        }
+  @apply fixed start-0 end-0 top-0 z-999 bg-transparent border-0 transition-all duration-500 ease-in-out;
+  .logo {
+    @apply ltr:float-left rtl:float-right text-black dark:text-white #{!important};
+    .l-dark {
+      @apply hidden;
     }
-    .has-submenu{
-      @apply relative;
+    .l-light {
+      @apply inline-block;
+    }
+    &:focus {
+      @apply outline-none;
+    }
+  }
+  .has-submenu {
+    @apply relative;
+    &.active {
+      a {
+        @apply text-white dark:text-slate-900;
+      }
+      .submenu {
+        li {
+          &.active {
+            > a {
+              @apply text-fourth-base dark:text-fourth-base #{!important};
+            }
+          }
+        }
+      }
       &.active {
-        a {
-          @apply text-white dark:text-slate-900;
+        .menu-arrow {
+          @apply border-t-transparent border-e-fourth-base border-b-fourth-base border-s-transparent #{!important};
+        }
+      }
+    }
+    .submenu {
+      .submenu-arrow {
+        @apply absolute border-[3px] end-[1.25rem] top-[15px] border-t-transparent border-e-black dark:border-e-white border-b-black dark:border-b-white border-s-transparent rounded-[2px] inline-block ltr:-rotate-45 rtl:rotate-45;
+      }
+      .has-submenu {
+        &:hover,
+        &.active {
+          > .submenu-arrow {
+            @apply border-t-transparent border-e-fourth-base border-b-fourth-base border-s-transparent;
+          }
         }
         .submenu {
-          li{
-            &.active {
-              > a {
-                @apply text-orange-500 dark:text-orange-500 #{!important};
+          .has-submenu {
+            &:hover {
+              .submenu-arrow {
+                @apply border-t-transparent border-e-fourth-base border-b-fourth-base border-s-transparent;
+              }
+              > .submenu-arrow {
+                @apply border-t-transparent border-e-fourth-base border-b-fourth-base border-s-transparent;
               }
             }
           }
         }
-        &.active {
-          .menu-arrow {
-            @apply border-t-transparent border-e-orange-500 border-b-orange-500 border-s-transparent #{!important};
+      }
+    }
+  }
+  .navbar-toggle {
+    @apply border-0 relative p-0 m-0 cursor-pointer;
+    .lines {
+      @apply w-[25px] block relative h-[18px] mt-[30px] ms-[10px] me-0 mb-[26px];
+    }
+    span {
+      transition: transform 0.5s ease;
+      @apply h-[2px] w-full bg-black dark:bg-white block mb-[5px];
+      &:last-child {
+        @apply mb-0;
+      }
+    }
+    &.open {
+      span {
+        @apply absolute;
+        &:first-child {
+          @apply top-[6px] rotate-45;
+        }
+        &:nth-child(2) {
+          @apply invisible;
+        }
+        &:last-child {
+          @apply w-full top-[6px] -rotate-45;
+        }
+        &:hover {
+          @apply bg-fourth-base;
+        }
+      }
+    }
+    &:hover,
+    &:focus,
+    .navigation-menu > li > a:hover {
+      @apply bg-transparent;
+    }
+  }
+  .buy-button {
+    @apply ltr:float-right rtl:float-left leading-[74px];
+    > li {
+      @apply leading-[initial];
+    }
+    .login-btn-fourth-base,
+    .btn-icon-dark {
+      @apply hidden;
+    }
+    .login-btn-light,
+    .btn-icon-light {
+      @apply inline-block;
+    }
+    .search-bar {
+      .menu-search {
+        form {
+          @apply relative;
+        }
+      }
+      .searchform {
+        @apply after:absolute after:end-[14px] after:top-[14px] after:text-xl after:leading-5 after:pointer-events-none #{!important};
+        input[type='text'] {
+          @apply shadow-none py-2.5 pe-[42px] ps-3 h-11 text-sm block outline-none #{!important};
+        }
+        input[type='submit'] {
+          @apply hidden;
+        }
+        &:after {
+          content: '\f0349';
+          font-family: 'Material Design Icons';
+        }
+      }
+    }
+  }
+  .buy-button,
+  .buy-menu-btn {
+    .dropdown {
+      .dropdown-toggle {
+        @apply after:hidden;
+      }
+    }
+  }
+  .navigation-menu {
+    @apply list-none m-0 p-0;
+    > li {
+      @apply ltr:float-left rtl:float-right block relative my-0 mx-[10px];
+      > a {
+        @apply block text-black dark:text-white text-base bg-transparent font-medium tracking-[1px] leading-6 font-dm_sans px-[15px];
+        &:hover,
+        &:active {
+          @apply text-fourth-base;
+        }
+      }
+      &:hover,
+      &.active {
+        > a {
+          @apply text-fourth-base dark:text-fourth-base #{!important};
+        }
+      }
+      .submenu.megamenu {
+        li {
+          .megamenu-head {
+            @apply py-[10px] px-5 whitespace-nowrap text-xs uppercase tracking-[0.04em] font-semibold text-slate-400 #{!important};
           }
         }
       }
       .submenu {
-        .submenu-arrow {
-          @apply absolute border-[3px] end-[1.25rem] top-[15px] border-t-transparent border-e-black dark:border-e-white border-b-black dark:border-b-white border-s-transparent rounded-[2px] inline-block ltr:-rotate-45 rtl:rotate-45;
-        }
-        .has-submenu {
-          &:hover,
-          &.active {
-            > .submenu-arrow {
-              @apply border-t-transparent border-e-orange-500 border-b-orange-500 border-s-transparent;
-            }
-          }
-          .submenu {
-            .has-submenu{
-              &:hover {
-                .submenu-arrow {
-                  @apply border-t-transparent border-e-orange-500 border-b-orange-500 border-s-transparent;
-                }
-                > .submenu-arrow {
-                  @apply border-t-transparent border-e-orange-500 border-b-orange-500 border-s-transparent;
-                }
-              }
-            }
-          }
+        li {
+          @apply relative mx-0;
         }
       }
     }
-    .navbar-toggle {
-      @apply border-0 relative p-0 m-0 cursor-pointer;
-      .lines {
-        @apply w-[25px] block relative h-[18px] mt-[30px] ms-[10px] me-0 mb-[26px];
-      }
-      span {
-        transition: transform 0.5s ease;
-        @apply h-[2px] w-full bg-black dark:bg-white block mb-[5px];
-        &:last-child {
-          @apply mb-0;
-        }
-      }
-      &.open {
-        span {
-          @apply absolute;
-          &:first-child {
-            @apply top-[6px] rotate-45;
-          }
-          &:nth-child(2) {
-            @apply invisible;
-          }
-          &:last-child {
-            @apply w-full top-[6px] -rotate-45;
-          }
-          &:hover {
-            @apply bg-orange-500;
-          }
-        }
-      }
-      &:hover, &:focus,
-      .navigation-menu > li > a:hover {
-        @apply bg-transparent;
+    .has-submenu {
+      .menu-arrow {
+        @apply border-[3px] border-t-transparent border-e-black dark:border-e-white border-b-black dark:border-b-white border-s-transparent rounded-[2px] inline-block ltr:rotate-45 rtl:-rotate-45 absolute transition-all duration-500 end-0 top-[33px];
       }
     }
-    .buy-button {
-      @apply ltr:float-right rtl:float-left leading-[74px];
-      > li {
-        @apply leading-[initial];
-      }
-      .login-btn-primary,
-      .btn-icon-dark {
-        @apply hidden;
-      }
-      .login-btn-light,
-      .btn-icon-light {
-        @apply inline-block;
-      }
-      .search-bar {
-        .menu-search {
-          form {
-            @apply relative;
-          }
-        }
-        .searchform {
-          @apply after:absolute after:end-[14px] after:top-[14px] after:text-xl after:leading-5 after:pointer-events-none #{!important};
-          input[type=text] {
-            @apply shadow-none py-2.5 pe-[42px] ps-3 h-11 text-sm block outline-none #{!important};
-          }
-          input[type=submit] {
-            @apply hidden;
-          }
-          &:after {
-            content: "\f0349";
-            font-family: "Material Design Icons";
-          }
-        }
-      }
-    }
-    .buy-button,
-    .buy-menu-btn {
-      .dropdown {
-        .dropdown-toggle {
-          @apply after:hidden;
-        }
-      }
-    }
+  }
+  .menu-extras {
+    @apply ltr:float-right rtl:float-left;
+  }
+  &.scroll {
+    @apply bg-white dark:bg-slate-900 border-none shadow;
     .navigation-menu {
-      @apply list-none m-0 p-0;
       > li {
-        @apply ltr:float-left rtl:float-right block relative my-0 mx-[10px];
         > a {
-          @apply block text-black dark:text-white text-base bg-transparent font-medium tracking-[1px] leading-6 font-dm_sans px-[15px];
-          &:hover, 
-          &:active {
-            @apply text-orange-500;
-          }
+          @apply text-black dark:text-white;
         }
-        &:hover, 
-        &.active{
+        > .menu-arrow {
+          @apply border-t-transparent border-e-black dark:border-e-white border-b-black dark:border-b-white border-s-transparent;
+        }
+        &:hover,
+        &.active {
           > a {
-            @apply text-orange-500 dark:text-orange-500 #{!important};
+            @apply text-fourth-base;
           }
-        }
-        .submenu.megamenu {
-          li {
-            .megamenu-head {
-              @apply py-[10px] px-5 whitespace-nowrap text-xs uppercase tracking-[0.04em] font-semibold text-slate-400 #{!important};
-            }
+          > .menu-arrow {
+            @apply border-t-transparent border-e-fourth-base border-b-fourth-base border-s-transparent #{!important};
           }
-        }
-        .submenu {
-          li {
-            @apply relative mx-0;
-          }
-        }
-      }
-      .has-submenu {
-        .menu-arrow {
-          @apply border-[3px] border-t-transparent border-e-black dark:border-e-white border-b-black dark:border-b-white border-s-transparent rounded-[2px] inline-block ltr:rotate-45 rtl:-rotate-45 absolute transition-all duration-500 end-0 top-[33px];
         }
       }
     }
-    .menu-extras {
-      @apply ltr:float-right rtl:float-left;
+  }
+  &.defaultscroll {
+    &.dark-menubar {
+      .logo {
+        @apply leading-[70px];
+      }
     }
     &.scroll {
-      @apply bg-white dark:bg-slate-900 border-none shadow;
-      .navigation-menu {
+      .logo {
+        @apply leading-[62px];
+      }
+    }
+  }
+  &.nav-sticky {
+    @apply bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow dark:shadow-gray-700;
+    .navigation-menu {
+      &.nav-light {
         > li {
           > a {
             @apply text-black dark:text-white;
           }
-          > .menu-arrow {
-            @apply border-t-transparent border-e-black dark:border-e-white border-b-black dark:border-b-white border-s-transparent;
-          }
-          &:hover, 
-          &.active{
+          &.active {
             > a {
-              @apply text-orange-500;
+              @apply text-fourth-base dark:text-fourth-base #{!important};
             }
+          }
+          &:hover,
+          &.active {
             > .menu-arrow {
-              @apply border-t-transparent border-e-orange-500 border-b-orange-500 border-s-transparent #{!important};
+              @apply border-t-transparent border-e-fourth-base dark:border-e-fourth-base border-b-fourth-base dark:border-b-fourth-base border-s-transparent #{!important};
             }
           }
-        }
-      }
-    }
-    &.defaultscroll{
-      &.dark-menubar {
-        .logo {
-          @apply leading-[70px];
-        }
-      }
-      &.scroll {
-        .logo {
-          @apply leading-[62px];
-        }
-      }
-    }
-    &.nav-sticky {
-      @apply bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow dark:shadow-gray-700;
-      .navigation-menu{
-        &.nav-light {
-          > li {
+
+          &:hover,
+          &.active {
             > a {
-              @apply text-black dark:text-white;
-            }
-            &.active {
-              > a {
-                @apply text-orange-500 dark:text-orange-500 #{!important};
-              }
-            }
-            &:hover, 
-            &.active{
-              > .menu-arrow {
-                @apply border-t-transparent border-e-orange-500 dark:border-e-orange-500 border-b-orange-500 dark:border-b-orange-500 border-s-transparent #{!important};
-              }
-            }
-            
-            &:hover, 
-            &.active {
-              > a {
-                @apply text-orange-500 dark:text-orange-500 #{!important};
-              }
+              @apply text-fourth-base dark:text-fourth-base #{!important};
             }
           }
-          .has-submenu {
-            .menu-arrow {
-              @apply border-t-transparent border-e-black dark:border-e-white border-b-black dark:border-b-white border-s-transparent #{!important};
-            }
+        }
+        .has-submenu {
+          .menu-arrow {
+            @apply border-t-transparent border-e-black dark:border-e-white border-b-black dark:border-b-white border-s-transparent #{!important};
           }
-          
         }
       }
-      &.tagline-height {
-        @apply top-0 #{!important};
+    }
+    &.tagline-height {
+      @apply top-0 #{!important};
+    }
+
+    .buy-button {
+      .login-btn-fourth-base,
+      .btn-icon-dark {
+        @apply inline-block;
       }
-      
-      .buy-button {
-        .login-btn-primary,
-        .btn-icon-dark {
+      .login-btn-light,
+      .btn-icon-light {
+        @apply hidden;
+      }
+      .search-dropdown {
+        .dark-icon {
           @apply inline-block;
         }
-        .login-btn-light,
-        .btn-icon-light {
+        .white-icon {
           @apply hidden;
-        }
-        .search-dropdown {
-          .dark-icon {
-            @apply inline-block;          
-          }
-          .white-icon {
-            @apply hidden;          
-          }
         }
       }
-      
-      .logo {
-        .l-dark {
-          @apply inline-block;
-        }
-        .l-light {
-          @apply hidden;
-        }
+    }
+
+    .logo {
+      .l-dark {
+        @apply inline-block;
+      }
+      .l-light {
+        @apply hidden;
+      }
     }
   }
 }
@@ -288,7 +288,7 @@
   #topnav {
     .navigation-menu {
       > li {
-        .submenu{
+        .submenu {
           &.megamenu {
             @apply w-[1116px] #{!important};
           }
@@ -302,7 +302,7 @@
   #topnav {
     .navigation-menu {
       > li {
-        .submenu{
+        .submenu {
           &.megamenu {
             @apply w-[936px] #{!important};
           }
@@ -316,7 +316,7 @@
   #topnav {
     .navigation-menu {
       @apply flex flex-wrap justify-center;
-      
+
       &.justify-end {
         > li {
           &:last-child {
@@ -346,7 +346,7 @@
               transition: all 0.3s;
               @apply block py-[10px] px-5 clear-both whitespace-nowrap text-[14px] tracking-[0.04em] font-normal text-black dark:text-white leading-[17px];
               &:hover {
-                @apply text-orange-500 dark:text-orange-500 #{!important};
+                @apply text-fourth-base dark:text-fourth-base #{!important};
               }
             }
             ul {
@@ -373,19 +373,19 @@
         }
         &:hover {
           > .menu-arrow {
-            @apply border-t-transparent border-e-orange-500 border-b-orange-500 border-s-transparent #{!important};
+            @apply border-t-transparent border-e-fourth-base border-b-fourth-base border-s-transparent #{!important};
           }
         }
-        &:hover, 
-        &.active{
+        &:hover,
+        &.active {
           > a {
-            @apply text-orange-500 dark:text-orange-500 #{!important};
+            @apply text-fourth-base dark:text-fourth-base #{!important};
           }
         }
-        &.last-elements{
+        &.last-elements {
           .submenu {
             @apply start-auto end-0 before:start-auto before:end-[10px];
-            > li{
+            > li {
               &.has-submenu {
                 .submenu {
                   @apply start-auto end-full ms-0 me-[10px];
@@ -430,10 +430,10 @@
       @apply ps-[15px] ms-[15px];
       .search-dropdown {
         .dark-icon {
-          @apply hidden;          
+          @apply hidden;
         }
         .white-icon {
-          @apply inline-block;          
+          @apply inline-block;
         }
       }
     }
@@ -527,7 +527,7 @@
         > a:hover,
         .submenu li a:hover,
         &.has-submenu.open > a {
-          @apply text-orange-500;
+          @apply text-fourth-base;
         }
       }
     }
@@ -541,7 +541,7 @@
     }
 
     .buy-button {
-      .login-btn-primary,
+      .login-btn-fourth-base,
       .btn-icon-dark {
         @apply inline-block #{!important};
       }
@@ -551,10 +551,10 @@
       }
       .search-dropdown {
         .dark-icon {
-          @apply inline-block;          
+          @apply inline-block;
         }
         .white-icon {
-          @apply hidden;          
+          @apply hidden;
         }
       }
     }
@@ -566,12 +566,12 @@
       }
       &.active {
         a {
-          @apply text-orange-500;
+          @apply text-fourth-base;
         }
       }
     }
   }
-  
+
   #navigation {
     @apply absolute top-[74px] start-0 w-full hidden h-auto bg-white dark:bg-slate-900 overflow-auto;
     &.open {
@@ -595,17 +595,17 @@
 @media (min-width: 768px) {
   #topnav {
     .navigation-menu {
-      > li{
-        &.has-submenu{
+      > li {
+        &.has-submenu {
           &:hover {
             > .submenu {
               @apply visible opacity-100 mt-0;
-              > li{
-                &.has-submenu{
+              > li {
+                &.has-submenu {
                   &:hover {
                     > .submenu {
                       @apply visible opacity-100 ms-0 me-0;
-                      > li{
+                      > li {
                         &:hover {
                           > .submenu {
                             @apply visible opacity-100 ms-0 me-0;
@@ -632,7 +632,7 @@
     .buy-menu-btn {
       @apply block my-0 mx-[10px] py-[10px] px-5 #{!important};
       .dropdown {
-        .dropdown-menu{
+        .dropdown-menu {
           &.show {
             transform: translate3d(0px, -54px, 0px) !important;
           }
@@ -642,53 +642,53 @@
   }
 }
 .tagline {
-    @apply absolute w-full z-[99] text-sm py-[13px] px-0;
+  @apply absolute w-full z-[99] text-sm py-[13px] px-0;
 }
 @media screen and (max-width: 575px) {
-    .tagline {
-        @apply hidden;
-    }
-    .tagline-height {
-        @apply top-0 #{!important}; 
-    }
+  .tagline {
+    @apply hidden;
+  }
+  .tagline-height {
+    @apply top-0 #{!important};
+  }
 }
 @media (min-width: 576px) {
   .tagline-height {
     @apply top-[47px] #{!important};
   }
 }
-  
+
 .sidebar-nav {
-    @apply py-[15px] px-0;
-        > .navbar-item {
-          @apply py-[3px] px-[15px];
-          .navbar-link {
-            @apply text-[15px] font-semibold;
-            .navbar-icon {
-              @apply text-lg me-[6px];
-            }
-            &.active{
-              @apply text-orange-500;
-            }
-          }
-          &:hover,
-          &.active {
-            .navbar-link {
-              @apply text-orange-500;
-            }
-          }
-    }
-    li{
+  @apply py-[15px] px-0;
+  > .navbar-item {
+    @apply py-[3px] px-[15px];
+    .navbar-link {
+      @apply text-[15px] font-semibold;
+      .navbar-icon {
+        @apply text-lg me-[6px];
+      }
       &.active {
-        a {
-          @apply text-orange-500;
-        }
-      }
-      &.account-menu.active,
-      &.account-menu:hover{
-        .navbar-link {
-          @apply text-orange-500 dark:text-white #{!important};
-        }
+        @apply text-fourth-base;
       }
     }
+    &:hover,
+    &.active {
+      .navbar-link {
+        @apply text-fourth-base;
+      }
+    }
+  }
+  li {
+    &.active {
+      a {
+        @apply text-fourth-base;
+      }
+    }
+    &.account-menu.active,
+    &.account-menu:hover {
+      .navbar-link {
+        @apply text-fourth-base dark:text-white #{!important};
+      }
+    }
+  }
 }

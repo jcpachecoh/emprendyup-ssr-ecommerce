@@ -1,4 +1,4 @@
-/* Template Name: Cartzio - Fashion Store eCommerce Tailwind CSS Landing Template
+/* Template Name: EmprendyUp - Fashion Store eCommerce Tailwind CSS Landing Template
    Author: Shreethemes
    Email: support@shreethemes.in
    Website: https://shreethemes.in
@@ -7,23 +7,21 @@
    File: Main Css File
 */
 
-
-
 // FONTS
-@use "custom/fonts";
+@use 'custom/fonts';
 
 // general
-@use "custom/general";
+@use 'custom/general';
 
 // structure
-@use "custom/structure/topnav";
+@use 'custom/structure/topnav';
 
 // pages
-@use "custom/pages/helper";
-@use "custom/pages/testi";
-@use "custom/pages/swiper-slider";
-@use "custom/pages/countdown";
-@use "custom/pages/contact";
+@use 'custom/pages/helper';
+@use 'custom/pages/testi';
+@use 'custom/pages/swiper-slider';
+@use 'custom/pages/countdown';
+@use 'custom/pages/contact';
 
 @tailwind base;
 @tailwind components;

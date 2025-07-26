@@ -43,6 +43,28 @@ module.exports = {
       colors: {
         dark: '#3c4858',
         black: '#161c2d',
+        primary: {
+          base: '#F04E23',
+          200: '#F89F87',
+          300: '#F37750',
+          400: '#F04E23',
+          500: '#C53F1C',
+        },
+        secondary: {
+          base: '#00B077',
+          200: '#66D6B0',
+          300: '#33C89A',
+          400: '#00B077',
+          500: '#00925F',
+        },
+        tertiary: '#FFD233',
+        fourth: {
+          base: '#00B2FF',
+          200: '#80DCFF',
+          300: '#40C3FF',
+          400: '#00B2FF',
+          500: '#0091CC',
+        },
         'dark-footer': '#161c28',
       },
 

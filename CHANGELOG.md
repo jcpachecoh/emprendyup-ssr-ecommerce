@@ -1,3 +1,9 @@
+# [1.3.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.2.0...v1.3.0) (2025-07-26)
+
+### Features
+
+- traduction titles and new colors ([#2](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/issues/2)) ([5002e8b](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/5002e8be022a2b1af97f591d222d254022e63cca))
+
 # [1.2.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.1.0...v1.2.0) (2025-07-25)
 
 ### Features

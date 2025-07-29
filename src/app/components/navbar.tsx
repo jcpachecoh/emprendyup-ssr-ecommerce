@@ -364,8 +364,8 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                 </ul>
               </li>
 
-              {/* <li
-                className={`has-submenu parent-parent-menu-item ${['/shop-grid', '/shop-grid-left-sidebar', '/shop-grid-right-sidebar', '/shop-list', '/shop-list-left-sidebar', '/shop-list-right-sidebar', '/product-detail-one', '/product-detail-two', '/product-detail-three', '/shop-cart', '/shop-checkout', '/our-store', '/brands', '/compare-product', '/recently-viewed-product', '/shop-item', '/list-item', '/detail-item', '/grid-item'].includes(menu) ? 'active' : ''}`}
+              <li
+                className={`has-submenu parent-parent-menu-item ${['/tienda-cuadricula', '/tienda-cuadricula-sidebar-izquierdo', '/tienda-cuadricula-sidebar-derecho', '/tienda-lista', '/tienda-lista-sidebar-izquierdo', '/tienda-lista-sidebar-derecho', '/product-detail-one', '/product-detail-two', '/product-detail-three', '/shop-cart', '/shop-checkout', '/our-store', '/brands', '/compare-product', '/recently-viewed-product', '/shop-item', '/list-item', '/detail-item', '/grid-item'].includes(menu) ? 'active' : ''}`}
               >
                 <Link
                   href="#"
@@ -376,10 +376,10 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                 </Link>
                 <span className="menu-arrow"></span>
                 <ul
-                  className={`submenu ${['/shop-grid', '/shop-grid-left-sidebar', '/shop-grid-right-sidebar', '/shop-list', '/shop-list-left-sidebar', '/shop-list-right-sidebar', '/product-detail-one', '/product-detail-two', '/product-detail-three', '/shop-cart', '/shop-checkout', '/our-store', '/brands', '/compare-product', '/recently-viewed-product', '/shop-item', '/list-item', '/detail-item', '/grid-item'].includes(submenu) ? 'open' : ''}`}
+                  className={`submenu ${['/tienda-cuadricula', '/tienda-cuadricula-sidebar-izquierdo', '/tienda-cuadricula-sidebar-derecho', '/tienda-lista', '/tienda-lista-sidebar-izquierdo', '/tienda-lista-sidebar-derecho', '/product-detail-one', '/product-detail-two', '/product-detail-three', '/shop-cart', '/shop-checkout', '/our-store', '/brands', '/compare-product', '/recently-viewed-product', '/shop-item', '/list-item', '/detail-item', '/grid-item'].includes(submenu) ? 'open' : ''}`}
                 >
                   <li
-                    className={`has-submenu parent-menu-item ms-0 ${['/shop-grid', '/shop-grid-left-sidebar', '/shop-grid-right-sidebar', '/grid-item'].includes(menu) ? 'active' : ''}`}
+                    className={`has-submenu parent-menu-item ms-0 ${['/tienda-cuadricula', '/tienda-cuadricula-sidebar-izquierdo', '/tienda-cuadricula-sidebar-derecho', '/grid-item'].includes(menu) ? 'active' : ''}`}
                   >
                     <Link
                       href="#"
@@ -390,28 +390,28 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                     </Link>
                     <span className="submenu-arrow"></span>
                     <ul
-                      className={`submenu ${['/shop-grid', '/shop-grid-left-sidebar', '/shop-grid-right-sidebar', '/grid-item'].includes(submenu) ? 'open' : ''}`}
+                      className={`submenu ${['/tienda-cuadricula', '/tienda-cuadricula-sidebar-izquierdo', '/tienda-cuadricula-sidebar-derecho', '/grid-item'].includes(submenu) ? 'open' : ''}`}
                     >
-                      <li className={`ms-0 ${menu === '/shop-grid' ? 'active' : ''}`}>
-                        <Link href="/shop-grid" className="sub-menu-item">
+                      <li className={`ms-0 ${menu === '/tienda-cuadricula' ? 'active' : ''}`}>
+                        <Link href="/tienda-cuadricula" className="sub-menu-item">
                           Cuadrícula de Tienda
                         </Link>
                       </li>
-                      <li className={`ms-0 ${menu === '/shop-grid-left-sidebar' ? 'active' : ''}`}>
+                      {/* <li className={`ms-0 ${menu === '/tienda-cuadricula-sidebar-izquierdo' ? 'active' : ''}`}>
                         <Link href="/shop-grid-left-sidebar" className="sub-menu-item">
                           Cuadrícula Izquierda
                         </Link>
                       </li>
-                      <li className={`ms-0 ${menu === '/shop-grid-right-sidebar' ? 'active' : ''}`}>
+                      <li className={`ms-0 ${menu === '/tienda-cuadricula-sidebar-derecho' ? 'active' : ''}`}>
                         <Link href="/shop-grid-right-sidebar" className="sub-menu-item">
                           Cuadrícula Derecha
                         </Link>
-                      </li>
+                      </li> */}
                     </ul>
                   </li>
 
                   <li
-                    className={`has-submenu parent-menu-item ms-0 ${['/shop-list', '/shop-list-left-sidebar', '/shop-list-right-sidebar', '/list-item'].includes(menu) ? 'active' : ''}`}
+                    className={`has-submenu parent-menu-item ms-0 ${['/tienda-lista', '/tienda-lista-sidebar-izquierdo', '/tienda-lista-sidebar-derecho', '/list-item'].includes(menu) ? 'active' : ''}`}
                   >
                     <Link
                       href="#"
@@ -422,33 +422,32 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                     </Link>
                     <span className="submenu-arrow"></span>
                     <ul
-                      className={`submenu ${['/shop-list', '/shop-list-left-sidebar', '/shop-list-right-sidebar', '/list-item'].includes(submenu) ? 'open' : ''}`}
+                      className={`submenu ${['/tienda-lista', '/tienda-lista-sidebar-izquierdo', '/tienda-lista-sidebar-derecho', '/list-item'].includes(submenu) ? 'open' : ''}`}
                     >
-                      <li className={`ms-0 ${menu === '/shop-list' ? 'active' : ''}`}>
-                        <Link href="/shop-list" className="sub-menu-item">
+                      <li className={`ms-0 ${menu === '/tienda-lista' ? 'active' : ''}`}>
+                        <Link href="/tienda-lista" className="sub-menu-item">
                           Lista de Tienda
                         </Link>
                       </li>
-                      <li className={`ms-0 ${menu === '/shop-list-left-sidebar' ? 'active' : ''}`}>
-                        <Link href="/shop-list-left-sidebar" className="sub-menu-item">
-                          Lista Izquierda
+                      <li
+                        className={`ms-0 ${menu === '/tienda-lista-sidebar-izquierdo' ? 'active' : ''}`}
+                      >
+                        <Link href="/tienda-lista-sidebar-izquierdo" className="sub-menu-item">
+                          Productos
                         </Link>
                       </li>
-                      <li className={`ms-0 ${menu === '/shop-list-right-sidebar' ? 'active' : ''}`}>
-                        <Link href="/shop-list-right-sidebar" className="sub-menu-item">
+                      {/* <li className={`ms-0 ${menu === '/tienda-lista-sidebar-derecho' ? 'active' : ''}`}>
+                        <Link href="/tienda-lista-sidebar-derecho" className="sub-menu-item">
                           Lista Derecha
                         </Link>
-                      </li>
+                      </li> */}
                     </ul>
                   </li>
 
-                  <li
+                  {/* <li
                     className={`has-submenu parent-menu-item ms-0 ${['/product-detail-one', '/product-detail-two', '/product-detail-three', '/detail-item'].includes(menu) ? 'active' : ''}`}
                   >
-                    <Link
-                      href="#"
-                      onClick={() => setSubmenu(menu === '/detail-item' ? '' : '/detail-item')}
-                    >
+                    <Link href="#" onClick={() => setSubmenu(menu === '/detail-item' ? '' : '/detail-item')}>
                       {' '}
                       Detalle de Tienda{' '}
                     </Link>
@@ -472,8 +471,8 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                         </Link>
                       </li>
                     </ul>
-                  </li>
-                  <li className={`ms-0 ${menu === '/shop-cart' ? 'active' : ''}`}>
+                  </li> */}
+                  {/* <li className={`ms-0 ${menu === '/shop-cart' ? 'active' : ''}`}>
                     <Link href="/shop-cart" className="sub-menu-item">
                       Carrito
                     </Link>
@@ -502,9 +501,9 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                     <Link href="/recently-viewed-product" className="sub-menu-item">
                       Vistos Recientemente
                     </Link>
-                  </li>
+                  </li> */}
                 </ul>
-              </li> */}
+              </li>
 
               {/* <li
                 className={`has-submenu parent-parent-menu-item ${['/aboutus', '/user-account', '/user-billing', '/user-payment', '/user-invoice', '/user-social', '/user-notification', '/user-setting', '/page-item', '/user-item', '/email-item', '/email-confirmation', '/email-cart', '/email-offers', '/email-order-success', '/email-gift-voucher', '/email-reset-password', '/email-item-review', '/blog-item', '/blogs', '/blog-detail', '/help-item', '/helpcenter', '/helpcenter-faqs', '/helpcenter-guides', '/helpcenter-support', '/auth-item', '/login', '/signup', '/forgot-password', '/lock-screen', '/utility-item', '/terms', '/privacy', '/comingsoon', '/maintenance', '/error', '/special-item', '/multi-item', '/multi-item2', '/multi-item3', '/career'].includes(menu) ? 'active' : ''}`}
@@ -863,7 +862,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                     </ul>
                   </li>
                 </ul>
-              </li> */}
+              </li>  */}
 
               <li className={`${menu === '/sale' ? 'active' : ''}`}>
                 <Link href="/sale" className="sub-menu-item">
@@ -1015,7 +1014,7 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
 
             <li className="inline-block ps-0.5">
               <Link
-                href="#"
+                href="/favoritos"
                 className="size-9 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-base text-center rounded-full bg-fourth-base text-black"
               >
                 <FiHeart data-feather="heart" className="h-4 w-4"></FiHeart>

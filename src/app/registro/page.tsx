@@ -6,7 +6,7 @@ import Layout from '../components/layout';
 
 const REGISTER_MUTATION = gql`
   mutation CreateEntrepreneur($data: CreateEntrepreneurDto!) {
-    createEntrepreneur(input: $data) {
+    createEntrepreneur(data: $data) {
       id
       name
       email
@@ -17,8 +17,22 @@ const REGISTER_MUTATION = gql`
   }
 `;
 
-const categories = ['TECHNOLOGY', 'FOOD', 'FASHION', 'EDUCATION', 'HEALTH', 'OTHER'];
-const referralSources = ['GOOGLE', 'FACEBOOK', 'INSTAGRAM', 'FRIEND', 'OTHER'];
+const mappedValues = [
+  { name: 'Tecnología', value: 'TECHNOLOGY' },
+  { name: 'Comida', value: 'FOOD' },
+  { name: 'Moda', value: 'RETAIL' },
+  { name: 'Educación', value: 'EDUCATION' },
+  { name: 'Salud', value: 'HEALTH' },
+  { name: 'Otro', value: 'OTHER' },
+];
+const mappedReferralSources = [
+  { name: 'Google', value: 'GOOGLE' },
+  { name: 'Redes Sociales', value: 'SOCIAL_MEDIA' },
+  { name: 'Amigo', value: 'FRIEND' },
+  { name: 'Evento', value: 'EVENT' },
+  { name: 'Publicidad', value: 'ADVERTISEMENT' },
+  { name: 'Otro', value: 'OTHER' },
+];
 
 export default function RegistroPage() {
   const {
@@ -32,7 +46,17 @@ export default function RegistroPage() {
 
   const onSubmit = async (formData: any) => {
     try {
-      await registerBusiness({ variables: { input: formData } });
+      await registerBusiness({
+        variables: {
+          data: {
+            ...formData,
+            category: mappedValues.find((cat) => cat.name === formData.category)?.value || 'OTHER',
+            referralSource:
+              mappedReferralSources.find((src) => src.name === formData.referralSource)?.value ||
+              'OTHER',
+          },
+        },
+      });
       setSuccess(true);
       reset();
     } catch (e) {
@@ -43,7 +67,7 @@ export default function RegistroPage() {
 
   return (
     <Layout>
-      <section className="relative table w-full items-center pt-36 pb-52 bg-primary bg-[url('/images/hero/bg-shape.png')] bg-center bg-no-repeat bg-cover">
+      <section className="relative table w-full items-center pt-36 pb-52 bg-primary-500 bg-[url('/images/hero/bg-shape.png')] bg-center bg-no-repeat bg-cover">
         <div className="container relative">
           <h1 className="text-4xl font-bold text-white text-center mb-4">
             Conecta, crece y emprende
@@ -111,9 +135,9 @@ export default function RegistroPage() {
                 className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
               >
                 <option value="">Selecciona una categoría</option>
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
+                {mappedValues.map((cat) => (
+                  <option key={cat.value} value={cat.value}>
+                    {cat.name}
                   </option>
                 ))}
               </select>
@@ -195,9 +219,9 @@ export default function RegistroPage() {
                 className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
               >
                 <option value="">Selecciona una opción</option>
-                {referralSources.map((src) => (
-                  <option key={src} value={src}>
-                    {src}
+                {mappedReferralSources.map((referral) => (
+                  <option key={referral.value} value={referral.value}>
+                    {referral.name}
                   </option>
                 ))}
               </select>
@@ -207,7 +231,7 @@ export default function RegistroPage() {
             </div>
             <button
               type="submit"
-              className="w-full py-3 px-6 bg-gradient-to-r from-primary-base to-primary-300 text-white font-bold rounded-xl shadow hover:from-primary-400 hover:to-primary-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400"
+              className="w-full py-3 px-6 bg-gradient-to-r from-fourth-base to-fourth-300 text-white font-bold rounded-xl shadow hover:from-primary-400 hover:to-primary-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400"
             >
               {loading ? 'Enviando...' : 'Registrar'}
             </button>

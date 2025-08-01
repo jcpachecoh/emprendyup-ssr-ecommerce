@@ -6,6 +6,7 @@ import ProductDetailSlugClient from './ProductDetailSlugClient';
 import Footer from '../../components/footer';
 import Switcher from '../../components/switcher';
 import ScrollToTop from '../../components/scroll-to-top';
+import ProductInformation from '../../components/ProductInformation';
 
 export default function ProductDetailSlugPage() {
   return (
@@ -44,6 +45,7 @@ export default function ProductDetailSlugPage() {
       <section className="relative md:py-24 py-16">
         <div className="container relative">
           <ProductDetailSlugClient />
+          <ProductInformation />
         </div>
       </section>
       <Footer />

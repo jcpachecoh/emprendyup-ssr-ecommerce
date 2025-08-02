@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -12,7 +12,7 @@ import { FiCalendar, FiClock } from '../assets/icons/vander';
 
 export default function BlogDetail() {
   return (
-    <>
+    <Suspense fallback={<div>Loading...</div>}>
       <Navbar navClass="defaultscroll is-sticky" navlight={false} />
       <section className="relative table w-full items-center py-36 bg-[url('/images/hero/pages.jpg')] bg-top bg-no-repeat bg-cover">
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/80 to-slate-900"></div>
@@ -266,6 +266,6 @@ export default function BlogDetail() {
       <Footer />
       <Switcher />
       <ScrollToTop />
-    </>
+    </Suspense>
   );
 }

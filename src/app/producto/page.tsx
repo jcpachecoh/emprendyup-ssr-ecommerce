@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import Link from 'next/link';
 
 import Tagline from '../components/tagline';
@@ -8,10 +8,11 @@ import Footer from '../components/footer';
 import Switcher from '../components/switcher';
 import ProductViewTwo from '../components/product-view-two';
 import ScrollToTop from '../components/scroll-to-top';
+import Loader from '../components/Loader';
 
 export default function ProductDetailPage() {
   return (
-    <>
+    <Suspense fallback={<Loader />}>
       <Tagline />
       <Navbar navClass="defaultscroll is-sticky tagline-height" navlight={false} />
       <section className="relative table w-full py-20 lg:py-24 md:pt-28 bg-gray-50 dark:bg-slate-800">
@@ -53,6 +54,6 @@ export default function ProductDetailPage() {
       <Footer />
       <Switcher />
       <ScrollToTop />
-    </>
+    </Suspense>
   );
 }

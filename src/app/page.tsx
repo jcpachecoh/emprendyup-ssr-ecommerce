@@ -19,12 +19,9 @@ export default function Home() {
     <>
       <Tagline />
       <Navbar navClass="defaultscroll is-sticky tagline-height" navlight={false} />
-      <section
-        className="flex items-center justify-between w-full md:h-screen pt-32 overflow-hidden bg-white dark:bg-slate-900"
-        style={{ position: 'relative' }}
-      >
-        {/* Elementos flotantes tipo cuadrado */}
-        <FloatingSquares />
+      <section className="flex items-center justify-between w-full md:h-screen pt-32 overflow-hidden bg-white dark:bg-slate-900 bg-[url('/images/hero/teenager.webp')] bg-cover bg-center bg-no-repeat relative">
+        {/* Overlay background */}
+        <div className="absolute inset-0 bg-black/50"></div>
 
         {/* Contenido izquierdo */}
         <HeroSection />

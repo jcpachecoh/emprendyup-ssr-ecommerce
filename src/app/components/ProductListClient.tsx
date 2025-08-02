@@ -73,10 +73,11 @@ export default function ProductListClient({
               >
                 <Image
                   className="w-full h-full object-cover rounded-md group-hover:scale-110 duration-500"
-                  src={item.imageUrl!}
+                  src={item.imageUrl || '/images/placeholder.svg'}
                   width={320}
                   height={320}
-                  alt={item.title}
+                  alt={item.title || 'Placeholder Image'}
+                  loading="lazy"
                 />
                 <ul className="list-none absolute top-[10px] end-4 opacity-0 group-hover:opacity-100 duration-500 space-y-1">
                   <li>

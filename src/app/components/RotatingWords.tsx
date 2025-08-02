@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 
-const words = ['Networking', 'Ecommerce', 'Coaching', 'Eventos', 'AI'];
+const words = ['Red Emprendedora', 'Impulsa tu marca con ecommerce', 'Coaching', 'Eventos', 'AI'];
 
 export default function RotatingWords() {
   const [index, setIndex] = useState(0);
@@ -23,12 +23,12 @@ export default function RotatingWords() {
 
   return (
     <span
-      className="text-slate-900 font-bold"
+      className="text-slate-900 font-bold text-2xl align-middle rounded-md shadow-md p-2 text-center dark:text-white"
       style={{ minWidth: 120, display: 'inline-block', position: 'relative' }}
     >
       <span
         key={index}
-        className={`inline-block transition-all duration-500 ease-in-out ${show ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-2 scale-90'}`}
+        className={`inline-block transition-all duration-500 ease-in-out text-center ${show ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-2 scale-90'}`}
         style={{
           minWidth: 100,
           textAlign: 'left',

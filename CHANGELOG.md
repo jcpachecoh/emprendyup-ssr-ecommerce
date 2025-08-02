@@ -1,3 +1,14 @@
+# [1.4.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.3.0...v1.4.0) (2025-08-02)
+
+### Bug Fixes
+
+- build ([12ef9d1](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/12ef9d16cecc9da85a20570f1373a53f53da3121))
+
+### Features
+
+- favoritos y cambios ([86989c6](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/86989c6f4f085fce9c2e02646215cb3fb1d87592))
+- mejoras en detalle de producto y favoritos ([#3](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/issues/3)) ([cd5a006](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/cd5a006cdb60e62c06a9a30bab4df68b024d20f2))
+
 # [1.3.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.2.0...v1.3.0) (2025-07-26)
 
 ### Features

@@ -1,3 +1,9 @@
+## [1.5.1](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.5.0...v1.5.1) (2025-08-05)
+
+### Bug Fixes
+
+- register companyName ([#4](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/issues/4)) ([4747648](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/474764851a4d02f56de3c6419b16ba5a40bdf640))
+
 # [1.5.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.4.0...v1.5.0) (2025-08-02)
 
 ### Features

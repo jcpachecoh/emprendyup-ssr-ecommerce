@@ -8,11 +8,17 @@ const REGISTER_MUTATION = gql`
   mutation CreateEntrepreneur($data: CreateEntrepreneurDto!) {
     createEntrepreneur(data: $data) {
       id
+      companyName
+      country
+      city
       name
+      description
+      phone
+      website
       email
       category
-      referralSource
       createdAt
+      referralSource
     }
   }
 `;
@@ -50,10 +56,8 @@ export default function RegistroPage() {
         variables: {
           data: {
             ...formData,
-            category: mappedValues.find((cat) => cat.name === formData.category)?.value || 'OTHER',
-            referralSource:
-              mappedReferralSources.find((src) => src.name === formData.referralSource)?.value ||
-              'OTHER',
+            category: formData.category,
+            referralSource: formData.referralSource,
           },
         },
       });
@@ -88,12 +92,25 @@ export default function RegistroPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div>
               <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-200">
+                Nombre Emprendimiento
+              </label>
+              <input
+                {...register('companyName', { required: true })}
+                className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
+                placeholder="Ej: mi emprendimiento"
+              />
+              {errors.companyName && (
+                <span className="text-red-500 text-xs mt-1 block">Este campo es requerido</span>
+              )}
+            </div>
+            <div>
+              <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-200">
                 Nombre
               </label>
               <input
                 {...register('name', { required: true })}
                 className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-                placeholder="Ej: Juan Perez"
+                placeholder="Ej: nombre del emprendedor"
               />
               {errors.name && (
                 <span className="text-red-500 text-xs mt-1 block">Este campo es requerido</span>
@@ -155,19 +172,6 @@ export default function RegistroPage() {
                 placeholder="+573001234567"
               />
               {errors.phone && (
-                <span className="text-red-500 text-xs mt-1 block">Este campo es requerido</span>
-              )}
-            </div>
-            <div>
-              <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-200">
-                Identificación
-              </label>
-              <input
-                {...register('identification', { required: true })}
-                className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-                placeholder="123456789"
-              />
-              {errors.identification && (
                 <span className="text-red-500 text-xs mt-1 block">Este campo es requerido</span>
               )}
             </div>

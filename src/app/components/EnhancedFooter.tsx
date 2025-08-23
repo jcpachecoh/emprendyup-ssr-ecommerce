@@ -92,7 +92,7 @@ const EnhancedFooter = () => {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="/ayuda"
+                  href="/centro-de-ayuda"
                   className="text-slate-400 hover:text-fourth-base transition-colors"
                 >
                   Centro de ayuda

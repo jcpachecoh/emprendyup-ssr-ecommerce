@@ -13,8 +13,6 @@ import { FiHelpCircle } from '../assets/icons/vander';
 export default function Helpcenter() {
   return (
     <>
-      <Navbar navClass="defaultscroll is-sticky" navlight={true} />
-
       <section className="relative table w-full py-36 bg-[url(/images/hero/pages.jpg)] bg-center bg-no-repeat bg-cover">
         <div className="absolute inset-0 bg-black opacity-80"></div>
         <div className="container relative">
@@ -148,7 +146,6 @@ export default function Helpcenter() {
 
         <GetInTouch />
       </section>
-      <Footer />
       <Switcher />
       <ScrollToTop />
     </>

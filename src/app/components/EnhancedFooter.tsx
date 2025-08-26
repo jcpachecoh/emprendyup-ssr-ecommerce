@@ -147,7 +147,7 @@ const EnhancedFooter = () => {
               </div>
             </div>
             <p className="text-slate-400 text-sm">
-              © 2025 EmprendyUp. Todos los derechos reservados.
+              © 2025 EmprendyUp. Desarrollado en 🇨🇴 - Todos los derechos reservados.
             </p>
           </div>
         </div>

@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.9.0...v1.10.0) (2025-08-26)
+
+### Features
+
+- new regiser ([7c340ac](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/7c340acc862a7d42a35ccb8307973524f0dc4ea6))
+- new regiser ([1b949f9](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/1b949f9d49d071f3597ff96ce08791a229d22692))
+
 # [1.9.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.8.0...v1.9.0) (2025-08-26)
 
 ### Features

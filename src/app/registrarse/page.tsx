@@ -8,24 +8,24 @@ import Switcher from '../components/switcher';
 export default function Signup() {
   return (
     <>
-      <section className="md:h-screen py-36 flex items-center bg-fourth-base/10 dark:bg-fourth-base/20 bg-[url('/images/hero/bg-shape.png')] bg-center bg-no-repeat bg-cover">
-        <div className="container relative">
-          <div className="grid grid-cols-1">
-            <div className="relative overflow-hidden rounded-md shadow dark:shadow-gray-700 bg-white dark:bg-slate-900">
-              <div className="grid md:grid-cols-2 grid-cols-1 items-center">
-                <div className="relative md:shrink-0">
+      <section className="w-full h-screen flex items-center justify-center bg-gradient-to-br from-fourth-base/10 via-blue-50 to-green-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 bg-[url(/images/hero/bg-shape.png)] bg-center bg-no-repeat bg-cover">
+        <div className="w-full h-full flex items-center justify-center p-0 m-0">
+          <div className="w-full h-full">
+            <div className="w-full h-full bg-white dark:bg-black">
+              <div className="grid md:grid-cols-2 grid-cols-1 items-center h-full">
+                <div className="relative md:shrink-0 h-full">
                   <Image
                     src="/images/signup.jpg"
                     width={0}
                     height={0}
                     sizes="100vw"
                     style={{ width: '100%', height: 'auto' }}
-                    className="h-full w-full object-cover md:h-[44rem]"
+                    className="w-full h-full object-cover"
                     alt=""
                   />
                 </div>
 
-                <div className="p-8 lg:px-20">
+                <div className="p-8 lg:px-20 flex flex-col justify-center h-full min-h-screen md:min-h-full bg-black">
                   <div className="text-center">
                     <Link href="/">
                       <Image

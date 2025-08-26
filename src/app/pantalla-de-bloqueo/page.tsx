@@ -51,7 +51,7 @@ export default function LockScreen() {
                       </label>
                     </div>
                     <p className="text-slate-400 mb-0">
-                      <Link href="/forgot-password" className="text-slate-400">
+                      <Link href="/olvido-contraseña" className="text-slate-400">
                         Olvidaste tu contraseña?
                       </Link>
                     </p>

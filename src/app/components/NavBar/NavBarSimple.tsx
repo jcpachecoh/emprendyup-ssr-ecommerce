@@ -207,7 +207,7 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
             {/* Login/Usuario */}
             <li className="inline-block ps-2">
               <Link
-                href="/auth/login"
+                href="/login"
                 className="size-9 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-base text-center rounded-full border border-gray-300 dark:border-gray-700 hover:border-fourth-base text-slate-700 dark:text-white hover:text-fourth-base"
                 title="Iniciar Sesión"
               >

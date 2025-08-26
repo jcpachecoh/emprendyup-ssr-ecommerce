@@ -86,7 +86,7 @@ export default function Login() {
                         </label>
                       </div>
                       <p className="text-slate-400 mb-0">
-                        <Link href="/forgot-password" className="text-slate-400">
+                        <Link href="/olvido-contraseña" className="text-slate-400">
                           ¿Olvidaste tu contraseña?
                         </Link>
                       </p>
@@ -103,7 +103,7 @@ export default function Login() {
                     <div className="text-center">
                       <span className="text-slate-400 me-2">¿No tienes una cuenta?</span>{' '}
                       <Link
-                        href="/signup"
+                        href="/registrarse"
                         className="text-white dark:text-white font-bold inline-block"
                       >
                         Registrarse

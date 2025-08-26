@@ -177,7 +177,7 @@ const LeadCaptureSectionNew = () => {
                     </label>
                     <input
                       {...register('companyName', { required: true })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
                       placeholder="Mi emprendimiento"
                     />
                     {errors.companyName && (
@@ -188,7 +188,7 @@ const LeadCaptureSectionNew = () => {
                     <label className="block font-semibold mb-2 text-slate-700">Tu Nombre *</label>
                     <input
                       {...register('name', { required: true })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
                       placeholder="Tu nombre completo"
                     />
                     {errors.name && (
@@ -204,7 +204,7 @@ const LeadCaptureSectionNew = () => {
                     <input
                       type="email"
                       {...register('email', { required: true })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
                       placeholder="correo@ejemplo.com"
                     />
                     {errors.email && (
@@ -215,7 +215,7 @@ const LeadCaptureSectionNew = () => {
                     <label className="block font-semibold mb-2 text-slate-700">WhatsApp *</label>
                     <input
                       {...register('phone', { required: true })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
                       placeholder="+573001234567"
                     />
                     {errors.phone && (
@@ -229,7 +229,7 @@ const LeadCaptureSectionNew = () => {
                   <label className="block font-semibold mb-2 text-slate-700">Sitio Web</label>
                   <input
                     {...register('website')}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
                     placeholder="https://miemprendimiento.com (opcional)"
                   />
                 </div>
@@ -240,7 +240,7 @@ const LeadCaptureSectionNew = () => {
                     <label className="block font-semibold mb-2 text-slate-700">Categoría *</label>
                     <select
                       {...register('category', { required: true })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
                     >
                       <option value="">Selecciona categoría</option>
                       {mappedValues.map((cat) => (
@@ -258,12 +258,12 @@ const LeadCaptureSectionNew = () => {
                     <div className="grid grid-cols-2 gap-2">
                       <input
                         {...register('country', { required: true })}
-                        className="w-full px-3 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all text-sm"
+                        className="w-full px-3 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all text-sm"
                         placeholder="Colombia"
                       />
                       <input
                         {...register('city', { required: true })}
-                        className="w-full px-3 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all text-sm"
+                        className="w-full px-3 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all text-sm"
                         placeholder="Bogotá"
                       />
                     </div>
@@ -279,7 +279,7 @@ const LeadCaptureSectionNew = () => {
                   <textarea
                     {...register('description', { required: true })}
                     rows={3}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all resize-none"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all resize-none"
                     placeholder="Describe brevemente tu emprendimiento..."
                   />
                   {errors.description && (
@@ -294,7 +294,7 @@ const LeadCaptureSectionNew = () => {
                   </label>
                   <select
                     {...register('referralSource', { required: true })}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
                   >
                     <option value="">Selecciona una opción</option>
                     {mappedReferralSources.map((referral) => (
@@ -348,7 +348,7 @@ const LeadCaptureSectionNew = () => {
                 )}
 
                 {/* Trust Indicators */}
-                <div className="text-center pt-4 border-t border-slate-200">
+                <div className="text-center pt-4 border-t border-slate-200 text-black">
                   <p className="text-sm text-slate-500 mb-2">
                     ✅ 100% Seguro • ✅ Sin Spam • ✅ Datos Protegidos
                   </p>

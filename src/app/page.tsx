@@ -38,7 +38,9 @@ export default function Home() {
           <HowItWorksSection />
         </section>
 
-        <section aria-label="Economía colaborativa">{/* <SharingEconomyNetwork /> */}</section>
+        <section aria-label="Economía colaborativa">
+          <SharingEconomyNetwork />
+        </section>
 
         {/* Lead Capture Section */}
         <section aria-label="Únete a la comunidad EmprendyUp">

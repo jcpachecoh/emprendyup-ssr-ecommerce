@@ -199,15 +199,16 @@ const SharingEconomyNetwork = () => {
               />
 
               {/* Animated data pulse */}
-              {pulseIndex === index && (
-                <circle r="4" fill="#3b82f6" className="animate-ping">
-                  <animateMotion
-                    dur="2s"
-                    repeatCount="1"
-                    path={`M ${window.innerWidth / 2} ${200} L ${(company.position.x / 700) * window.innerWidth} ${(company.position.y / 600) * 400}`}
-                  />
-                </circle>
-              )}
+              {pulseIndex === index &&
+                typeof window !== 'undefined' &&
+                (() => {
+                  const path = `M ${window.innerWidth / 2} ${200} L ${(company.position.x / 700) * window.innerWidth} ${(company.position.y / 600) * 400}`;
+                  return (
+                    <circle r="4" fill="#3b82f6" className="animate-ping">
+                      <animateMotion dur="2s" repeatCount="1" path={path} />
+                    </circle>
+                  );
+                })()}
             </svg>
 
             {/* Company node */}

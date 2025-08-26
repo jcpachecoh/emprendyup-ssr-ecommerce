@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import Navbar from '../components/navbar';
+import Navbar from '../components/NavBar/navbar';
 import MobileApp from '../components/mobile-app';
 import Footer from '../components/footer';
 import Switcher from '../components/switcher';
@@ -14,7 +14,6 @@ import { jobData } from '../data/data';
 export default function Career() {
   return (
     <>
-      <Navbar navClass="defaultscroll is-sticky" navlight={false} />
       <section className="relative table w-full py-36 lg:py-44 bg-[url('/images/hero/pages.jpg')] bg-no-repeat bg-center bg-cover">
         <div className="absolute inset-0 bg-black opacity-80"></div>
         <div className="container relative">
@@ -156,7 +155,6 @@ export default function Career() {
 
         <MobileApp />
       </section>
-      <Footer />
       <Switcher />
       <ScrollToTop />
     </>

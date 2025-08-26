@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import Link from 'next/link';
 
 import Tagline from '../components/tagline';
-import Navbar from '../components/navbar';
+import Navbar from '../components/NavBar/navbar';
 import ProductDetailClient from '../components/ProductDetailClient';
 import Footer from '../components/footer';
 import Switcher from '../components/switcher';

@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 
-import Navbar from '../components/navbar';
+import Navbar from '../components/NavBar/navbar';
 import MobileApp from '../components/mobile-app';
 import Footer from '../components/footer';
 import Switcher from '../components/switcher';

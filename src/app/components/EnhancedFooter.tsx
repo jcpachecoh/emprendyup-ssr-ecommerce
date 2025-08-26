@@ -9,6 +9,8 @@ const EnhancedFooter = () => {
     '/images/payments/visa.jpg',
     '/images/payments/mastercard.jpg',
     '/images/payments/american-express.jpg',
+    '/images/payments/paypal.jpg',
+    '/images/payments/wompi.png',
   ];
 
   return (
@@ -145,7 +147,7 @@ const EnhancedFooter = () => {
               </div>
             </div>
             <p className="text-slate-400 text-sm">
-              © 2024 EmprendyUp. Todos los derechos reservados.
+              © 2025 EmprendyUp. Todos los derechos reservados.
             </p>
           </div>
         </div>

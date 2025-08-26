@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Navbar from '../components/navbar';
+import Navbar from '../components/NavBar/navbar';
 import Usertab from '../components/user-tab';
 import Footer from '../components/footer';
 import Switcher from '../components/switcher';

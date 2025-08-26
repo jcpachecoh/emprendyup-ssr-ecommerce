@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import Navbar from '../components/navbar';
+import Navbar from '../components/NavBar/navbar';
 import { termsData } from '../data/data';
 import Footer from '../components/footer';
 import Switcher from '../components/switcher';
@@ -9,7 +9,6 @@ import ScrollToTop from '../components/scroll-to-top';
 export default function Privacy() {
   return (
     <>
-      <Navbar navlight={false} />
       <section className="relative table w-full py-32 lg:py-40 bg-gray-50 dark:bg-slate-800">
         <div className="container relative">
           <div className="grid grid-cols-1 text-center mt-10">
@@ -92,7 +91,6 @@ export default function Privacy() {
         </div>
       </section>
 
-      <Footer />
       <Switcher />
       <ScrollToTop />
     </>

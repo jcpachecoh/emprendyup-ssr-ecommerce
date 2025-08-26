@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import Tagline from '../components/tagline';
-import Navbar from '../components/navbar';
+import Navbar from '../components/NavBar/navbar';
 import Client from '../components/client';
 import Footer from '../components/footer';
 import Switcher from '../components/switcher';

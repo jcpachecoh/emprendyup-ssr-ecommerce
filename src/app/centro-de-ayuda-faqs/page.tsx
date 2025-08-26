@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 
-import Navbar from '../components/navbar';
+import Navbar from '../components/NavBar/navbar';
 import GetInTouch from '../components/get-in-touch';
 import Footer from '../components/footer';
 import Switcher from '../components/switcher';

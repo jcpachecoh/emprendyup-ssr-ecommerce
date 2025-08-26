@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import TaglineLight from '../components/tagline-light';
-import Navbar from '../components/navbar';
+import Navbar from '../components/NavBar/navbar';
 
 import { categories, newProduct } from '../data/data';
 import { FiHeart, FiEye, FiBookmark } from '../assets/icons/vander';

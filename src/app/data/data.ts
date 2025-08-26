@@ -684,15 +684,7 @@ export const blogData = [
   },
 ];
 
-export const social = [
-  FiFacebook,
-  FiInstagram,
-  FiTwitter,
-  FiLinkedin,
-  FiGithub,
-  FiYoutube,
-  FiGitlab,
-];
+export const social = [FiFacebook, FiInstagram, FiLinkedin];
 
 export const jobData = [
   {

@@ -33,7 +33,7 @@ const SEOHomepage = () => {
             '@type': 'WebPage',
             '@id': 'https://www.emprendyup.com/#webpage',
             url: 'https://www.emprendyup.com/',
-            name: 'EmprendyUp - Herramientas Integrales para Emprendedores',
+            name: 'EmprendyUp - Herramientas ideales para emprendedores que buscan crecer.',
             description:
               'Plataforma todo-en-uno para emprendedores: tienda online, marketplace colaborativo, CRM, IA para contenido, chatbot WhatsApp y comunidad',
             inLanguage: 'es-ES',

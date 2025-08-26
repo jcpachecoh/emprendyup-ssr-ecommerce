@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 
-import Navbar from '../components/navbar';
+import Navbar from '../components/NavBar/navbar';
 import Footer from '../components/footer';
 import Switcher from '../components/switcher';
 import ScrollToTop from '../components/scroll-to-top';
@@ -11,7 +11,6 @@ import { brand } from '../data/data';
 export default function Brands() {
   return (
     <>
-      <Navbar navClass="defaultscroll is-sticky" navlight={false} />
       <section className="relative table w-full py-20 lg:py-24 bg-gray-50 dark:bg-slate-800">
         <div className="container relative">
           <div className="grid grid-cols-1 text-center mt-14">
@@ -61,7 +60,6 @@ export default function Brands() {
           </div>
         </div>
       </section>
-      <Footer />
       <Switcher />
       <ScrollToTop />
     </>

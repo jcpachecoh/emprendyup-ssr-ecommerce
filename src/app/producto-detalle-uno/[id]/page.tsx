@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 
 import Tagline from '../../components/tagline';
-import Navbar from '../../components/navbar';
+import Navbar from '../../components/NavBar/navbar';
 import ProductDetail from '../../components/product-detail';
 import ProductAboutTab from '../../components/product-about-tab';
 import ArrivalItem from '../../components/arrival-item';

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import Footer from './footer';
-import Navbar from './navbar';
+import Navbar from './NavBar/navbar';
 import ScrollToTop from './scroll-to-top';
 import Switcher from './switcher';
 

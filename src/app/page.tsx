@@ -1,15 +1,15 @@
 import React from 'react';
-import Navbar from './components/navbar';
+import Navbar from './components/NavBar/navbar';
 import Tagline from './components/tagline';
 import Switcher from './components/switcher';
 import ScrollToTop from './components/scroll-to-top';
 import NewHeroSection from './components/NewHeroSection';
 import FeaturesSection from './components/FeaturesSection';
 import HowItWorksSection from './components/HowItWorksSection';
-import LeadCaptureSection from './components/LeadCaptureSection';
+import LeadCaptureSectionNew from './components/LeadCaptureSectionNew';
 import TestimonialsSection from './components/TestimonialsSection';
-import EnhancedFooter from './components/EnhancedFooter';
 import SEOHomepage from './components/SEOHomepage';
+import SharingEconomyNetwork from './components/SharingEconomy';
 
 export default function Home() {
   return (
@@ -38,9 +38,11 @@ export default function Home() {
           <HowItWorksSection />
         </section>
 
+        <section aria-label="Economía colaborativa">{/* <SharingEconomyNetwork /> */}</section>
+
         {/* Lead Capture Section */}
         <section aria-label="Únete a la comunidad EmprendyUp">
-          <LeadCaptureSection />
+          <LeadCaptureSectionNew />
         </section>
 
         {/* Testimonials Section */}

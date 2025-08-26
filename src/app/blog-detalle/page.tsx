@@ -2,8 +2,6 @@ import React, { Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import Navbar from '../components/navbar';
-import Footer from '../components/footer';
 import Switcher from '../components/switcher';
 import ScrollToTop from '../components/scroll-to-top';
 
@@ -13,7 +11,6 @@ import { FiCalendar, FiClock } from '../assets/icons/vander';
 export default function BlogDetail() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <Navbar navClass="defaultscroll is-sticky" navlight={false} />
       <section className="relative table w-full items-center py-36 bg-[url('/images/hero/pages.jpg')] bg-top bg-no-repeat bg-cover">
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/80 to-slate-900"></div>
         <div className="container relative">
@@ -263,7 +260,6 @@ export default function BlogDetail() {
           </div>
         </div>
       </section>
-      <Footer />
       <Switcher />
       <ScrollToTop />
     </Suspense>

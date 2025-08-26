@@ -2,11 +2,10 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import Navbar from '../components/navbar';
-import Footer from '../components/footer';
 import Switcher from '../components/switcher';
 
 import { blogData } from '../data/data';
+import { blogPosts } from '../data/blogData';
 
 import { FiCalendar, FiClock, FiChevronLeft, FiChevronRight } from '../assets/icons/vander';
 import ScrollToTop from '../components/scroll-to-top';
@@ -14,7 +13,6 @@ import ScrollToTop from '../components/scroll-to-top';
 export default function Blogs() {
   return (
     <>
-      <Navbar navClass="defaultscroll is-sticky" navlight={false} />
       <section className="relative table w-full items-center py-36 bg-[url('/images/hero/pages.jpg')] bg-top bg-no-repeat bg-cover">
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/80 to-slate-900"></div>
         <div className="container relative">
@@ -46,7 +44,7 @@ export default function Blogs() {
       <section className="relative md:py-24 py-16">
         <div className="container relative">
           <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
-            {blogData.map((item, index) => {
+            {blogPosts.map((item, index) => {
               return (
                 <div className="group relative overflow-hidden" key={index}>
                   <div className="relative overflow-hidden rounded-md shadow dark:shadow-gray-800">
@@ -74,7 +72,7 @@ export default function Blogs() {
                     </div>
 
                     <Link
-                      href={`/blog-detail/${item.id}`}
+                      href={item.slug}
                       className="title text-lg font-semibold hover:text-fourth-base duration-500 ease-in-out"
                     >
                       {item.title}
@@ -165,7 +163,6 @@ export default function Blogs() {
           </div>
         </div>
       </section>
-      <Footer />
       <Switcher />
       <ScrollToTop />
     </>

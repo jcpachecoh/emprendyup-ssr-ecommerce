@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import Navbar from '../components/navbar';
+import Navbar from '../components/NavBar/navbar';
 import Usertab from '../components/user-tab';
 import Switcher from '../components/switcher';
 import Footer from '../components/footer';

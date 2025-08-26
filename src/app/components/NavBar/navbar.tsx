@@ -12,7 +12,7 @@ import {
   FiHelpCircle,
   FiSettings,
   FiLogOut,
-} from '../assets/icons/vander';
+} from '../../assets/icons/vander';
 
 type NavbarProps = {
   navClass?: string;
@@ -32,41 +32,43 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
   const userRef = useRef<HTMLLIElement | null>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const isScrolling = window.scrollY > 50;
-      setScrolling(isScrolling);
-    };
-    const handleOutsideClick = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    const cartOutsideClick = (event: MouseEvent) => {
-      if (cartRef.current && !cartRef.current.contains(event.target as Node)) {
-        setCartmenu(false);
-      }
-    };
-    const userOutsideClick = (e: MouseEvent) => {
-      if (userRef.current && !userRef.current.contains(e.target as Node)) {
-        setUsermenu(false);
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('click', handleOutsideClick);
-    window.addEventListener('click', cartOutsideClick);
-    window.addEventListener('click', userOutsideClick);
+    if (typeof window !== 'undefined') {
+      const handleScroll = () => {
+        const isScrolling = window.scrollY > 50;
+        setScrolling(isScrolling);
+      };
+      const handleOutsideClick = (event: MouseEvent) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+          setIsOpen(false);
+        }
+      };
+      const cartOutsideClick = (event: MouseEvent) => {
+        if (cartRef.current && !cartRef.current.contains(event.target as Node)) {
+          setCartmenu(false);
+        }
+      };
+      const userOutsideClick = (e: MouseEvent) => {
+        if (userRef.current && !userRef.current.contains(e.target as Node)) {
+          setUsermenu(false);
+        }
+      };
+      window.addEventListener('scroll', handleScroll);
+      window.addEventListener('click', handleOutsideClick);
+      window.addEventListener('click', cartOutsideClick);
+      window.addEventListener('click', userOutsideClick);
 
-    let current = window.location.pathname;
-    setmenu(current);
-    setSubmenu(current);
-    window.scrollTo(0, 0);
+      let current = window.location.pathname;
+      setmenu(current);
+      setSubmenu(current);
+      window.scrollTo(0, 0);
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('click', handleOutsideClick);
-      window.removeEventListener('click', cartOutsideClick);
-      window.removeEventListener('click', userOutsideClick);
-    };
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('click', handleOutsideClick);
+        window.removeEventListener('click', cartOutsideClick);
+        window.removeEventListener('click', userOutsideClick);
+      };
+    }
   }, []);
 
   const toggleMenu = () => {

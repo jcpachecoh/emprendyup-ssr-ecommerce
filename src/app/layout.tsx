@@ -90,8 +90,7 @@ export const metadata = {
 
 import { ReactNode } from 'react';
 import ApolloWrapper from './components/ApolloWrapper';
-import Navbar from './components/navbar';
-import EnhancedFooter from './components/EnhancedFooter';
+import ConditionalLayout from './components/ConditionalLayout';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -234,11 +233,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body className={`${dm_sans.variable} dark:bg-slate-900`}>
         <ApolloWrapper>
-          <Navbar navClass="defaultscroll is-sticky tagline-height" navlight={false} />
-          {children}
-          <footer aria-label="Pie de página con información de contacto">
-            <EnhancedFooter />
-          </footer>
+          <ConditionalLayout>{children}</ConditionalLayout>
         </ApolloWrapper>
       </body>
     </html>

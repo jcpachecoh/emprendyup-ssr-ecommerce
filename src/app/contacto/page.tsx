@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 
-import Navbar from '../components/navbar';
+import Navbar from '../components/NavBar/navbar';
 import Footer from '../components/footer';
 import Switcher from '../components/switcher';
 import ScrollToTop from '../components/scroll-to-top';
@@ -13,21 +13,7 @@ import Link from 'next/link';
 export default function Contact() {
   return (
     <>
-      <Navbar navClass="defaultscroll is-sticky" navlight={false} />
-      <div className="container-fluid relative mt-20">
-        <div className="grid grid-cols-1">
-          <div className="w-full leading-[0] border-0">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d39206.002432144705!2d-95.4973981212445!3d29.709510002925988!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8640c16de81f3ca5%3A0xf43e0b60ae539ac9!2sGerald+D.+Hines+Waterwall+Park!5e0!3m2!1sen!2sin!4v1566305861440!5m2!1sen!2sin"
-              style={{ border: '0' }}
-              title="EmprendyUp"
-              className="w-full h-[500px]"
-              allowFullScreen
-            ></iframe>
-          </div>
-        </div>
-      </div>
-      <section className="relative lg:py-24 py-16">
+      <section className="relative table w-full py-36">
         <div className="container">
           <div className="grid md:grid-cols-12 grid-cols-1 items-center gap-6">
             <div className="lg:col-span-7 md:col-span-6">
@@ -37,64 +23,66 @@ export default function Contact() {
                 height={0}
                 sizes="100vw"
                 style={{ width: '100%', height: 'auto' }}
-                alt=""
+                alt="Contacto EmprendyUp"
               />
             </div>
 
             <div className="lg:col-span-5 md:col-span-6">
               <div className="lg:ms-5">
                 <div className="bg-white dark:bg-slate-900 rounded-md shadow dark:shadow-gray-700 p-6">
-                  <h3 className="mb-6 text-2xl leading-normal font-semibold">Get in touch !</h3>
+                  <h3 className="mb-6 text-2xl leading-normal font-semibold">
+                    ¡Ponte en contacto!
+                  </h3>
 
                   <form>
                     <div className="grid lg:grid-cols-12 grid-cols-1 gap-3">
                       <div className="lg:col-span-6">
                         <label htmlFor="name" className="font-semibold">
-                          Your Name:
+                          Tu Nombre:
                         </label>
                         <input
                           name="name"
                           id="name"
                           type="text"
                           className="mt-2 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-100 dark:border-gray-800 focus:ring-0"
-                          placeholder="Name :"
+                          placeholder="Nombre:"
                         />
                       </div>
 
                       <div className="lg:col-span-6">
                         <label htmlFor="email" className="font-semibold">
-                          Your Email:
+                          Tu Email:
                         </label>
                         <input
                           name="email"
                           id="email"
                           type="email"
                           className="mt-2 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-100 dark:border-gray-800 focus:ring-0"
-                          placeholder="Email :"
+                          placeholder="Email:"
                         />
                       </div>
 
                       <div className="lg:col-span-12">
                         <label htmlFor="subject" className="font-semibold">
-                          Your Question:
+                          Tu Pregunta:
                         </label>
                         <input
                           name="subject"
                           id="subject"
                           className="mt-2 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-100 dark:border-gray-800 focus:ring-0"
-                          placeholder="Subject :"
+                          placeholder="Asunto:"
                         />
                       </div>
 
                       <div className="lg:col-span-12">
                         <label htmlFor="comments" className="font-semibold">
-                          Your Comment:
+                          Tu Comentario:
                         </label>
                         <textarea
                           name="comments"
                           id="comments"
                           className="mt-2 w-full py-2 px-3 h-28 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-100 dark:border-gray-800 focus:ring-0"
-                          placeholder="Message :"
+                          placeholder="Mensaje:"
                         ></textarea>
                       </div>
                     </div>
@@ -104,7 +92,7 @@ export default function Contact() {
                       name="send"
                       className="py-2 px-5 inline-block tracking-wide align-middle duration-500 text-base text-center bg-fourth-base text-black rounded-md mt-2"
                     >
-                      Send Message
+                      Enviar Mensaje
                     </button>
                   </form>
                 </div>
@@ -123,14 +111,15 @@ export default function Contact() {
               </div>
 
               <div className="content mt-7">
-                <h5 className="title h5 text-lg font-semibold">Phone</h5>
+                <h5 className="title h5 text-lg font-semibold">Teléfono</h5>
                 <p className="text-slate-400 mt-3">
-                  The phrasal sequence of the is now so that many campaign and benefit
+                  ¿Necesitas ayuda inmediata? Llámanos y te atenderemos con gusto para resolver
+                  todas tus dudas sobre EmprendyUp
                 </p>
 
                 <div className="mt-5">
-                  <Link href="tel:+152534-468-854" className="text-fourth-base font-medium">
-                    +152 534-468-854
+                  <Link href="tel:+57-300-123-4567" className="text-fourth-base font-medium">
+                    +57 300 123 4567
                   </Link>
                 </div>
               </div>
@@ -146,12 +135,13 @@ export default function Contact() {
               <div className="content mt-7">
                 <h5 className="title h5 text-lg font-semibold">Email</h5>
                 <p className="text-slate-400 mt-3">
-                  The phrasal sequence of the is now so that many campaign and benefit
+                  Escríbenos y te responderemos en menos de 24 horas con toda la información que
+                  necesites para tu emprendimiento
                 </p>
 
                 <div className="mt-5">
-                  <Link href="mailto:contact@example.com" className="text-fourth-base font-medium">
-                    contact@example.com
+                  <Link href="mailto:hola@emprendyup.com" className="text-fourth-base font-medium">
+                    hola@emprendyup.com
                   </Link>
                 </div>
               </div>
@@ -165,9 +155,9 @@ export default function Contact() {
               </div>
 
               <div className="content mt-7">
-                <h5 className="title h5 text-lg font-semibold">Location</h5>
+                <h5 className="title h5 text-lg font-semibold">Ubicación</h5>
                 <p className="text-slate-400 mt-3">
-                  C/54 Northwest Freeway, Suite 558, <br /> Houston, USA 485
+                  Calle 72 #10-34, Oficina 501, <br /> Bogotá, Colombia
                 </p>
 
                 <ContactModal />
@@ -176,7 +166,7 @@ export default function Contact() {
           </div>
         </div>
       </section>
-      <Footer />
+
       <Switcher />
       <ScrollToTop />
     </>

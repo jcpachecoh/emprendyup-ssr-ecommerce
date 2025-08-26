@@ -1,3 +1,9 @@
+# [1.9.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.8.0...v1.9.0) (2025-08-26)
+
+### Features
+
+- refactor ([142f935](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/142f93572716e62c2b96cf20f98319eefe102e74))
+
 # [1.8.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.7.0...v1.8.0) (2025-08-26)
 
 ### Features

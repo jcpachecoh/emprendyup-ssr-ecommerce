@@ -18,6 +18,7 @@ import {
   FiPlay,
 } from '../assets/icons/vander';
 import ChatTienda from '../components/chatTienda';
+import InteractiveChatStore from '../components/InteractiveChatStore';
 
 const steps = [
   {
@@ -183,7 +184,9 @@ export default function CrearTienda() {
           </motion.div>
         </div>
       </section>
-      <ChatTienda />
+      {/* <ChatTienda /> */}
+
+      <InteractiveChatStore />
 
       {/* Steps Section */}
       <section id="pasos" className="relative md:py-24 py-16 bg-white dark:bg-slate-900">

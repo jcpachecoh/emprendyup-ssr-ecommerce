@@ -68,7 +68,7 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
           <div id="navigation" style={{ display: isToggle === true ? 'block' : 'none' }}>
             <ul className={`navigation-menu ${navlight === true ? 'nav-light' : ''}`}>
               <li className={`${menu === '/' ? 'active' : ''}`}>
-                <Link href="/" className="sub-menu-item">
+                <Link href="/" className="sub-menu-item" onClick={() => setToggle(false)}>
                   Inicio
                 </Link>
               </li>
@@ -89,17 +89,29 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
                 <span className="menu-arrow"></span>
                 <ul className={`submenu ${submenu === '/beneficios-item' ? 'open' : ''}`}>
                   <li className={`ms-0 ${menu === '/por-que-emprendy' ? 'active' : ''}`}>
-                    <Link href="/por-que-emprendy" className="sub-menu-item">
+                    <Link
+                      href="/por-que-emprendy"
+                      className="sub-menu-item"
+                      onClick={() => setToggle(false)}
+                    >
                       ¿Por qué EmprendyUp?
                     </Link>
                   </li>
                   <li className={`ms-0 ${menu === '/crear-tienda' ? 'active' : ''}`}>
-                    <Link href="/crear-tienda" className="sub-menu-item">
+                    <Link
+                      href="/crear-tienda"
+                      className="sub-menu-item"
+                      onClick={() => setToggle(false)}
+                    >
                       Crear mi Tienda
                     </Link>
                   </li>
                   <li className={`ms-0 ${menu === '/ventajas' ? 'active' : ''}`}>
-                    <Link href="/ventajas" className="sub-menu-item">
+                    <Link
+                      href="/ventajas"
+                      className="sub-menu-item"
+                      onClick={() => setToggle(false)}
+                    >
                       Ventajas Competitivas
                     </Link>
                   </li>
@@ -140,7 +152,7 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
               </li> */}
 
               <li className={`${menu === '/contact' ? 'active' : ''}`}>
-                <Link href="/contacto" className="sub-menu-item">
+                <Link href="/contacto" className="sub-menu-item" onClick={() => setToggle(false)}>
                   Contacto
                 </Link>
               </li>

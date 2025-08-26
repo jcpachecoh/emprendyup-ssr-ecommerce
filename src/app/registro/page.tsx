@@ -70,7 +70,7 @@ export default function RegistroPage() {
   };
 
   return (
-    <Layout>
+    <>
       <section className="relative table w-full items-center pt-36 pb-52 bg-primary-500 bg-[url('/images/hero/bg-shape.png')] bg-center bg-no-repeat bg-cover">
         <div className="container relative">
           <h1 className="text-4xl font-bold text-white text-center mb-4">
@@ -248,6 +248,6 @@ export default function RegistroPage() {
           </form>
         </div>
       </div>
-    </Layout>
+    </>
   );
 }

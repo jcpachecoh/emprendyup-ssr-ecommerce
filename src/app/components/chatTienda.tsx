@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 
 interface Message {
   from: 'bot' | 'user';
@@ -7,44 +8,55 @@ interface Message {
 }
 
 const questions = [
-  '¿Cuál es el nombre de tu emprendimiento?',
-  'Por favor sube tu logo o describe cómo es.',
-  '¿Cuáles son los colores principales de tu marca?',
-  '¿Qué categorías de productos tendrás?',
-  '¿Cuál es la visión de tu emprendimiento?',
+  { key: 'name', text: '¿Cuál es el nombre de tu emprendimiento?' },
+  { key: 'logo', text: 'Por favor sube tu logo o describe cómo es.' },
+  { key: 'colors', text: '¿Cuáles son los colores principales de tu marca?' },
+  { key: 'categories', text: '¿Qué categorías de productos tendrás?' },
+  { key: 'vision', text: '¿Cuál es la visión de tu emprendimiento?' },
 ];
 
 export default function ChatTienda() {
   const [messages, setMessages] = useState<Message[]>([
     { from: 'bot', text: '👋 Hola, te ayudaré a crear tu tienda. Vamos paso a paso.' },
-    { from: 'bot', text: questions[0] },
+    { from: 'bot', text: questions[0].text },
   ]);
   const [step, setStep] = useState(0);
   const [input, setInput] = useState('');
   const [storeData, setStoreData] = useState<any>({});
+  const [botTyping, setBotTyping] = useState(false);
+
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  // Autoscroll al final
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, botTyping]);
 
   const handleSend = () => {
     if (!input.trim()) return;
 
-    // Mostrar mensaje del usuario
-    setMessages([...messages, { from: 'user', text: input }]);
-
-    // Guardar respuesta en storeData
     const currentQuestion = questions[step];
-    setStoreData({
-      ...storeData,
-      [currentQuestion]: input,
-    });
+
+    // Mensaje del usuario
+    setMessages((prev) => [...prev, { from: 'user', text: input }]);
+
+    // Guardar respuesta con key
+    setStoreData((prev: any) => ({
+      ...prev,
+      [currentQuestion.key]: input,
+    }));
 
     setInput('');
 
-    // Siguiente paso
     const nextStep = step + 1;
     if (nextStep < questions.length) {
+      // Mostrar "escribiendo..."
+      setBotTyping(true);
       setTimeout(() => {
-        setMessages((prev) => [...prev, { from: 'bot', text: questions[nextStep] }]);
-      }, 500);
-      setStep(nextStep);
+        setMessages((prev) => [...prev, { from: 'bot', text: questions[nextStep].text }]);
+        setStep(nextStep);
+        setBotTyping(false);
+      }, 1000);
     } else {
       setMessages((prev) => [
         ...prev,
@@ -54,22 +66,35 @@ export default function ChatTienda() {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') handleSend();
+  };
+
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white dark:bg-slate-900 rounded-2xl shadow-lg">
       {/* Chat window */}
-      <div className="h-96 overflow-y-auto space-y-3 mb-4 p-4 border rounded-lg bg-slate-50 dark:bg-slate-800">
+      <div className="h-96 overflow-y-auto space-y-3 mb-4 p-4 border rounded-lg bg-slate-50 dark:bg-slate-800 flex flex-col">
         {messages.map((msg, idx) => (
-          <div
+          <motion.div
             key={idx}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
             className={`p-3 rounded-xl max-w-xs ${
               msg.from === 'bot'
                 ? 'bg-blue-100 text-slate-800 self-start'
-                : 'bg-green-500 text-white ml-auto'
+                : 'bg-green-500 text-white self-end'
             }`}
           >
             {msg.text}
-          </div>
+          </motion.div>
         ))}
+
+        {botTyping && (
+          <div className="self-start text-slate-400 italic text-sm">El bot está escribiendo...</div>
+        )}
+
+        <div ref={chatEndRef} />
       </div>
 
       {/* Input */}
@@ -78,8 +103,9 @@ export default function ChatTienda() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder="Escribe tu respuesta..."
-          className="flex-1 p-3 border rounded-lg"
+          className="flex-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button
           onClick={handleSend}

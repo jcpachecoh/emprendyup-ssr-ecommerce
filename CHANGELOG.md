@@ -1,3 +1,9 @@
+# [1.11.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.10.1...v1.11.0) (2025-08-28)
+
+### Features
+
+- login and register ([#5](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/issues/5)) ([11bb5b1](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/11bb5b108910832a9a24a120c585e4ca91c11fba))
+
 ## [1.10.1](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.10.0...v1.10.1) (2025-08-26)
 
 ### Bug Fixes

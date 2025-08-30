@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import { FiSearch, FiUser, FiSettings, FiLogOut } from '../../assets/icons/vander';
+import { FiSearch, FiUser } from '../../assets/icons/vander';
+import { FaUser } from 'react-icons/fa6';
 
 type NavbarSimpleProps = {
   navClass?: string;
@@ -34,7 +35,7 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
       window.addEventListener('scroll', handleScroll);
       window.addEventListener('click', handleOutsideClick);
 
-      let current = window.location.pathname;
+      const current = typeof window !== 'undefined' ? window.location.pathname : '';
       setmenu(current);
       setSubmenu(current);
 
@@ -50,9 +51,267 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
   };
 
   return (
-    <nav id="topnav" className={`${navClass} nav-sticky`}>
-      <div className="container relative flex items-center justify-between gap-4">
-        <Link className="logo flex items-center" href="/">
+    <nav id="topnav" className={`${navClass} nav-sticky relative z-50`}>
+      <div className="hidden md:block container font-roboto flex items-center justify-between gap-4">
+        <div className="flex flex-row gap-8 items-center">
+          <Link className="logo flex items-center" href="/">
+            <Image
+              src="/images/logo.svg"
+              width={48}
+              height={48}
+              className="h-12 w-12 min-w-[48px] min-h-[48px] object-contain"
+              alt="EmprendyUp Logo"
+              priority
+            />
+          </Link>
+        </div>
+
+        <div
+          id="navigation"
+          className={`${isToggle ? 'fixed inset-0 pt-16 z-40 bg-white overflow-auto md:hidden' : 'hidden md:block'}`}
+          role={isToggle ? 'dialog' : undefined}
+          aria-modal={isToggle ? true : undefined}
+          onClick={() => {
+            if (isToggle) setToggle(false);
+          }}
+        >
+          {/* inner container stops click propagation so clicks inside don't close the overlay */}
+          <div
+            className={`${isToggle ? 'max-w-md mx-auto' : ''}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close button (mobile) */}
+            {isToggle && (
+              <button
+                aria-label="Cerrar menú"
+                className="absolute top-4 right-4 z-50 p-2 rounded-md"
+                onClick={() => setToggle(false)}
+              >
+                <svg
+                  className="w-6 h-6"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6 6L18 18"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M6 18L18 6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            )}
+
+            {/* Mobile-only submenu quick links */}
+
+            <ul
+              className={`navigation-menu items-center ${navlight === true ? 'nav-light' : ''} ${isToggle ? 'flex flex-col gap-6 p-6' : 'md:flex'}`}
+            >
+              <li
+                className={`has-submenu parent-menu-item ${['/crear-tienda', '/ventajas', '/por-que-emprendy'].includes(menu) ? 'active' : ''}`}
+              >
+                <button
+                  type="button"
+                  aria-expanded={submenu === '/soluciones-item'}
+                  aria-controls="soluciones-item"
+                  className="parent-menu-button sub-menu-item flex items-center gap-2"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setSubmenu(submenu === '/soluciones-item' ? '' : '/soluciones-item');
+                  }}
+                >
+                  <span>Soluciones</span>
+                  <svg
+                    className={`w-3 h-3 transition-transform ${submenu === '/soluciones-item' ? 'rotate-180' : 'rotate-0'}`}
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+
+                {/* Full-width submenu panel (desktop) / inline submenu (mobile overlay) */}
+                {submenu === '/soluciones-item' &&
+                  (isToggle ? (
+                    /* Mobile: render inline inside the overlay so it's visible */
+                    <div
+                      id="beneficios-item"
+                      className="w-full bg-black text-white py-6"
+                      role="menu"
+                    >
+                      <div className="container mx-auto px-6 py-6">
+                        <div className="grid grid-cols-1 gap-6">
+                          <div className="pr-0">
+                            <h3 className="text-xl font-bold mb-2">
+                              Soluciones para escalar tu emprendimiento
+                            </h3>
+                            <p className="text-sm text-white/90 mb-4">
+                              Todo para vender en línea — recursos, plantillas y apoyo para
+                              emprendedores.
+                            </p>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <Link
+                              href="/emprendedores-online"
+                              onClick={() => setToggle(false)}
+                              className="block bg-white rounded-xl overflow-hidden shadow-md"
+                            >
+                              <div className="relative h-44 w-full">
+                                <Image
+                                  src="/images/ab1.jpg"
+                                  alt="Para quienes ya venden en línea"
+                                  fill
+                                  className="object-cover"
+                                />
+                              </div>
+                              <div className="p-3">
+                                <h4 className="font-semibold text-gray-900">
+                                  Para quienes ya venden en línea
+                                </h4>
+                                <p className="text-sm text-gray-600">
+                                  Optimiza tu tienda y canales de venta
+                                </p>
+                              </div>
+                            </Link>
+
+                            <Link
+                              href="/tienda-fisica"
+                              onClick={() => setToggle(false)}
+                              className="block bg-white rounded-xl overflow-hidden shadow-md"
+                            >
+                              <div className="relative h-44 w-full">
+                                <Image
+                                  src="/images/ab2.jpg"
+                                  alt="Para quienes tienen una tienda física"
+                                  fill
+                                  className="object-cover"
+                                />
+                              </div>
+                              <div className="p-3">
+                                <h4 className="font-semibold text-gray-900">
+                                  Para quienes tienen una tienda física
+                                </h4>
+                                <p className="text-sm text-gray-600">
+                                  Integración y recogida en tienda
+                                </p>
+                              </div>
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    /* Desktop: full-width absolute panel */
+                    <div
+                      id="soluciones-item"
+                      className={`submenu fullwidth-submenu open`}
+                      role="menu"
+                    >
+                      <div className="absolute left-1/2 transform -translate-x-[575px] w-screen max-w-none z-50">
+                        <div className="bg-black text-white">
+                          <div className="container mx-auto px-6 py-12 lg:py-16">
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                              {/* Left text column */}
+                              <div className="lg:col-span-1 pr-6 border-r border-white/10">
+                                <h3 className="text-2xl lg:text-3xl font-bold mb-3">
+                                  Soluciones para escalar tu emprendimiento
+                                </h3>
+                                <p className="text-sm lg:text-base text-white/90">
+                                  Todas las herramientas que necesitas para mejorar tu
+                                  emprendimiento y hacerlo crecer.
+                                </p>
+                              </div>
+
+                              {/* Right: two cards */}
+                              <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <Link
+                                  href="/por-que-emprendy"
+                                  onClick={() => setToggle(false)}
+                                  className="block bg-white rounded-xl overflow-hidden shadow-md"
+                                >
+                                  <div className="relative h-56 w-full">
+                                    <Image
+                                      src="/images/ab1.jpg"
+                                      alt="Para quienes ya venden en línea"
+                                      fill
+                                      className="object-cover"
+                                    />
+                                  </div>
+                                  <div className="p-4">
+                                    <h4 className="font-semibold text-gray-900">
+                                      Conoce todos los benificios de emprendyup
+                                    </h4>
+                                    <p className="text-sm text-gray-600">
+                                      Optimizamos todos tus procesos con tecnologia y AI
+                                    </p>
+                                  </div>
+                                </Link>
+
+                                <Link
+                                  href="/crear-tienda"
+                                  onClick={() => setToggle(false)}
+                                  className="block bg-white rounded-xl overflow-hidden shadow-md"
+                                >
+                                  <div className="relative h-56 w-full">
+                                    <Image
+                                      src="/images/ab2.jpg"
+                                      alt="Para quienes tienen una tienda física"
+                                      fill
+                                      className="object-cover"
+                                    />
+                                  </div>
+                                  <div className="p-4">
+                                    <h4 className="font-semibold text-gray-900">
+                                      Crear tu tienda en linea y rapido
+                                    </h4>
+                                    <p className="text-sm text-gray-600">
+                                      Utiliza nuestro agente AI para crear tu tienda en minutos
+                                    </p>
+                                  </div>
+                                </Link>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </li>
+
+              <li className={`${menu === '/blog' ? 'active' : ''}`}>
+                <Link href="/blog" className="sub-menu-item" onClick={() => setToggle(false)}>
+                  Blog
+                </Link>
+              </li>
+
+              <li className={`${menu === '/contact' ? 'active' : ''}`}>
+                <Link href="/contacto" className="sub-menu-item" onClick={() => setToggle(false)}>
+                  Contacto
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div className="md:hidden relative flex flex-row items-center w-full justify-between">
+        <Link className="logo flex items-center px-4" href="/">
           <Image
             src="/images/logo.svg"
             width={48}
@@ -62,162 +321,15 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
             priority
           />
         </Link>
-
-        {/* Menú de navegación principal */}
-        <div className="flex items-center gap-4">
-          <div id="navigation" style={{ display: isToggle === true ? 'block' : 'none' }}>
-            <ul className={`navigation-menu ${navlight === true ? 'nav-light' : ''}`}>
-              <li className={`${menu === '/' ? 'active' : ''}`}>
-                <Link href="/" className="sub-menu-item" onClick={() => setToggle(false)}>
-                  Inicio
-                </Link>
-              </li>
-
-              <li
-                className={`has-submenu parent-menu-item ${['/por-que-emprendy', '/crear-tienda', '/ventajas'].includes(menu) ? 'active' : ''}`}
-              >
-                <Link
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setSubmenu(submenu === '/beneficios-item' ? '' : '/beneficios-item');
-                  }}
-                >
-                  Beneficios
-                </Link>
-                <span className="menu-arrow"></span>
-                <ul className={`submenu ${submenu === '/beneficios-item' ? 'open' : ''}`}>
-                  <li className={`ms-0 ${menu === '/por-que-emprendy' ? 'active' : ''}`}>
-                    <Link
-                      href="/por-que-emprendy"
-                      className="sub-menu-item"
-                      onClick={() => setToggle(false)}
-                    >
-                      ¿Por qué EmprendyUp?
-                    </Link>
-                  </li>
-                  <li className={`ms-0 ${menu === '/crear-tienda' ? 'active' : ''}`}>
-                    <Link
-                      href="/crear-tienda"
-                      className="sub-menu-item"
-                      onClick={() => setToggle(false)}
-                    >
-                      Crear mi Tienda
-                    </Link>
-                  </li>
-                  <li className={`ms-0 ${menu === '/ventajas' ? 'active' : ''}`}>
-                    <Link
-                      href="/ventajas"
-                      className="sub-menu-item"
-                      onClick={() => setToggle(false)}
-                    >
-                      Ventajas Competitivas
-                    </Link>
-                  </li>
-                </ul>
-              </li>
-
-              {/* <li
-                className={`has-submenu parent-menu-item ${['/blog', '/blog-detalle', '/recursos'].includes(menu) ? 'active' : ''}`}
-              >
-                <Link
-                  href="#"
-                  onClick={e => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setSubmenu(submenu === '/blog-item' ? '' : '/blog-item');
-                  }}
-                >
-                  Recursos
-                </Link>
-                <span className="menu-arrow"></span>
-                <ul className={`submenu ${submenu === '/blog-item' ? 'open' : ''}`}>
-                  <li className={`ms-0 ${menu === '/blog' ? 'active' : ''}`}>
-                    <Link href="/blog" className="sub-menu-item">
-                      Blog de Emprendimiento
-                    </Link>
-                  </li>
-                  <li className={`ms-0 ${menu === '/recursos' ? 'active' : ''}`}>
-                    <Link href="/recursos" className="sub-menu-item">
-                      Guías y Recursos
-                    </Link>
-                  </li>
-                  <li className={`ms-0 ${menu === '/casos-exito' ? 'active' : ''}`}>
-                    <Link href="/casos-exito" className="sub-menu-item">
-                      Casos de Éxito
-                    </Link>
-                  </li>
-                </ul>
-              </li> */}
-
-              <li className={`${menu === '/contact' ? 'active' : ''}`}>
-                <Link href="/contacto" className="sub-menu-item" onClick={() => setToggle(false)}>
-                  Contacto
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Botones de acción */}
-          <ul className="buy-button list-none mb-0">
-            {/* Buscador */}
-            <li className="dropdown inline-block relative pe-1">
-              <button
-                data-dropdown-toggle="dropdown"
-                className="dropdown-toggle align-middle inline-flex search-dropdown"
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsOpen(!isOpen);
-                }}
-              >
-                {navlight === true ? (
-                  <FiSearch className="size-5 text-white"></FiSearch>
-                ) : (
-                  <FiSearch className="size-5"></FiSearch>
-                )}
-              </button>
-              {isOpen && (
-                <div className="dropdown-menu absolute overflow-hidden end-0 m-0 mt-5 z-10 md:w-52 w-48 rounded-md bg-white dark:bg-slate-900 shadow dark:shadow-gray-800">
-                  <div className="relative">
-                    <FiSearch className="absolute size-4 top-[9px] end-3"></FiSearch>
-                    <input
-                      type="text"
-                      className="h-9 px-3 pe-10 w-full border-gray-100 dark:border-gray-800 focus:ring-0 outline-none bg-white dark:bg-slate-900"
-                      name="s"
-                      id="searchItem"
-                      placeholder="Buscar recursos..."
-                    />
-                  </div>
-                </div>
-              )}
-            </li>
-
-            {/* Botón CTA principal */}
-            <li className="inline-block ps-0.5">
-              <Link
-                href="/crear-tienda"
-                className="py-2 px-4 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-sm font-medium text-center rounded-md bg-fourth-base hover:bg-fourth-base/90 text-white"
-              >
-                Crear Mi Tienda
-              </Link>
-            </li>
-
-            {/* Login/Usuario */}
-            <li className="inline-block ps-2">
-              <Link
-                href="/login"
-                className="size-9 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-base text-center rounded-full border border-gray-300 dark:border-gray-700 hover:border-fourth-base text-slate-700 dark:text-white hover:text-fourth-base"
-                title="Iniciar Sesión"
-              >
-                <FiUser className="h-4 w-4"></FiUser>
-              </Link>
-            </li>
-          </ul>
-
+        <div className="flex flex-row gap-4 items-center px-4">
+          <Link
+            href="/crear-tienda"
+            className="py-2 px-4 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-sm font-medium text-center rounded-md bg-fourth-base hover:bg-fourth-base/90 text-white"
+          >
+            Crear Mi Tienda
+          </Link>
           {/* Menú móvil toggle */}
-          <div className="menu-extras">
+          <div className="menu-extras flex flex-row gap-8">
             <div className="menu-item">
               <Link
                 href="#"
@@ -237,6 +349,49 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
             </div>
           </div>
         </div>
+        {isToggle && (
+          <div className="md:hidden absolute top-full left-0 right-0 px-6 py-4 border-b bg-black border-gray-100 dark:border-gray-800">
+            <ul className="flex flex-col gap-3">
+              <li>
+                <Link
+                  href="/por-que-emprendy"
+                  onClick={() => setToggle(false)}
+                  className="block text-lg font-medium text-gray-800 dark:text-white py-2"
+                >
+                  Soluciones
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/blog"
+                  onClick={() => setToggle(false)}
+                  className="block text-lg font-medium text-gray-800 dark:text-white py-2"
+                >
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contacto"
+                  onClick={() => setToggle(false)}
+                  className="block text-lg font-medium text-gray-800 dark:text-white py-2"
+                >
+                  Contacto
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/login"
+                  target="_blank"
+                  onClick={() => setToggle(false)}
+                  className="block flex items-center gap-4 text-lg font-medium text-gray-800 dark:text-white py-2"
+                >
+                  <FaUser /> Login
+                </Link>
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
     </nav>
   );

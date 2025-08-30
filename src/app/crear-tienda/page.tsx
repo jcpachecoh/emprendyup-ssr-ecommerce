@@ -183,7 +183,6 @@ export default function CrearTienda() {
           </motion.div>
         </div>
       </section>
-      <ChatTienda />
 
       {/* Steps Section */}
       <section id="pasos" className="relative md:py-24 py-16 bg-white dark:bg-slate-900">
@@ -285,7 +284,7 @@ export default function CrearTienda() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
-                  href="/registro"
+                  href="/registrarse"
                   className="py-4 px-8 inline-flex items-center justify-center font-semibold tracking-wide align-middle duration-500 text-lg text-center rounded-full bg-gradient-to-r from-fourth-base to-green-600 hover:from-fourth-base/90 hover:to-green-600/90 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
                 >
                   Empezar a Crear Mi Tienda

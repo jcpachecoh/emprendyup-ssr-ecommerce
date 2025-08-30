@@ -52,19 +52,17 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
 
   return (
     <nav id="topnav" className={`${navClass} nav-sticky relative z-50`}>
-      <div className="hidden md:block container font-roboto flex items-center justify-between gap-4">
-        <div className="flex flex-row gap-8 items-center">
-          <Link className="logo flex items-center" href="/">
-            <Image
-              src="/images/logo.svg"
-              width={48}
-              height={48}
-              className="h-12 w-12 min-w-[48px] min-h-[48px] object-contain"
-              alt="EmprendyUp Logo"
-              priority
-            />
-          </Link>
-        </div>
+      <div className="hidden md:flex container font-roboto items-center justify-between gap-4">
+        <Link className="logo flex items-center" href="/">
+          <Image
+            src="/images/logo.svg"
+            width={48}
+            height={48}
+            className="h-12 w-12 min-w-[48px] min-h-[48px] object-contain"
+            alt="EmprendyUp Logo"
+            priority
+          />
+        </Link>
 
         <div
           id="navigation"
@@ -117,7 +115,7 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
               className={`navigation-menu items-center ${navlight === true ? 'nav-light' : ''} ${isToggle ? 'flex flex-col gap-6 p-6' : 'md:flex'}`}
             >
               <li
-                className={`has-submenu parent-menu-item ${['/crear-tienda', '/ventajas', '/por-que-emprendy'].includes(menu) ? 'active' : ''}`}
+                className={`has-submenu parent-menu-item  ${submenu === '/soluciones-item' ? 'active' : ''}`}
               >
                 <button
                   type="button"
@@ -307,6 +305,22 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
               </li>
             </ul>
           </div>
+        </div>
+        <div className="flex gap-2">
+          <Link
+            href="/login"
+            target="_blank"
+            className="py-2 px-4 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-sm font-medium text-center rounded-full bg-gray-800 hover:bg-gray-700 text-white"
+          >
+            <FaUser />
+          </Link>
+
+          <Link
+            href="/crear-tienda"
+            className="py-2 px-4 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-sm font-medium text-center rounded-md bg-fourth-base hover:bg-fourth-base/90 text-white"
+          >
+            Crear Mi Tienda
+          </Link>
         </div>
       </div>
 

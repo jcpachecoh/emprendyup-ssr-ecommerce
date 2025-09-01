@@ -20,7 +20,7 @@ export default function Home() {
       {/* Hero Section */}
       <main>
         <section
-          className="flex items-center justify-between w-full md:h-screen pt-32 overflow-hidden bg-white dark:bg-slate-100 bg-[url('/images/hero/teenager.webp')] bg-cover bg-center bg-no-repeat relative"
+          className="flex text-sm items-center justify-between w-full md:h-screen pt-16 overflow-hidden  bg-cover bg-center bg-no-repeat relative bg-black"
           aria-label="Sección principal de EmprendyUp"
         >
           {/* Overlay background */}
@@ -43,7 +43,7 @@ export default function Home() {
         </section>
 
         {/* Lead Capture Section */}
-        <section aria-label="Únete a la comunidad EmprendyUp">
+        <section aria-label="Únete a la comunidad EmprendyUp" id={'lead-capture'}>
           <LeadCaptureSectionNew />
         </section>
 

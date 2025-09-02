@@ -29,7 +29,7 @@ export default function ChatWidget(): React.ReactElement {
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const typingAbortRef = useRef<number>(0);
   const [isMobile, setIsMobile] = useState<boolean>(false);
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
 
   // helper: append a user message and send to backend
   async function handleSend(messageText: string) {

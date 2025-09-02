@@ -514,7 +514,7 @@ export default function ChatWidget(): React.ReactElement {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Escribe tu mensaje aquí..."
-                className="w-full min-h-[48px] max-h-32 p-3 pr-12 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-2xl resize-none text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-300 transition-all duration-200 placeholder-slate-400"
+                className="w-full min-h-[48px] max-h-32 p-3 pr-12 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-2xl resize-none text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-300 transition-all duration-200 placeholder-slate-400 !text-black"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();

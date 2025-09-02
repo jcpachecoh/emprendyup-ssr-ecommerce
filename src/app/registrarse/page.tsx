@@ -157,20 +157,6 @@ export default function Signup() {
                     />
                   </div>
 
-                  <div className="mb-4">
-                    <label className="font-semibold" htmlFor="RegisterStore">
-                      ID de Tienda:
-                    </label>
-                    <input
-                      id="RegisterStore"
-                      type="text"
-                      value={storeId}
-                      onChange={(e) => setStoreId(e.target.value)}
-                      className="mt-3 w-full py-2 px-3 h-10 bg-transparent border rounded"
-                      placeholder="ej: default-store"
-                    />
-                  </div>
-
                   <div className="mb-4 flex items-center">
                     <input
                       type="checkbox"

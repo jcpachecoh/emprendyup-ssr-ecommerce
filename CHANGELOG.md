@@ -1,3 +1,11 @@
+## [1.13.1](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.13.0...v1.13.1) (2025-09-02)
+
+### Bug Fixes
+
+- collapse default ([5d19fff](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/5d19ffff6be7e5b60602d9fdb0981165446b74db))
+- mobile ([27ae53d](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/27ae53df8b251eb630c83e1f8eb4a95e601e300c))
+- mobile ([8465357](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/8465357d85bd56d82a6a21e9442886d8b79d07e7))
+
 # [1.13.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.12.1...v1.13.0) (2025-09-01)
 
 ### Features

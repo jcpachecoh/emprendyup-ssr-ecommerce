@@ -191,8 +191,8 @@ export default function ChatWidget(): React.ReactElement {
     const setSizes = () => {
       const mobile = typeof window !== 'undefined' && window.innerWidth < 768;
       setIsMobile(mobile);
-      // expanded by default on mobile
-      setIsCollapsed(false);
+      // collapse by default on mobile
+      setIsCollapsed(mobile);
     };
     setSizes();
     window.addEventListener('resize', setSizes);

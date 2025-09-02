@@ -94,7 +94,7 @@ const NewHeroSection = () => {
           </div>
         </div>
 
-        <motion.div>
+        <motion.div className="w-full md:w-[700px]">
           <ChatWidget />
         </motion.div>
       </div>

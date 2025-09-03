@@ -1,3 +1,9 @@
+## [1.13.2](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.13.1...v1.13.2) (2025-09-02)
+
+### Bug Fixes
+
+- SEO landing ([4b1f303](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/4b1f303bc548b59038d314a84cb74832d2fbe31e))
+
 ## [1.13.1](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.13.0...v1.13.1) (2025-09-02)
 
 ### Bug Fixes

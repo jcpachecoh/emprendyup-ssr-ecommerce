@@ -8,7 +8,8 @@ const dm_sans = DM_Sans({
 });
 
 export const metadata = {
-  title: 'EmprendyUp - Plataforma Integral para Emprendedores | Tienda Online + Marketplace + IA',
+  title:
+    'Herramientas digitales para emprendedores que quieren escalar su negocio con IA, tecnología y una comunidad que impulsa su crecimiento - EmprendyUp',
   description:
     'Crea tu tienda online profesional con EmprendyUp. Marketplace colaborativo, CRM integrado, IA para contenido, chatbot WhatsApp, métricas de ventas y comunidad de emprendedores. ¡Haz crecer tu negocio hoy!',
   keywords: [
@@ -46,7 +47,8 @@ export const metadata = {
     locale: 'es_ES',
     url: 'https://www.emprendyup.com/',
     siteName: 'EmprendyUp',
-    title: 'EmprendyUp - Herramientas Integrales para Hacer Crecer tu Emprendimiento',
+    title:
+      'Herramientas digitales para emprendedores que quieren escalar su negocio con IA, tecnología y una comunidad que impulsa su crecimiento - EmprendyUp',
     description:
       'Plataforma todo-en-uno para emprendedores: tienda online, marketplace colaborativo, CRM, IA para contenido, chatbot WhatsApp y comunidad con capacitaciones.',
     images: [
@@ -54,7 +56,7 @@ export const metadata = {
         url: '/images/emprendyup-og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'EmprendyUp - Plataforma para Emprendedores',
+        alt: 'Herramientas digitales para emprendedores que quieren escalar su negocio con IA, tecnología y una comunidad que impulsa su crecimiento - EmprendyUp',
       },
     ],
   },
@@ -62,7 +64,8 @@ export const metadata = {
     card: 'summary_large_image',
     site: '@emprendyup',
     creator: '@emprendyup',
-    title: 'EmprendyUp - Herramientas para Hacer Crecer tu Emprendimiento',
+    title:
+      'Herramientas digitales para emprendedores que quieren escalar su negocio con IA, tecnología y una comunidad que impulsa su crecimiento - EmprendyUp',
     description:
       'Tienda online + Marketplace + IA + CRM + Comunidad de emprendedores. Todo lo que necesitas para hacer crecer tu negocio.',
     images: ['/images/emprendyup-twitter-card.jpg'],
@@ -102,6 +105,97 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
 
+        {/* Essential SEO meta tags */}
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
+        <meta name="keywords" content={metadata.keywords} />
+        <meta
+          name="author"
+          content={(metadata.authors && metadata.authors[0]?.name) || metadata.publisher}
+        />
+        <meta name="theme-color" content={metadata.other?.['theme-color'] || '#ffffff'} />
+
+        {/* Open Graph / Twitter */}
+        <meta property="og:type" content={metadata.openGraph?.type || 'website'} />
+        <meta property="og:locale" content={metadata.openGraph?.locale || 'es_ES'} />
+        <meta property="og:site_name" content={metadata.openGraph?.siteName || 'EmprendyUp'} />
+        <meta property="og:title" content={metadata.openGraph?.title || metadata.title} />
+        <meta
+          property="og:description"
+          content={metadata.openGraph?.description || metadata.description}
+        />
+        <meta
+          property="og:url"
+          content={
+            metadata.openGraph?.url ||
+            metadata.alternates?.canonical ||
+            'https://www.emprendyup.com/'
+          }
+        />
+        {metadata.openGraph?.images?.[0] && (
+          <meta property="og:image" content={metadata.openGraph.images[0].url} />
+        )}
+        {metadata.openGraph?.images?.[0] && metadata.openGraph.images[0].alt && (
+          <meta property="og:image:alt" content={metadata.openGraph.images[0].alt} />
+        )}
+
+        <meta name="twitter:card" content={metadata.twitter?.card || 'summary_large_image'} />
+        <meta name="twitter:site" content={metadata.twitter?.site || '@emprendyup'} />
+        <meta name="twitter:creator" content={metadata.twitter?.creator || '@emprendyup'} />
+        <meta name="twitter:title" content={metadata.twitter?.title || metadata.title} />
+        <meta
+          name="twitter:description"
+          content={metadata.twitter?.description || metadata.description}
+        />
+        {metadata.twitter?.images?.[0] && (
+          <meta name="twitter:image" content={metadata.twitter.images[0]} />
+        )}
+
+        {/* Hreflang / alternates for SEO */}
+        {metadata.alternates?.canonical && (
+          <link rel="canonical" href={metadata.alternates.canonical} />
+        )}
+        {metadata.alternates?.languages &&
+          Object.entries(metadata.alternates.languages).map(([lang, url]) => (
+            <link key={lang} rel="alternate" hrefLang={lang} href={url} />
+          ))}
+
+        {/* WebSite structured data (JSON-LD) and Breadcrumb */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'EmprendyUp',
+              url: metadata.openGraph?.url || 'https://www.emprendyup.com/',
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: `${metadata.openGraph?.url || 'https://www.emprendyup.com/'}?q={search_term_string}`,
+                'query-input': 'required name=search_term_string',
+              },
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'BreadcrumbList',
+              itemListElement: [
+                {
+                  '@type': 'ListItem',
+                  position: 1,
+                  name: 'Inicio',
+                  item: metadata.alternates?.canonical || 'https://www.emprendyup.com/',
+                },
+              ],
+            }),
+          }}
+        />
+
         {/* Structured Data JSON-LD */}
         <script
           type="application/ld+json"
@@ -111,7 +205,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               '@type': 'Organization',
               name: 'EmprendyUp',
               description:
-                'Plataforma integral para emprendedores con tienda online, marketplace colaborativo, CRM, IA y comunidad',
+                'Herramientas digitales para emprendedores que quieren escalar su negocio con IA, tecnología y una comunidad que impulsa su crecimiento',
               url: 'https://www.emprendyup.com',
               logo: 'https://www.emprendyup.com/images/logo-light.png',
               sameAs: [

@@ -1,4 +1,5 @@
 import React, { Suspense } from 'react';
+import { BlogPost } from '@/app/utils/types/BlogPost';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
@@ -8,8 +9,17 @@ import { FiCalendar, FiClock } from 'react-icons/fi';
 import Switcher from '@/app/components/switcher';
 import ScrollToTop from '@/app/components/scroll-to-top';
 
-export default function BlogDetail({ params }: { params: { slug: string } }) {
-  const post = blogPosts.find((item: any) => item.slug === `/blog-detalle/${params.slug}`);
+interface BlogDetailProps {
+  params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function BlogDetailPage({ params }: BlogDetailProps) {
+  // Await the params to get the actual values
+  const { slug } = await params;
+  const post: BlogPost | undefined = blogPosts.find(
+    (item) => item.slug === `/blog-detalle/${slug}`
+  );
 
   if (!post) {
     return notFound();
@@ -171,7 +181,7 @@ export default function BlogDetail({ params }: { params: { slug: string } }) {
               <div className="bg-gray-50 dark:bg-slate-800 rounded-xl p-6">
                 <h5 className="text-lg font-semibold mb-6 text-center">Blogs Relacionados</h5>
                 <div className="space-y-6">
-                  {blogPosts.slice(0, 3).map((item, index) => (
+                  {blogPosts.slice(0, 3).map((item: BlogPost, index: number) => (
                     <div
                       className="group relative bg-white dark:bg-slate-900 rounded-lg overflow-hidden transition-transform hover:-translate-y-1"
                       key={index}

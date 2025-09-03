@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import BackToHome from '../components/back-to-home';
 import Switcher from '../components/switcher';
 
-export default function Signup() {
+function SignupForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [name, setName] = useState('');
@@ -241,5 +241,13 @@ export default function Signup() {
       <BackToHome />
       <Switcher />
     </section>
+  );
+}
+
+export default function Signup() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <SignupForm />
+    </Suspense>
   );
 }

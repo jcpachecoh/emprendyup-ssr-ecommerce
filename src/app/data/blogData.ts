@@ -1,4 +1,6 @@
-export const blogPosts = [
+import { BlogPost } from '../utils/types/BlogPost';
+
+export const blogPosts: BlogPost[] = [
   {
     id: 'product-market-fit-emprendedores-locales',
     title: 'Mercado de productos para emprendedores locales',

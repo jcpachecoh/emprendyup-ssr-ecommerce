@@ -1,27 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-
-// Helper to attempt NextAuth signIn dynamically
-async function tryNextAuthSignIn(provider: string) {
-  try {
-    // dynamic import to avoid bundling requirement
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const nextAuth = await import('next-auth/react');
-    if (nextAuth?.signIn) {
-      // @ts-ignore
-      return nextAuth.signIn(provider);
-    }
-  } catch (e) {
-    return null;
-  }
-}
+import { useRouter, useSearchParams } from 'next/navigation';
+import BackToHome from '../components/back-to-home';
+import Switcher from '../components/switcher';
 
 export default function Signup() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,6 +18,29 @@ export default function Signup() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Handle OAuth errors from URL params
+  useEffect(() => {
+    const oauthError = searchParams.get('error');
+    if (oauthError) {
+      const errorMessages = {
+        oauth_cancelled: 'Has cancelado el registro con Google.',
+        no_authorization_code: 'Error de autorización con Google.',
+        oauth_not_configured: 'Google OAuth no está configurado correctamente.',
+        token_exchange_failed: 'Error al intercambiar el token de Google.',
+        profile_fetch_failed: 'Error al obtener tu perfil de Google.',
+        backend_not_configured: 'Backend no configurado.',
+        backend_auth_failed: 'Error de autenticación en el servidor.',
+        unexpected_error: 'Error inesperado durante el registro con Google.',
+      };
+      setError(errorMessages[oauthError as keyof typeof errorMessages] || 'Error desconocido');
+
+      // Clear the error from URL
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete('error');
+      window.history.replaceState({}, '', newUrl.toString());
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,7 +54,7 @@ export default function Signup() {
     try {
       setLoading(true);
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
+      const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -55,15 +66,13 @@ export default function Signup() {
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.message?.[0] || 'Error en el registro');
+        throw new Error(errorData.error || 'Error en el registro');
       }
 
       const data = await res.json();
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-
-      router.push('/dashboard');
+      // Redirect to login or home after successful registration
+      router.push('/ingresar');
     } catch (err: any) {
       setError(err.message || 'Error en el registro');
     } finally {
@@ -72,20 +81,18 @@ export default function Signup() {
   };
 
   const handleGoogleSignup = async () => {
-    // Try NextAuth if available
-    const res = await tryNextAuthSignIn('google');
-    if (res !== null) return;
+    // Clear any existing errors
+    setError('');
 
-    // Fallback: redirect to Google's OAuth 2.0 endpoint
+    // Check if Google OAuth is configured
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-    const redirectUri =
-      process.env.NEXT_PUBLIC_OAUTH_REDIRECT_URI ||
-      `${window.location.origin}/api/auth/google/callback`;
     if (!clientId) {
-      setError('Google OAuth no está configurado. Falta NEXT_PUBLIC_GOOGLE_CLIENT_ID.');
+      setError('Google OAuth no está configurado. Contacta al administrador.');
       return;
     }
 
+    // Redirect directly to Google's OAuth 2.0 endpoint
+    const redirectUri = `${window.location.origin}/api/auth/google/callback`;
     const scope = encodeURIComponent('profile email');
     const state = encodeURIComponent(JSON.stringify({ from: 'signup' }));
     const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(
@@ -157,20 +164,22 @@ export default function Signup() {
                     />
                   </div>
 
-                  <div className="mb-4 flex items-center">
-                    <input
-                      type="checkbox"
-                      id="AcceptT&C"
-                      checked={acceptTerms}
-                      onChange={(e) => setAcceptTerms(e.target.checked)}
-                      className="form-checkbox me-2"
-                    />
-                    <label htmlFor="AcceptT&C" className="text-slate-400">
-                      Acepto los{' '}
-                      <Link href="/terminos" className="text-fourth-base">
-                        Términos y Condiciones
-                      </Link>
-                    </label>
+                  <div className="mb-4">
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id="AcceptT&C"
+                        checked={acceptTerms}
+                        onChange={(e) => setAcceptTerms(e.target.checked)}
+                        className="form-checkbox me-2"
+                      />
+                      <label htmlFor="AcceptT&C" className="text-slate-400">
+                        Acepto los{' '}
+                        <Link href="/terminos" className="text-fourth-base">
+                          Términos y Condiciones
+                        </Link>
+                      </label>
+                    </div>
                   </div>
 
                   {error && <p className="text-red-500 mb-3">{error}</p>}
@@ -219,7 +228,7 @@ export default function Signup() {
 
                   <div className="text-center mt-4">
                     <span className="text-slate-400">¿Ya tienes una cuenta?</span>{' '}
-                    <Link href="/login" className="text-white font-bold">
+                    <Link href="/ingresar" className="text-white font-bold">
                       Inicia sesión
                     </Link>
                   </div>
@@ -229,6 +238,8 @@ export default function Signup() {
           </div>
         </div>
       </div>
+      <BackToHome />
+      <Switcher />
     </section>
   );
 }

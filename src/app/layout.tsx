@@ -95,6 +95,8 @@ import { ReactNode } from 'react';
 import ApolloWrapper from './components/ApolloWrapper';
 import ConditionalLayout from './components/ConditionalLayout';
 import Script from 'next/script';
+import CookieConsentModal from './components/CookieConsentModal';
+import CookieWrapper from './components/CookieWrapper';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -345,6 +347,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <ApolloWrapper>
           <ConditionalLayout>{children}</ConditionalLayout>
         </ApolloWrapper>
+        <CookieWrapper />
       </body>
     </html>
   );

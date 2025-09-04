@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.14.0...v1.15.0) (2025-09-04)
+
+### Features
+
+- google analytics ([af72f58](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/af72f5822202a74b1e1ce461d98efa9059888d1f))
+- google analytics ([635c4f5](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/635c4f58e7d582b7f4a297af9df3965ecc8d074e))
+
 # [1.14.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.13.2...v1.14.0) (2025-09-03)
 
 ### Features

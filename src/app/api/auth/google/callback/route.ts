@@ -92,7 +92,19 @@ export async function GET(req: Request) {
 
     // Set auth cookie and redirect to success page
     const token = authData?.access_token || authData?.accessToken || authData?.token;
-    const response = NextResponse.redirect(new URL('/', req.url));
+
+    // Parse state to get redirect URL
+    let redirectTo = '/dashboard/insights'; // Default redirect
+    try {
+      if (state) {
+        const stateData = JSON.parse(decodeURIComponent(state));
+        redirectTo = stateData.redirectTo || redirectTo;
+      }
+    } catch (e) {
+      console.warn('Failed to parse state parameter:', e);
+    }
+
+    const response = NextResponse.redirect(new URL(redirectTo, req.url));
 
     if (token) {
       response.cookies.set('auth_token', token, {

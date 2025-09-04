@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function Login() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
@@ -103,7 +103,12 @@ export default function Login() {
     // Redirect directly to Google's OAuth 2.0 endpoint using the original callback
     const redirectUri = `${window.location.origin}/api/auth/google/callback`;
     const scope = encodeURIComponent('profile email');
-    const state = encodeURIComponent(JSON.stringify({ from: 'login' }));
+    const state = encodeURIComponent(
+      JSON.stringify({
+        from: 'login',
+        redirectTo: '/dashboard/insights', // Specify where to redirect after success
+      })
+    );
     const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(
       redirectUri
     )}&response_type=code&scope=${scope}&state=${state}&prompt=select_account`;
@@ -218,5 +223,13 @@ export default function Login() {
         </div>
       </div>
     </section>
+  );
+}
+
+export default function Login() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }

@@ -1,3 +1,9 @@
+# [1.16.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.15.0...v1.16.0) (2025-09-04)
+
+### Features
+
+- new dashboard ([9d950bb](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/9d950bb1e7d8d2c3fbb551e381f9eb17a6ec3f78))
+
 # [1.15.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.14.0...v1.15.0) (2025-09-04)
 
 ### Features

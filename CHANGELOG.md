@@ -1,3 +1,11 @@
+# [1.14.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.13.2...v1.14.0) (2025-09-03)
+
+### Features
+
+- blog ([931a775](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/931a775c42792f16ca58eba3d215afc50517da42))
+- blog detail ([#7](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/issues/7)) ([e01342b](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/e01342b404715c4c3022ef51d153301368912d18))
+- update OAuth flow and error handling in signup process ([#6](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/issues/6)) ([832254a](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/832254ad46421723ba7c1c343533c5ca7ba85efd))
+
 ## [1.13.2](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.13.1...v1.13.2) (2025-09-02)
 
 ### Bug Fixes

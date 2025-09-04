@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import BackToHome from '../components/back-to-home';
 import Switcher from '../components/switcher';
 
-export default function Signup() {
+function SignupForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [name, setName] = useState('');
@@ -43,6 +43,29 @@ export default function Signup() {
       const newUrl = new URL(window.location.href);
       newUrl.searchParams.delete('error');
       newUrl.searchParams.delete('message');
+      window.history.replaceState({}, '', newUrl.toString());
+    }
+  }, [searchParams]);
+
+  // Handle OAuth errors from URL params
+  useEffect(() => {
+    const oauthError = searchParams.get('error');
+    if (oauthError) {
+      const errorMessages = {
+        oauth_cancelled: 'Has cancelado el registro con Google.',
+        no_authorization_code: 'Error de autorización con Google.',
+        oauth_not_configured: 'Google OAuth no está configurado correctamente.',
+        token_exchange_failed: 'Error al intercambiar el token de Google.',
+        profile_fetch_failed: 'Error al obtener tu perfil de Google.',
+        backend_not_configured: 'Backend no configurado.',
+        backend_auth_failed: 'Error de autenticación en el servidor.',
+        unexpected_error: 'Error inesperado durante el registro con Google.',
+      };
+      setError(errorMessages[oauthError as keyof typeof errorMessages] || 'Error desconocido');
+
+      // Clear the error from URL
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete('error');
       window.history.replaceState({}, '', newUrl.toString());
     }
   }, [searchParams]);
@@ -254,7 +277,7 @@ export default function Signup() {
 
                   <div className="text-center mt-4">
                     <span className="text-slate-400">¿Ya tienes una cuenta?</span>{' '}
-                    <Link href="/login" className="text-white font-bold">
+                    <Link href="/ingresar" className="text-white font-bold">
                       Inicia sesión
                     </Link>
                   </div>
@@ -304,5 +327,13 @@ export default function Signup() {
         </div>
       )}
     </section>
+  );
+}
+
+export default function Signup() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <SignupForm />
+    </Suspense>
   );
 }

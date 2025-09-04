@@ -63,9 +63,26 @@ export default function Login() {
       }
 
       const data = await res.json();
+      console.log('🚀 ~ handleSubmit ~ data:', data);
 
-      // Redirect to home after successful login
-      router.push('/');
+      // Store access token and user data in localStorage
+      localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem(
+        'user',
+        JSON.stringify({
+          id: data.id,
+          email: data.email,
+          name: data.name,
+          membershipLevel: data.membershipLevel,
+          role: data.role,
+          createdAt: data.createdAt,
+          updatedAt: data.updatedAt,
+          storeId: data.storeId,
+        })
+      );
+
+      // Redirect to dashboard or home page
+      router.push('/dashboard/insights');
     } catch (err: any) {
       setError(err.message || 'Error en el login');
     } finally {
@@ -153,7 +170,7 @@ export default function Login() {
                   >
                     {loading ? 'Ingresando...' : 'Login / Sign in'}
                   </button>
-
+                  <div className="text-center my-4 text-slate-400">o</div>
                   <button
                     type="button"
                     onClick={handleGoogleSignIn}

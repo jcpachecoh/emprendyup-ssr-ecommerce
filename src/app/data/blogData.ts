@@ -1,4 +1,6 @@
-export const blogPosts = [
+import { BlogPost } from '../utils/types/BlogPost';
+
+export const blogPosts: BlogPost[] = [
   {
     id: 'product-market-fit-emprendedores-locales',
     title: 'Mercado de productos para emprendedores locales',
@@ -36,8 +38,8 @@ export const blogPosts = [
     title: 'Canales de venta híbridos: tienda física, WhatsApp y web',
     desc: 'Diseña un embudo de ventas que combine punto de venta, WhatsApp y sitio web para maximizar conversiones.',
     date: '25 Aug, 2025',
-    image:
-      'https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80',
+    image: '/images/blog/2.jpg',
+
     slug: '/blog-detalle/canales-venta-hibridos',
     tags: ['ventas', 'híbrido', 'whatsapp', 'ecommerce'],
     keywords: 'canales de venta, omnicanal, whatsapp business, ecommerce, retail',
@@ -47,14 +49,22 @@ export const blogPosts = [
 <h3>Arquitectura del embudo</h3>
 <ol>
 <li><strong>Atracción:</strong> redes sociales, Google Ads local, referidos.</li>
+</pr>
 <li><strong>Primer contacto:</strong> tienda física, landing page, WhatsApp.</li>
+
 <li><strong>Nutrición:</strong> lista de WhatsApp, retargeting, email.</li>
+
 <li><strong>Conversión:</strong> compra en tienda, web o WhatsApp.</li>
+
 <li><strong>Retención:</strong> programa de lealtad, contenido exclusivo.</li>
 </ol>
+
 <h3>Integración práctica</h3>
+
 <p><strong>QR en tienda → landing con descuento por WhatsApp</strong></p>
+
 <p><strong>Carrito abandonado web → mensaje automático WhatsApp</strong></p>
+
 <p><strong>Compra WhatsApp → invitación a recoger en tienda</strong></p>
 <blockquote>
 <p>Mide el customer journey completo, no cada canal por separado. El valor está en la sinergia.</p>

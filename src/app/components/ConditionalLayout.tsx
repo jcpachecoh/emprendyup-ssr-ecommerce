@@ -12,7 +12,20 @@ export default function ConditionalLayout({ children }: ConditionalLayoutProps) 
   const pathname = usePathname();
 
   // Rutas que no deben mostrar navbar ni footer
-  const authRoutes = ['/login', '/signup', '/olvido-contraseña', '/reset-password', '/registrarse'];
+  const authRoutes = [
+    '/login',
+    '/signup',
+    '/olvido-contraseña',
+    '/reset-password',
+    '/registrarse',
+    '/dashboard/insights',
+    '/dashboard/bonuses',
+    '/dashboard/customers',
+    '/dashboard/orders',
+    '/dashboard/store',
+    '/dashboard/settings',
+    '/dashboard/admin',
+  ];
   const isAuthRoute = authRoutes.includes(pathname);
 
   // Only treat auth routes as special on desktop viewports.

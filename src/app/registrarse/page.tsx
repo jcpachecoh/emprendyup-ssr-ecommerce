@@ -18,10 +18,13 @@ export default function Signup() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showToast, setShowToast] = useState(false);
 
   // Handle OAuth errors from URL params
   useEffect(() => {
     const oauthError = searchParams.get('error');
+    const message = searchParams.get('message');
+
     if (oauthError) {
       const errorMessages = {
         oauth_cancelled: 'Has cancelado el registro con Google.',
@@ -32,12 +35,14 @@ export default function Signup() {
         backend_not_configured: 'Backend no configurado.',
         backend_auth_failed: 'Error de autenticación en el servidor.',
         unexpected_error: 'Error inesperado durante el registro con Google.',
+        no_account_found: message || 'No tienes una cuenta. Por favor regístrate primero.',
       };
       setError(errorMessages[oauthError as keyof typeof errorMessages] || 'Error desconocido');
 
       // Clear the error from URL
       const newUrl = new URL(window.location.href);
       newUrl.searchParams.delete('error');
+      newUrl.searchParams.delete('message');
       window.history.replaceState({}, '', newUrl.toString());
     }
   }, [searchParams]);
@@ -45,9 +50,16 @@ export default function Signup() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setShowToast(false);
 
     if (!acceptTerms) {
       setError('Debes aceptar los Términos y Condiciones.');
+      return;
+    }
+
+    // Validate password length
+    if (password.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres.');
       return;
     }
 
@@ -61,6 +73,7 @@ export default function Signup() {
           name,
           email,
           password,
+          ...(storeId && storeId.trim() !== '' && { storeId }), // Only include storeId if it has a value
         }),
       });
 
@@ -71,15 +84,28 @@ export default function Signup() {
 
       const data = await res.json();
 
-      // Redirect to login or home after successful registration
-      router.push('/ingresar');
+      // Show toast message
+      setShowToast(true);
+
+      // Hide toast and redirect after delay (form stays filled until redirect)
+      setTimeout(() => {
+        setShowToast(false);
+
+        // Clear form just before redirecting
+        setName('');
+        setEmail('');
+        setPassword('');
+        setStoreId('');
+        setAcceptTerms(false);
+
+        router.push('/login');
+      }, 3000);
     } catch (err: any) {
       setError(err.message || 'Error en el registro');
     } finally {
       setLoading(false);
     }
   };
-
   const handleGoogleSignup = async () => {
     // Clear any existing errors
     setError('');
@@ -91,7 +117,7 @@ export default function Signup() {
       return;
     }
 
-    // Redirect directly to Google's OAuth 2.0 endpoint
+    // Redirect directly to Google's OAuth 2.0 endpoint using the original callback
     const redirectUri = `${window.location.origin}/api/auth/google/callback`;
     const scope = encodeURIComponent('profile email');
     const state = encodeURIComponent(JSON.stringify({ from: 'signup' }));
@@ -123,7 +149,7 @@ export default function Signup() {
                 <h2 className="text-white text-xl font-bold mb-6 text-center">Registro</h2>
                 <div className="grid grid-cols-1">
                   <div className="mb-4">
-                    <label className="font-semibold" htmlFor="RegisterName">
+                    <label className="font-semibold text-white" htmlFor="RegisterName">
                       Nombre:
                     </label>
                     <input
@@ -131,13 +157,13 @@ export default function Signup() {
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="mt-3 w-full py-2 px-3 h-10 bg-transparent border rounded"
+                      className="mt-3 w-full py-2 px-3 h-10 bg-transparent border rounded text-white placeholder-gray-400"
                       required
                     />
                   </div>
 
                   <div className="mb-4">
-                    <label className="font-semibold" htmlFor="RegisterEmail">
+                    <label className="font-semibold text-white" htmlFor="RegisterEmail">
                       Correo Electrónico:
                     </label>
                     <input
@@ -145,13 +171,13 @@ export default function Signup() {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="mt-3 w-full py-2 px-3 h-10 bg-transparent border rounded"
+                      className="mt-3 w-full py-2 px-3 h-10 bg-transparent border rounded text-white placeholder-gray-400"
                       required
                     />
                   </div>
 
                   <div className="mb-4">
-                    <label className="font-semibold" htmlFor="RegisterPassword">
+                    <label className="font-semibold text-white" htmlFor="RegisterPassword">
                       Contraseña:
                     </label>
                     <input
@@ -159,7 +185,7 @@ export default function Signup() {
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="mt-3 w-full py-2 px-3 h-10 bg-transparent border rounded"
+                      className="mt-3 w-full py-2 px-3 h-10 bg-transparent border rounded text-white placeholder-gray-400"
                       required
                     />
                   </div>
@@ -228,7 +254,7 @@ export default function Signup() {
 
                   <div className="text-center mt-4">
                     <span className="text-slate-400">¿Ya tienes una cuenta?</span>{' '}
-                    <Link href="/ingresar" className="text-white font-bold">
+                    <Link href="/login" className="text-white font-bold">
                       Inicia sesión
                     </Link>
                   </div>
@@ -240,6 +266,43 @@ export default function Signup() {
       </div>
       <BackToHome />
       <Switcher />
+
+      {/* Toast Success Message */}
+      {showToast && (
+        <div className="fixed top-4 right-4 z-50 transform transition-all duration-500 ease-in-out">
+          <div className="bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3 max-w-md">
+            <div className="flex-shrink-0">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <p className="font-medium">¡Registro exitoso!</p>
+              <p className="text-sm text-green-100">
+                Serás redirigido al login en unos momentos...
+              </p>
+            </div>
+            <button
+              onClick={() => setShowToast(false)}
+              className="flex-shrink-0 ml-2 text-green-200 hover:text-white transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

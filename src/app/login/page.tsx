@@ -1,17 +1,45 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function Login() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Handle OAuth errors from URL params
+  useEffect(() => {
+    const oauthError = searchParams.get('error');
+    const message = searchParams.get('message');
+
+    if (oauthError) {
+      const errorMessages = {
+        oauth_cancelled: 'Has cancelado el inicio de sesión con Google.',
+        no_authorization_code: 'Error de autorización con Google.',
+        oauth_not_configured: 'Google OAuth no está configurado correctamente.',
+        token_exchange_failed: 'Error al intercambiar el token de Google.',
+        profile_fetch_failed: 'Error al obtener tu perfil de Google.',
+        backend_not_configured: 'Backend no configurado.',
+        backend_auth_failed: 'Error de autenticación en el servidor.',
+        unexpected_error: 'Error inesperado durante el inicio de sesión con Google.',
+        user_exists: message || 'Ya tienes una cuenta. Por favor inicia sesión.',
+      };
+      setError(errorMessages[oauthError as keyof typeof errorMessages] || 'Error desconocido');
+
+      // Clear the error from URL
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete('error');
+      newUrl.searchParams.delete('message');
+      window.history.replaceState({}, '', newUrl.toString());
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +48,7 @@ export default function Login() {
     try {
       setLoading(true);
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+      const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -31,15 +59,13 @@ export default function Login() {
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.message?.[0] || 'Credenciales inválidas');
+        throw new Error(errorData.error || 'Credenciales inválidas');
       }
 
       const data = await res.json();
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-
-      router.push('/dashboard');
+      // Redirect to home after successful login
+      router.push('/');
     } catch (err: any) {
       setError(err.message || 'Error en el login');
     } finally {
@@ -49,30 +75,23 @@ export default function Login() {
 
   const handleGoogleSignIn = async () => {
     setError('');
-    try {
-      // Try NextAuth signIn if available
-      const mod = await import('next-auth/react').catch(() => null);
-      const signIn = mod?.signIn as unknown as ((provider?: string) => void) | undefined;
-      if (typeof signIn === 'function') {
-        signIn('google');
-        return;
-      }
-    } catch (err) {
-      // continue to fallback
-    }
 
-    // Fallback: redirect to Google OAuth endpoint (requires server callback)
+    // Check if Google OAuth is configured
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-    const redirectUri = process.env.NEXT_PUBLIC_OAUTH_REDIRECT_URI;
-    if (clientId && redirectUri && typeof window !== 'undefined') {
-      const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(
-        redirectUri
-      )}&response_type=code&scope=profile%20email&prompt=select_account`;
-      window.location.href = url;
+    if (!clientId) {
+      setError('Google OAuth no está configurado. Contacta al administrador.');
       return;
     }
 
-    setError('Google login no está configurado.');
+    // Redirect directly to Google's OAuth 2.0 endpoint using the original callback
+    const redirectUri = `${window.location.origin}/api/auth/google/callback`;
+    const scope = encodeURIComponent('profile email');
+    const state = encodeURIComponent(JSON.stringify({ from: 'login' }));
+    const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(
+      redirectUri
+    )}&response_type=code&scope=${scope}&state=${state}&prompt=select_account`;
+
+    window.location.href = oauthUrl;
   };
 
   return (
@@ -96,7 +115,7 @@ export default function Login() {
                 <h2 className="text-white text-xl font-bold mb-6 text-center">Iniciar Sesión</h2>
                 <div className="grid grid-cols-1">
                   <div className="mb-4">
-                    <label className="font-semibold" htmlFor="LoginEmail">
+                    <label className="font-semibold text-white" htmlFor="LoginEmail">
                       Correo electrónico:
                     </label>
                     <input
@@ -104,14 +123,14 @@ export default function Login() {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="mt-3 w-full py-2 px-3 h-10 bg-transparent border rounded"
+                      className="mt-3 w-full py-2 px-3 h-10 bg-transparent border rounded text-white placeholder-gray-400"
                       placeholder="nombre@gmail.com"
                       required
                     />
                   </div>
 
                   <div className="mb-4">
-                    <label className="font-semibold" htmlFor="LoginPassword">
+                    <label className="font-semibold text-white" htmlFor="LoginPassword">
                       Contraseña:
                     </label>
                     <input
@@ -119,7 +138,7 @@ export default function Login() {
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="mt-3 w-full py-2 px-3 h-10 bg-transparent border rounded"
+                      className="mt-3 w-full py-2 px-3 h-10 bg-transparent border rounded text-white placeholder-gray-400"
                       placeholder="********"
                       required
                     />

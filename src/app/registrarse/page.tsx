@@ -54,7 +54,7 @@ function SignupForm() {
     try {
       setLoading(true);
 
-      const res = await fetch('/api/auth/register', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -72,7 +72,7 @@ function SignupForm() {
       const data = await res.json();
 
       // Redirect to login or home after successful registration
-      router.push('/ingresar');
+      router.push('/login');
     } catch (err: any) {
       setError(err.message || 'Error en el registro');
     } finally {

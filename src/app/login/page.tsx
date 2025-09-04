@@ -19,7 +19,7 @@ export default function Login() {
 
     try {
       setLoading(true);
-
+      console.log('Logging in with', { email, password });
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -35,11 +35,26 @@ export default function Login() {
       }
 
       const data = await res.json();
+      console.log('🚀 ~ handleSubmit ~ data:', data);
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      // Store access token and user data in localStorage
+      localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem(
+        'user',
+        JSON.stringify({
+          id: data.id,
+          email: data.email,
+          name: data.name,
+          membershipLevel: data.membershipLevel,
+          role: data.role,
+          createdAt: data.createdAt,
+          updatedAt: data.updatedAt,
+          storeId: data.storeId,
+        })
+      );
 
-      router.push('/dashboard');
+      // Redirect to dashboard or home page
+      router.push('/dashboard/insights');
     } catch (err: any) {
       setError(err.message || 'Error en el login');
     } finally {
@@ -96,7 +111,7 @@ export default function Login() {
                 <h2 className="text-white text-xl font-bold mb-6 text-center">Iniciar Sesión</h2>
                 <div className="grid grid-cols-1">
                   <div className="mb-4">
-                    <label className="font-semibold" htmlFor="LoginEmail">
+                    <label className="font-semibold text-white" htmlFor="LoginEmail">
                       Correo electrónico:
                     </label>
                     <input
@@ -104,14 +119,14 @@ export default function Login() {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="mt-3 w-full py-2 px-3 h-10 bg-transparent border rounded"
+                      className="mt-3 w-full py-2 px-3 h-10 bg-transparent border rounded text-white"
                       placeholder="nombre@gmail.com"
                       required
                     />
                   </div>
 
                   <div className="mb-4">
-                    <label className="font-semibold" htmlFor="LoginPassword">
+                    <label className="font-semibold text-white" htmlFor="LoginPassword">
                       Contraseña:
                     </label>
                     <input
@@ -119,7 +134,7 @@ export default function Login() {
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="mt-3 w-full py-2 px-3 h-10 bg-transparent border rounded"
+                      className="mt-3 w-full py-2 px-3 h-10 bg-transparent border rounded text-white"
                       placeholder="********"
                       required
                     />
@@ -134,7 +149,7 @@ export default function Login() {
                   >
                     {loading ? 'Ingresando...' : 'Login / Sign in'}
                   </button>
-
+                  <div className="text-center my-4 text-slate-400">o</div>
                   <button
                     type="button"
                     onClick={handleGoogleSignIn}

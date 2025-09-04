@@ -94,6 +94,7 @@ export const metadata = {
 import { ReactNode } from 'react';
 import ApolloWrapper from './components/ApolloWrapper';
 import ConditionalLayout from './components/ConditionalLayout';
+import Script from 'next/script';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -324,6 +325,21 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             }),
           }}
         />
+        {/* Google Analytics */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
+              page_path: window.location.pathname,
+            });
+          `}
+        </Script>
       </head>
       <body className={`${dm_sans.variable} dark:bg-slate-900`}>
         <ApolloWrapper>

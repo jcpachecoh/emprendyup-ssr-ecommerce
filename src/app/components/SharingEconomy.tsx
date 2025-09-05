@@ -119,19 +119,7 @@ const SharingEconomyNetwork = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 flex flex-col items-center justify-center p-4 overflow-hidden py-32">
-      {/* Background stars */}
-      {[...Array(50)].map((_, i) => (
-        <div
-          key={i}
-          className="absolute w-1 h-1 bg-white rounded-full opacity-30 animate-pulse"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 3}s`,
-            animationDuration: `${2 + Math.random() * 2}s`,
-          }}
-        />
-      ))}
+      {/* background points removed */}
 
       {/* Header */}
       <div className="text-center mb-8 z-10">

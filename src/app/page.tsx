@@ -20,11 +20,10 @@ export default function Home() {
       {/* Hero Section */}
       <main>
         <section
-          className="flex text-sm items-center justify-between w-full md:h-screen pt-16 overflow-hidden  bg-cover bg-center bg-no-repeat relative bg-black"
+          className="flex text-sm items-center justify-between w-full md:h-screen pt-16 overflow-hidden relative"
           aria-label="Sección principal de EmprendyUp"
         >
           {/* Overlay background */}
-          <div className="absolute inset-0 bg-black/50"></div>
           <NewHeroSection />
         </section>
 

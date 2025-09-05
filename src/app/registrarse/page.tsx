@@ -277,7 +277,7 @@ function SignupForm() {
 
                   <div className="text-center mt-4">
                     <span className="text-slate-400">¿Ya tienes una cuenta?</span>{' '}
-                    <Link href="/ingresar" className="text-white font-bold">
+                    <Link href="/login" className="text-white font-bold">
                       Inicia sesión
                     </Link>
                   </div>

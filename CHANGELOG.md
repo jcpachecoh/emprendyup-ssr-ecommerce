@@ -1,3 +1,9 @@
+# [1.18.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.17.0...v1.18.0) (2025-09-05)
+
+### Features
+
+- update front page ([1ec9814](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/1ec9814ebdf5deeca4d4bf8a92c2bedb13258d37))
+
 # [1.17.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.16.0...v1.17.0) (2025-09-04)
 
 ### Bug Fixes

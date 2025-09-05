@@ -12,10 +12,12 @@ import {
   Store,
   Menu,
   X,
-  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   LogOut,
   User,
 } from 'lucide-react';
+import Image from 'next/image';
 import { useDashboardUIStore, useSessionStore } from '@/lib/store/dashboard';
 import { getCurrentUser } from '@/lib/utils/rbac';
 
@@ -32,13 +34,13 @@ const adminNavigation = [{ name: 'Admin', href: '/dashboard/admin', icon: User }
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { sidebarOpen, setSidebarOpen } = useDashboardUIStore();
   const { user, setUser, currentStore } = useSessionStore();
   const [mounted, setMounted] = useState(false);
+  const [collapsed, setCollapsed] = useState(false); // Estado para colapsar el sidebar en desktop
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // Estado para el menú móvil
 
   useEffect(() => {
     setMounted(true);
-    // Load user from localStorage
     const currentUser = getCurrentUser();
     if (currentUser) {
       setUser(currentUser);
@@ -58,70 +60,55 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const allNavigation = [...navigation, ...(user?.role === 'admin' ? adminNavigation : [])];
 
   return (
-    <div className="h-screen bg-slate-900 dark:bg-gray-900 grid lg:grid-cols-[256px_1fr] grid-rows-[auto_1fr]">
-      {/* Mobile sidebar overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black bg-opacity-25 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
+    <div
+      className={`h-screen bg-slate-900 dark:bg-gray-900 grid grid-rows-[auto_1fr] transition-all duration-300 
+      ${collapsed ? 'lg:grid-cols-[96px_1fr]' : 'lg:grid-cols-[256px_1fr]'}`}
+    >
+      {/* Sidebar para desktop */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:row-span-2 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`hidden lg:block fixed inset-y-0 left-0 z-50 ${
+          collapsed ? 'w-24' : 'w-64'
+        } bg-white dark:bg-gray-800 shadow-lg transform transition-all duration-300 ease-in-out`}
       >
         <div className="flex h-full flex-col">
-          {/* Logo */}
+          {/* Logo y botón para colapsar */}
           <div className="flex h-16 items-center justify-between px-4 border-b border-gray-200 dark:border-gray-700">
             <Link href="/dashboard" className="flex items-center space-x-2">
-              <div className="h-8 w-8 bg-fourth-base rounded-lg flex items-center justify-center">
-                <span className="text-black font-bold text-sm">E</span>
-              </div>
-              <span className="text-lg font-semibold text-gray-900 dark:text-white">
-                EmprendyUp
-              </span>
+              <Image
+                src="/images/logo.svg"
+                width={48}
+                height={48}
+                className="h-12 w-12 min-w-[48px] min-h-[48px] object-contain"
+                alt="EmprendyUp Logo"
+                priority
+              />
+              {!collapsed && (
+                <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                  EmprendyUp
+                </span>
+              )}
             </Link>
             <button
-              onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-1 rounded-md text-gray-400 hover:text-gray-500"
+              onClick={() => setCollapsed(!collapsed)}
+              className="p-1 rounded-md text-gray-400 hover:text-gray-500"
             >
-              <X className="h-6 w-6" />
+              {collapsed ? (
+                <ChevronRight className="h-6 w-6" />
+              ) : (
+                <ChevronLeft className="h-6 w-6" />
+              )}
             </button>
           </div>
 
-          {/* Store Switcher */}
-          {currentStore && (
-            <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <div className="h-8 w-8 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-                    <Store className="h-4 w-4 text-gray-600 dark:text-gray-300" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                      {currentStore.name}
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      {currentStore.subdomain}
-                    </p>
-                  </div>
-                </div>
-                <ChevronDown className="h-4 w-4 text-gray-400" />
-              </div>
-            </div>
-          )}
-
           {/* Navigation */}
-          <nav className="flex-1 px-4 py-4 space-y-1">
+          <div className="flex-1 px-4 py-4 space-y-1 items-center justify-center">
             {allNavigation.map((item) => {
               const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
               return (
                 <Link
                   key={item.name}
                   href={item.href}
+                  onClick={() => setCollapsed(true)} // Colapsar el sidebar al hacer clic
                   className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors ${
                     isActive
                       ? 'bg-fourth-base text-black'
@@ -129,53 +116,87 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   }`}
                 >
                   <item.icon
-                    className={`mr-3 h-5 w-5 ${isActive ? 'text-black' : 'text-gray-400 group-hover:text-gray-500'}`}
+                    className={`mr-0 pl-3 md:mr-3 h-8 w-8 ${
+                      isActive ? 'text-black' : 'text-gray-400 group-hover:text-gray-500'
+                    }`}
                   />
-                  {item.name}
+                  {!collapsed && <span className="truncate">{item.name}</span>}
                 </Link>
               );
             })}
-          </nav>
-
-          {/* User Menu */}
-          <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex items-center space-x-3">
-              <div className="h-8 w-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
-                <User className="h-4 w-4 text-gray-600 dark:text-gray-300" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                  {user?.name || 'Usuario'}
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">
-                  {user?.role || 'user'}
-                </p>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="p-1 rounded-md text-gray-400 hover:text-gray-500"
-                title="Logout"
-              >
-                <LogOut className="h-4 w-4" />
-              </button>
-            </div>
           </div>
         </div>
       </aside>
+
+      {/* Menú móvil */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 bg-black bg-opacity-75">
+          <div className="absolute inset-y-0 left-0 w-64 bg-white dark:bg-gray-800 shadow-lg">
+            <div className="flex h-16 items-center justify-between px-4 border-b border-gray-200 dark:border-gray-700">
+              <Link href="/dashboard" className="flex items-center space-x-2">
+                <Image
+                  src="/images/logo.svg"
+                  width={48}
+                  height={48}
+                  className="h-12 w-12 min-w-[48px] min-h-[48px] object-contain"
+                  alt="EmprendyUp Logo"
+                  priority
+                />
+                <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                  EmprendyUp
+                </span>
+              </Link>
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-1 rounded-md text-gray-400 hover:text-gray-500"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            <div className="flex-1 px-4 py-4 space-y-1">
+              {allNavigation.map((item) => {
+                const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)} // Cerrar el menú al hacer clic
+                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors ${
+                      isActive
+                        ? 'bg-fourth-base text-black'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                    }`}
+                  >
+                    <item.icon
+                      className={`mr-3 h-5 w-5 ${
+                        isActive ? 'text-black' : 'text-gray-400 group-hover:text-gray-500'
+                      }`}
+                    />
+                    <span className="truncate">{item.name}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main content */}
       <div className="lg:col-start-2 lg:row-start-1 lg:row-span-2 grid grid-rows-[auto_1fr] min-h-screen">
         {/* Top bar */}
         <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
           <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500"
-            >
-              <Menu className="h-6 w-6" />
-            </button>
-
+            {/* Left side: hamburguesa + fecha */}
             <div className="flex items-center space-x-4">
+              {/* Botón hamburguesa solo en mobile */}
+              <button
+                onClick={() => setMobileMenuOpen(true)}
+                className="p-2 rounded-md text-gray-400 hover:text-gray-500 lg:hidden"
+              >
+                <Menu className="h-6 w-6" />
+              </button>
+
               <div className="text-sm text-gray-500 dark:text-gray-400">
                 {new Date().toLocaleDateString('es-ES', {
                   weekday: 'long',
@@ -188,7 +209,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </header>
 
-        {/* Page content with grid layout */}
+        {/* Page content */}
         <main className="overflow-auto bg-gray-50 dark:bg-gray-900">
           <div className="grid grid-cols-1 gap-6 p-4 sm:p-6 lg:p-8 auto-rows-max">{children}</div>
         </main>

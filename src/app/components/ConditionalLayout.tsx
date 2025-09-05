@@ -10,39 +10,33 @@ interface ConditionalLayoutProps {
 
 export default function ConditionalLayout({ children }: ConditionalLayoutProps) {
   const pathname = usePathname();
-
-  // Rutas que no deben mostrar navbar ni footer
-  const authRoutes = [
-    '/login',
-    '/signup',
-    '/olvido-contraseña',
-    '/reset-password',
-    '/registrarse',
-    '/dashboard/insights',
-    '/dashboard/bonuses',
-    '/dashboard/customers',
-    '/dashboard/orders',
-    '/dashboard/store',
-    '/dashboard/settings',
-    '/dashboard/admin',
-  ];
-  const isAuthRoute = authRoutes.includes(pathname);
-
-  // Only treat auth routes as special on desktop viewports.
-  // This keeps the navbar/footer visible on mobile even for auth pages.
-  const [isDesktop, setIsDesktop] = useState<boolean>(false);
+  const [isAuthRoute, setIsAuthRoute] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const mq = window.matchMedia('(min-width: 768px)');
-    const setFromMq = () => setIsDesktop(mq.matches);
-    setFromMq();
-    mq.addEventListener('change', setFromMq);
-    return () => mq.removeEventListener('change', setFromMq);
-  }, []);
+    // Rutas que no deben mostrar navbar ni footer
+    const authRoutes = [
+      '/login',
+      '/signup',
+      '/olvido-contraseña',
+      '/reset-password',
+      '/registrarse',
+      '/dashboard/insights',
+      '/dashboard/bonuses',
+      '/dashboard/customers',
+      '/dashboard/orders',
+      '/dashboard/store',
+      '/dashboard/settings',
+      '/dashboard/admin',
+      '/dashboard/store/settings',
+      '/dashboard/store/products',
+      '/store/create',
+      '/dashboard/store/products/new',
+    ];
+    setIsAuthRoute(authRoutes.includes(pathname));
+  }, [pathname]);
 
-  // If it's an auth route AND we're on desktop, render only the children (no chrome).
-  if (isAuthRoute && isDesktop) {
+  // Si la ruta pertenece a `authRoutes`, no renderizar el navbar ni el footer
+  if (isAuthRoute) {
     return <>{children}</>;
   }
 

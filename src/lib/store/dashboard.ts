@@ -79,6 +79,21 @@ interface SessionState {
   user: UserProfile | null;
   currentStore: Store | null;
   stores: Store[];
+  userStores: Array<{
+    id: string;
+    name: string;
+    slug: string;
+    brandColor: string;
+    currency: string;
+    ownerId: string;
+    industry: string;
+    country: string;
+    subdomain: string;
+    createdAt: string;
+    updatedAt: string;
+    logoUrl?: string;
+  }>;
+
   setUser: (user: UserProfile | null) => void;
   setCurrentStore: (store: Store | null) => void;
   setStores: (stores: Store[]) => void;
@@ -93,11 +108,12 @@ export const useSessionStore = create<SessionState>()(
         user: null,
         currentStore: null,
         stores: [],
+        userStores: [],
         setUser: (user) => set({ user }),
         setCurrentStore: (store) => set({ currentStore: store }),
         setStores: (stores) => set({ stores }),
         addStore: (store) => set((state) => ({ stores: [...state.stores, store] })),
-        logout: () => set({ user: null, currentStore: null, stores: [] }),
+        logout: () => set({ user: null, currentStore: null, stores: [], userStores: [] }),
       }),
       {
         name: 'session',

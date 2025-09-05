@@ -1,3 +1,13 @@
+# [1.17.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.16.0...v1.17.0) (2025-09-04)
+
+### Bug Fixes
+
+- login ([0acdf11](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/0acdf11510ca958196949a3f39f3d52b18be52f8))
+
+### Features
+
+- cookiesConsent Ecommerce ([#9](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/issues/9)) ([bc375c9](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/bc375c9391ed41664a9b94fbd50f27386d80f51c))
+
 # [1.16.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.15.0...v1.16.0) (2025-09-04)
 
 ### Features

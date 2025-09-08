@@ -1,3 +1,9 @@
+# [1.20.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.19.0...v1.20.0) (2025-09-08)
+
+### Features
+
+- dashboard createStore ([#10](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/issues/10)) ([cd98a0f](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/cd98a0f2cb71c39dfe94975b348b3cb0d5bfc780))
+
 # [1.19.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.18.0...v1.19.0) (2025-09-08)
 
 ### Features

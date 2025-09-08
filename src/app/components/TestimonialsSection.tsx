@@ -2,7 +2,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { FiChevronLeft, FiChevronRight, FiStar } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight, FiStar, FiClock, FiZap, FiLink } from 'react-icons/fi';
 
 const testimonials = [
   {
@@ -248,6 +248,34 @@ const TestimonialsSection = () => {
             />
           ))}
         </div>
+        {/* Value claims (show before numeric stats) */}
+        <div className="mt-8 max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+          <div className="p-4 bg-white/60 dark:bg-slate-800/60 rounded-lg">
+            <FiClock className="w-8 h-8 text-blue-500 mx-auto mb-3" />
+            <h4 className="font-semibold text-lg text-slate-900 dark:text-white">Ahorra tiempo</h4>
+            <p className="text-sm text-slate-600 dark:text-slate-300 mt-2">
+              Ahorra hasta 20 horas/semana con automatizaciones y plantillas.
+            </p>
+          </div>
+          <div className="p-4 bg-white/60 dark:bg-slate-800/60 rounded-lg">
+            <FiZap className="w-8 h-8 text-yellow-500 mx-auto mb-3" />
+            <h4 className="font-semibold text-lg text-slate-900 dark:text-white">
+              Resultados rápidos
+            </h4>
+            <p className="text-sm text-slate-600 dark:text-slate-300 mt-2">
+              Resultados visibles en 6–8 semanas con el plan piloto.
+            </p>
+          </div>
+          <div className="p-4 bg-white/60 dark:bg-slate-800/60 rounded-lg">
+            <FiLink className="w-8 h-8 text-green-500 mx-auto mb-3" />
+            <h4 className="font-semibold text-lg text-slate-900 dark:text-white">
+              Fácil integración
+            </h4>
+            <p className="text-sm text-slate-600 dark:text-slate-300 mt-2">
+              Integrado con WhatsApp, Shopify y pasarelas locales.
+            </p>
+          </div>
+        </div>
 
         {/* Stats Section */}
         <motion.div
@@ -265,7 +293,7 @@ const TestimonialsSection = () => {
               transition={{ type: 'spring', stiffness: 100, delay: 0.5 }}
               viewport={{ once: true }}
             >
-              50K+
+              50+
             </motion.h3>
             <p className="text-slate-600 dark:text-slate-400">Emprendedores Activos</p>
           </div>
@@ -301,9 +329,14 @@ const TestimonialsSection = () => {
               transition={{ type: 'spring', stiffness: 100, delay: 0.8 }}
               viewport={{ once: true }}
             >
-              15
+              3
             </motion.h3>
-            <p className="text-slate-600 dark:text-slate-400">Países</p>
+            <p className="text-slate-600 dark:text-slate-400 flex items-center justify-center md:justify-center">
+              <span>Ciudades</span>
+              <span className="ml-2 inline-flex items-center rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-semibold text-yellow-800 dark:bg-yellow-600 dark:text-black">
+                Beta
+              </span>
+            </p>
           </div>
         </motion.div>
       </div>

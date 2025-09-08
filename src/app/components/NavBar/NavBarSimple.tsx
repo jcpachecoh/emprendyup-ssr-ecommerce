@@ -292,6 +292,12 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
                   ))}
               </li>
 
+              <li className={`${menu === '/precios' ? 'active' : ''}`}>
+                <Link href="/precios" className="sub-menu-item" onClick={() => setToggle(false)}>
+                  Precios
+                </Link>
+              </li>
+
               <li className={`${menu === '/blog' ? 'active' : ''}`}>
                 <Link href="/blog" className="sub-menu-item" onClick={() => setToggle(false)}>
                   Blog
@@ -373,6 +379,15 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
                   className="block text-lg font-medium text-gray-800 dark:text-white py-2"
                 >
                   Soluciones
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/precios"
+                  onClick={() => setToggle(false)}
+                  className="block text-lg font-medium text-gray-800 dark:text-white py-2"
+                >
+                  Precios
                 </Link>
               </li>
               <li>

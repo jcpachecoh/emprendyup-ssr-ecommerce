@@ -19,16 +19,11 @@ export default function Home() {
 
       {/* Hero Section */}
       <main>
-        <section
-          className="flex text-sm items-center justify-between w-full md:h-screen pt-16 overflow-hidden relative"
-          aria-label="Sección principal de EmprendyUp"
-        >
-          {/* Overlay background */}
-          <NewHeroSection />
-        </section>
+        {/* Overlay background */}
+        <NewHeroSection />
 
         {/* Features Section */}
-        <section aria-label="Características y beneficios de EmprendyUp">
+        <section aria-label="Características y beneficios de EmprendyUp" id="features">
           <FeaturesSection />
         </section>
 

@@ -1,143 +1,138 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Rocket, Search } from 'lucide-react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+
 import ChatWidget from './ChatWidget/ChatWidget';
 
 const NewHeroSection = () => {
   const [chatOpen, setChatOpen] = useState(false);
+
+  const bgImage =
+    'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1920&auto=format&fit=crop';
+
+  // Background image URLb
+  const bgStyle = useMemo(
+    () => ({
+      backgroundImage: `url(${bgImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+    }),
+    [bgImage]
+  );
+
+  const onPrimaryClick = () => {
+    // Handle primary button click scroll to #lead-capture section smoothly
+    window.scrollTo({
+      top: document.getElementById('lead-capture')?.offsetTop,
+      behavior: 'smooth',
+    });
+  };
+
+  const onSecondaryClick = () => {
+    // Handle secondary button click
+    window.scrollTo({
+      top: document.getElementById('features')?.offsetTop,
+      behavior: 'smooth',
+    });
+  };
+
   return (
-    <div className="relative flex items-center justify-center h-screen px-6 sm:px-12 lg:px-40 w-full overflow-hidden">
-      <Image
-        src="/images/hero-banner-women.webp"
-        alt="Hero banner"
-        fill
-        priority
-        className="object-cover object-center -z-20"
-      />
-      {/* radial spotlight overlay to darken image and highlight text */}
-      <div
-        className="absolute inset-0 z-10 pointer-events-none bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.8)_0%,rgba(0,0,0,0)_60%)]"
-        aria-hidden
-      />
-      {/* Centered Content */}
-      <div className="relative z-20 text-center items-center flex flex-col md:flex-row md:justify-between justify-center w-full">
-        {/* Animated typing headline */}
-        <div className="flex flex-col w-full max-w-[700px] mx-auto">
-          <motion.h1
-            className="flex flex-col text-3xl max-w-lg text-center md:text-left md:text-2xl lg:text-5xl font-extrabold text-white mb-6 leading-tight"
-            initial={{ opacity: 0, y: 40 }}
+    <>
+      <section
+        className="relative isolate text-white"
+        style={{ minHeight: '70vh' }}
+        aria-label="Sección principal de EmprendyUp"
+      >
+        {/* Background */}
+        <div
+          className="absolute inset-0 -z-10"
+          style={bgStyle}
+          role="img"
+          aria-label="Emprendedores usando tecnología"
+        />
+
+        {/* Overlay for readability */}
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-slate-900/70 via-slate-900/60 to-slate-900/80" />
+
+        {/* Subtle radial glow */}
+        <div className="pointer-events-none absolute inset-0 -z-10 [background:radial-gradient(60%_40%_at_30%_20%,_rgba(56,189,248,0.25),_transparent_60%),_radial-gradient(40%_30%_at_70%_30%,_rgba(139,92,246,0.25),_transparent_60%)]" />
+
+        <div className="mx-auto max-w-7xl px-6 py-20 sm:py-24 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="max-w-2xl lg:max-w-3xl"
           >
-            <AnimatedHeadline />
-          </motion.h1>
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 items-center justify-center mt-4">
-            <button
-              onClick={() => {
-                const target = document.getElementById('next-section');
-                if (target) {
-                  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                } else {
-                  window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
-                }
-              }}
-              aria-label="Saber más"
-              className="inline-flex text-xl w-[200px] items-center gap-3 px-5 py-3 bg-white text-indigo-700 rounded-full font-semibold shadow-lg"
-            >
-              Saber más
-              <svg
-                className="w-4 h-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden
+            {/* Eyebrow / value props */}
+            <div className="mb-4 flex flex-wrap gap-2 justify-center sm:justify-start">
+              {['IA aplicada', 'Tecnología real', 'Comunidad que impulsa'].map((chip) => (
+                <span
+                  key={chip}
+                  className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium backdrop-blur md:text-sm"
+                >
+                  {chip}
+                </span>
+              ))}
+            </div>
+
+            {/* Headline */}
+            <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-center md:text-left sm:text-5xl lg:text-6xl">
+              <span className="block">Impulsa tu negocio</span>
+              <span className="block">con IA, tecnología y comunidad</span>
+            </h1>
+
+            {/* Subhead */}
+            <p className="mt-5 max-w-2xl text-base text-white/90 text-center md:text-left sm:text-lg">
+              Herramientas digitales diseñadas para emprendedores que quieren escalar y crecer de
+              forma inteligente.
+            </p>
+
+            {/* CTAs */}
+            <div className="mt-8 flex flex-col gap-3 items-center sm:flex-row sm:items-center md:items-start">
+              <button
+                onClick={onPrimaryClick}
+                className="group inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-base font-semibold shadow-lg transition focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 active:scale-[.99] bg-gradient-to-r from-cyan-400 to-violet-500 hover:from-cyan-300 hover:to-violet-400"
+                aria-label="Quiero crecer"
               >
-                <path
-                  d="M5 12h14"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                <Rocket
+                  className="h-5 w-5 transition-transform group-hover:-translate-y-0.5"
+                  aria-hidden="true"
                 />
-                <path
-                  d="M12 5l7 7-7 7"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-            <button
-              onClick={() => {
-                const target = document.getElementById('lead-capture');
-                if (target) {
-                  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                } else {
-                  window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
-                }
-              }}
-              aria-label="Saber más"
-              className="inline-flex text-center text-xl w-[200px] items-center gap-3 px-5 py-3 bg-indigo-700 text-white rounded-full font-semibold shadow-lg"
-            >
-              Registrarme
-              <svg
-                className="w-4 h-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden
+                Quiero crecer
+              </button>
+
+              <button
+                onClick={onSecondaryClick}
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-6 py-3 text-base font-semibold backdrop-blur transition hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+                aria-label="Descubrir cómo"
               >
-                <path
-                  d="M5 12h14"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M12 5l7 7-7 7"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-          </div>
+                <Search className="h-5 w-5" aria-hidden="true" />
+                Beneficios
+              </button>
+            </div>
+
+            {/* Social proof / quick stats */}
+            <div className="mt-10 grid max-w-xl grid-cols-2 gap-6 text-sm text-white/80 sm:grid-cols-3">
+              <div className="text-center sm:text-left">
+                <p className="text-2xl font-bold text-white">+120</p>
+                <p>emprendedores impactados</p>
+              </div>
+              <div className="text-center sm:text-left">
+                <p className="text-2xl font-bold text-white">+8%</p>
+                <p>mejora en conversión</p>
+              </div>
+              <div className="col-span-2 sm:col-span-1 text-center sm:text-left">
+                <p className="text-2xl font-bold text-white">99%</p>
+                <p>satisfacción del cliente</p>
+              </div>
+            </div>
+          </motion.div>
         </div>
+      </section>
 
-        {/* Chat widget removed from hero; use floating button to open chat */}
-        <div className="hidden md:block w-full md:w-[700px]" />
-      </div>
-      {/* Floating chat button */}
-      <div>
-        <button
-          aria-label="Abrir chat"
-          onClick={() => setChatOpen((s) => !s)}
-          className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-indigo-600 text-white shadow-lg flex items-center justify-center"
-        >
-          {/* chat bubble icon */}
-          <svg
-            className="w-6 h-6"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden
-          >
-            <path
-              d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-      </div>
-
-      {/* Chat panel (render when open) */}
       {chatOpen && (
         <div className="fixed bottom-20 right-6 z-50 w-[92%] max-w-md">
           <div className="bg-transparent">
@@ -154,7 +149,7 @@ const NewHeroSection = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

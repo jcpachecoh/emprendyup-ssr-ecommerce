@@ -1,3 +1,9 @@
+# [1.19.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.18.0...v1.19.0) (2025-09-08)
+
+### Features
+
+- improve ux and pricing ([b969582](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/b969582ff07ca954853c348e43862ac2aa33b44c))
+
 # [1.18.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.17.0...v1.18.0) (2025-09-05)
 
 ### Features

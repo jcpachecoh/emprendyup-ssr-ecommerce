@@ -5,10 +5,12 @@ import { motion } from 'framer-motion';
 interface Message {
   from: 'bot' | 'user';
   text: string;
+  error?: boolean;
 }
 
 const questions = [
   { key: 'name', text: '¿Cuál es el nombre de tu emprendimiento?' },
+  { key: 'subdomain', text: 'Elige un subdominio para tu tienda (ejemplo: mitienda).' },
   { key: 'logo', text: 'Por favor sube tu logo o describe cómo es.' },
   { key: 'colors', text: '¿Cuáles son los colores principales de tu marca?' },
   { key: 'categories', text: '¿Qué categorías de productos tendrás?' },
@@ -24,7 +26,6 @@ export default function ChatTienda() {
   const [input, setInput] = useState('');
   const [storeData, setStoreData] = useState<any>({});
   const [botTyping, setBotTyping] = useState(false);
-
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   // Autoscroll al final
@@ -32,15 +33,41 @@ export default function ChatTienda() {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, botTyping]);
 
+  // Validación de subdominio
+  const validateSubdomain = (value: string): string | null => {
+    const regex = /^[a-z0-9-]{3,30}$/;
+    if (!regex.test(value)) {
+      return '❌ El subdominio solo puede tener letras minúsculas, números o guiones (3–30 caracteres).';
+    }
+    if (value.startsWith('-') || value.endsWith('-')) {
+      return '❌ El subdominio no puede empezar ni terminar con guion.';
+    }
+    // Simulación: "demo" ya está tomado
+    if (value === 'demo') {
+      return '⚠️ Este subdominio ya está en uso. Prueba con otro (ej: demo-shop).';
+    }
+    return null;
+  };
+
   const handleSend = () => {
     if (!input.trim()) return;
-
     const currentQuestion = questions[step];
+
+    // Si estamos en la pregunta de subdominio → validar
+    if (currentQuestion.key === 'subdomain') {
+      const error = validateSubdomain(input.trim());
+      if (error) {
+        setMessages((prev) => [...prev, { from: 'user', text: input }]);
+        setMessages((prev) => [...prev, { from: 'bot', text: error, error: true }]);
+        setInput('');
+        return;
+      }
+    }
 
     // Mensaje del usuario
     setMessages((prev) => [...prev, { from: 'user', text: input }]);
 
-    // Guardar respuesta con key
+    // Guardar respuesta
     setStoreData((prev: any) => ({
       ...prev,
       [currentQuestion.key]: input,
@@ -50,7 +77,6 @@ export default function ChatTienda() {
 
     const nextStep = step + 1;
     if (nextStep < questions.length) {
-      // Mostrar "escribiendo..."
       setBotTyping(true);
       setTimeout(() => {
         setMessages((prev) => [...prev, { from: 'bot', text: questions[nextStep].text }]);
@@ -72,7 +98,7 @@ export default function ChatTienda() {
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white dark:bg-slate-900 rounded-2xl shadow-lg">
-      {/* Chat window */}
+      {/* Chat */}
       <div className="h-96 overflow-y-auto space-y-3 mb-4 p-4 border rounded-lg bg-slate-50 dark:bg-slate-800 flex flex-col">
         {messages.map((msg, idx) => (
           <motion.div
@@ -82,7 +108,9 @@ export default function ChatTienda() {
             transition={{ duration: 0.3 }}
             className={`p-3 rounded-xl max-w-xs ${
               msg.from === 'bot'
-                ? 'bg-blue-100 text-slate-800 self-start'
+                ? msg.error
+                  ? 'bg-red-100 text-red-800 self-start'
+                  : 'bg-blue-100 text-slate-800 self-start'
                 : 'bg-green-500 text-white self-end'
             }`}
           >

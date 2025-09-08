@@ -95,9 +95,9 @@ import { ReactNode } from 'react';
 import ApolloWrapper from './components/ApolloWrapper';
 import ConditionalLayout from './components/ConditionalLayout';
 import Script from 'next/script';
-import CookieConsentModal from './components/CookieConsentModal';
+import { Toaster } from 'sonner';
 import CookieWrapper from './components/CookieWrapper';
-
+import { ThemeProvider } from 'next-themes';
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="es" className="light scroll-smooth dm_sans" dir="ltr">
@@ -344,10 +344,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         </Script>
       </head>
       <body className={`${dm_sans.variable} dark:bg-slate-900`}>
-        <ApolloWrapper>
-          <ConditionalLayout>{children}</ConditionalLayout>
-        </ApolloWrapper>
-        <CookieWrapper />
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <ApolloWrapper>
+            <ConditionalLayout>
+              {children}
+              <Toaster richColors position="top-right" />
+            </ConditionalLayout>
+          </ApolloWrapper>
+          <CookieWrapper />
+        </ThemeProvider>
       </body>
     </html>
   );

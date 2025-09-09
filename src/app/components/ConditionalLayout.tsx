@@ -28,8 +28,8 @@ export default function ConditionalLayout({ children }: ConditionalLayoutProps) 
       '/dashboard/settings',
       '/dashboard/admin',
       '/dashboard/store/settings',
+      '/dashboard/store/new',
       '/dashboard/store/products',
-      '/store/create',
       '/dashboard/store/products/new',
     ];
     setIsAuthRoute(authRoutes.includes(pathname));

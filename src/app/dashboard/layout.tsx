@@ -39,6 +39,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [collapsed, setCollapsed] = useState(false); // Estado para colapsar el sidebar en desktop
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // Estado para el menú móvil
 
+  // If the route is the new-store flow, don't render dashboard chrome
+  const hideDashboardChrome = Boolean(pathname && pathname.includes('/dashboard/store/new'));
+
   useEffect(() => {
     setMounted(true);
     const currentUser = getCurrentUser();
@@ -50,11 +53,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const handleLogout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('accessToken');
-    window.location.href = '/login';
+    window.location.href = '/';
   };
 
   if (!mounted) {
     return <div>Loading...</div>;
+  }
+
+  if (hideDashboardChrome) {
+    return <div className="min-h-screen bg-slate-50 dark:bg-slate-900">{children}</div>;
   }
 
   const allNavigation = [...navigation, ...(user?.role === 'admin' ? adminNavigation : [])];
@@ -125,6 +132,56 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               );
             })}
           </div>
+
+          {/* Sidebar footer: usuario y acciones */}
+          <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-700">
+            {/* Expanded footer */}
+            {!collapsed ? (
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3 min-w-0">
+                  <Image
+                    src={user?.avatar || '/images/client/16.jpg'}
+                    width={40}
+                    height={40}
+                    className="rounded-full object-cover"
+                    alt="Avatar"
+                  />
+                  <div className="min-w-0">
+                    <div className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">
+                      {user?.name || user?.email || 'Usuario'}
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">Mi cuenta</div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleLogout}
+                  className="p-2 rounded-md text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  title="Salir"
+                >
+                  <ChevronRight className="w-5 h-5 text-white" />
+                </button>
+              </div>
+            ) : (
+              /* Collapsed footer - compact */
+              <div className="flex flex-col items-center gap-2">
+                <Image
+                  src={user?.avatar || '/images/client/16.jpg'}
+                  width={36}
+                  height={36}
+                  className="rounded-full object-cover"
+                  alt="Avatar"
+                />
+                <button
+                  onClick={handleLogout}
+                  className="p-1 rounded-md text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  title="Salir"
+                >
+                  <ChevronRight className="w-4 h-4 text-white" />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </aside>
 
@@ -177,6 +234,34 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   </Link>
                 );
               })}
+            </div>
+
+            {/* Footer del menú móvil */}
+            <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3 min-w-0">
+                  <Image
+                    src={user?.avatar || '/images/client/16.jpg'}
+                    width={40}
+                    height={40}
+                    className="rounded-full object-cover"
+                    alt="Avatar"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">
+                      {user?.name || user?.email || 'Usuario'}
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">Mi cuenta</div>
+                  </div>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="p-1 rounded-md text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  title="Salir"
+                >
+                  <ChevronRight className="w-4 h-4 text-white" />
+                </button>
+              </div>
             </div>
           </div>
         </div>

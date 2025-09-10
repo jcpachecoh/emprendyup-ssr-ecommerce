@@ -1,3 +1,9 @@
+## [1.20.1](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.20.0...v1.20.1) (2025-09-10)
+
+### Bug Fixes
+
+- tirgger deplo ([a07df63](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/a07df63468fd37b75ac1d9b1d91da6540748b95c))
+
 # [1.20.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.19.0...v1.20.0) (2025-09-08)
 
 ### Features

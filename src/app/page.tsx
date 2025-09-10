@@ -46,7 +46,6 @@ export default function Home() {
           <TestimonialsSection />
         </section>
       </main>
-
       <Switcher />
       <ScrollToTop />
     </>

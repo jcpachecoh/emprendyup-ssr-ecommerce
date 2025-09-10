@@ -1,11 +1,26 @@
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
+import { gql, useMutation } from '@apollo/client';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import BackToHome from '../components/back-to-home';
 import Switcher from '../components/switcher';
+
+const REGISTER_MUTATION = gql`
+  mutation Register($input: RegisterInput!) {
+    register(input: $input) {
+      user {
+        id
+        email
+        name
+        storeId
+      }
+      access_token
+    }
+  }
+`;
 
 function SignupForm() {
   const router = useRouter();
@@ -19,6 +34,7 @@ function SignupForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showToast, setShowToast] = useState(false);
+  const [registerMutation] = useMutation(REGISTER_MUTATION);
 
   // Handle OAuth errors from URL params
   useEffect(() => {
@@ -80,47 +96,38 @@ function SignupForm() {
       return;
     }
 
-    // Validate password length
     if (password.length < 6) {
       setError('La contraseña debe tener al menos 6 caracteres.');
       return;
     }
 
+    setLoading(true);
     try {
-      setLoading(true);
-
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-          ...(storeId && storeId.trim() !== '' && { storeId }), // Only include storeId if it has a value
-        }),
+      const { data } = await registerMutation({
+        variables: {
+          input: {
+            name,
+            email,
+            password,
+            storeId: storeId || null,
+          },
+        },
       });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'Error en el registro');
+      if (!data?.register?.user?.id) {
+        throw new Error('Error en el registro');
       }
-
-      const data = await res.json();
-
-      // Show toast message
+      // Store access token if needed
+      if (data.register.access_token) {
+        localStorage.setItem('accessToken', data.register.access_token);
+      }
       setShowToast(true);
-
-      // Hide toast and redirect after delay (form stays filled until redirect)
       setTimeout(() => {
         setShowToast(false);
-
-        // Clear form just before redirecting
         setName('');
         setEmail('');
         setPassword('');
         setStoreId('');
         setAcceptTerms(false);
-
         router.push('/login');
       }, 3000);
     } catch (err: any) {

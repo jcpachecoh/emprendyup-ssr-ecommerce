@@ -112,17 +112,71 @@ export function usePermissions(user: UserProfile | null) {
   return getPermissions(user);
 }
 
+function getCookie(name: string): string {
+  const nameEQ = name + '=';
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const ca = decodedCookie.split(';');
+
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(nameEQ) === 0) {
+      return c.substring(nameEQ.length, c.length);
+    }
+  }
+  return ''; // Return empty string if cookie not found
+}
+
 // Mock function to get current user (in real app, this would come from context/session)
 export function getCurrentUser(): UserProfile | null {
   // This is a mock - in a real app you'd get this from NextAuth, context, etc.
   if (typeof window !== 'undefined') {
-    const user = localStorage.getItem('user');
-    if (user) {
+    // 1) Prefer explicit stored user in localStorage
+    const a = getCookie('auth_token');
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
       try {
-        return JSON.parse(user);
+        return JSON.parse(userStr) as UserProfile;
       } catch {
-        return null;
+        // fall through to cookie check
       }
+    }
+
+    // 2) Fallback: try to read an auth token from cookies (non-HttpOnly)
+    try {
+      const match = document.cookie.match('(?:^|; )auth_token=([^;]*)');
+      const token = match ? decodeURIComponent(match[1]) : null;
+      if (token) {
+        // decode JWT payload (base64url)
+        const parts = token.split('.');
+        if (parts.length === 3) {
+          const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+          try {
+            const json = decodeURIComponent(
+              atob(base64)
+                .split('')
+                .map(function (c) {
+                  return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                })
+                .join('')
+            );
+            const payload = JSON.parse(json);
+            const user: UserProfile = {
+              id: payload.sub || payload.user_id || payload.id || '',
+              name: payload.name || payload.username || payload.email || '',
+              email: payload.email || '',
+              role: (payload.role && (payload.role === 'admin' ? 'admin' : 'user')) || 'user',
+            };
+            return user;
+          } catch {
+            return null;
+          }
+        }
+      }
+    } catch (e) {
+      // ignore and return null
     }
   }
   return null;

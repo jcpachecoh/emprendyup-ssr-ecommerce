@@ -1,9 +1,28 @@
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
+import { gql, useMutation } from '@apollo/client';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
+
+const LOGIN_MUTATION = gql`
+  mutation Login($input: LoginInput!) {
+    login(input: $input) {
+      access_token
+      user {
+        id
+        email
+        name
+        membershipLevel
+        role
+        createdAt
+        updatedAt
+        storeId
+      }
+    }
+  }
+`;
 
 function LoginForm() {
   const router = useRouter();
@@ -13,6 +32,7 @@ function LoginForm() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [loginMutation] = useMutation(LOGIN_MUTATION);
 
   // Handle OAuth errors from URL params
   useEffect(() => {
@@ -44,45 +64,28 @@ function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
+    setLoading(true);
     try {
-      setLoading(true);
-
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+      const { data } = await loginMutation({
+        variables: {
+          input: {
+            email,
+            password,
+          },
+        },
       });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'Credenciales inválidas');
+      if (!data?.login?.access_token || !data?.login?.user) {
+        throw new Error('Credenciales inválidas');
       }
-
-      const data = await res.json();
-      console.log('🚀 ~ handleSubmit ~ data:', data);
-
       // Store access token and user data in localStorage
-      localStorage.setItem('accessToken', data.accessToken);
-      localStorage.setItem(
-        'user',
-        JSON.stringify({
-          id: data.id,
-          email: data.email,
-          name: data.name,
-          membershipLevel: data.membershipLevel,
-          role: data.role,
-          createdAt: data.createdAt,
-          updatedAt: data.updatedAt,
-          storeId: data.storeId,
-        })
-      );
-
-      // Redirect to dashboard or home page
-      router.push('/dashboard/insights');
+      localStorage.setItem('accessToken', data.login.access_token);
+      localStorage.setItem('user', JSON.stringify(data.login.user));
+      // Conditional redirect
+      if (data.login.user.storeId) {
+        router.push('/dashboard/insights');
+      } else {
+        router.push('/crear-tienda');
+      }
     } catch (err: any) {
       setError(err.message || 'Error en el login');
     } finally {

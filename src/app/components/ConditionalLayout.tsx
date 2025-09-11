@@ -29,6 +29,8 @@ export default function ConditionalLayout({ children }: ConditionalLayoutProps) 
       '/dashboard/admin',
       '/dashboard/store/settings',
       '/dashboard/store/new',
+      '/dashboard/blog/new',
+      '/dashboard/blog/edit',
       '/dashboard/store/products',
       '/dashboard/store/products/new',
     ];

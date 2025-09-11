@@ -16,6 +16,7 @@ import {
   ChevronRight,
   LogOut,
   User,
+  FileText,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useDashboardUIStore, useSessionStore } from '@/lib/store/dashboard';
@@ -27,6 +28,7 @@ const navigation = [
   { name: 'Customers', href: '/dashboard/customers', icon: Users },
   { name: 'Bonuses', href: '/dashboard/bonuses', icon: Gift },
   { name: 'Store', href: '/dashboard/store', icon: Store },
+  { name: 'Blog', href: '/dashboard/blog/new', icon: FileText },
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ];
 
@@ -57,7 +59,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   };
 
   if (!mounted) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   if (hideDashboardChrome) {
@@ -283,12 +285,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </button>
 
               <div className="text-sm text-gray-500 dark:text-gray-400">
-                {new Date().toLocaleDateString('es-ES', {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
+                {mounted &&
+                  new Date().toLocaleDateString('es-ES', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
               </div>
             </div>
           </div>

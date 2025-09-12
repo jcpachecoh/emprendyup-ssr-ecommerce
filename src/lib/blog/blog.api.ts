@@ -9,7 +9,7 @@ export interface BlogPost {
   coverImageUrl?: string;
   status: 'DRAFT' | 'PUBLISHED';
   blogCategoryId?: string;
-  tags?: string[];
+  tagIds?: string[];
   relatedPosts?: string[];
   createdAt: string;
   updatedAt: string;
@@ -58,7 +58,21 @@ export const blogApi = {
   getPostById: (id: string) => fetch(`${API_BASE}/${id}`).then(handleResponse<BlogPost>),
 
   // Obtener un post por slug
-  getPostBySlug: (slug: string) => fetch(`${API_BASE}/slug/${slug}`).then(handleResponse<BlogPost>),
+  // Obtener un post por slug
+  async getPostBySlug(slug: string) {
+    const baseUrl =
+      typeof window === 'undefined'
+        ? process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+        : '';
+    const res = await fetch(`${baseUrl}/api/blog/slug/${slug}`, {
+      cache: 'no-store', // evita cache en server
+    });
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error('Error al obtener el post: ' + text);
+    }
+    return res.json();
+  },
 
   // Listar posts (paginados)
   listPosts: (params?: { page?: number; limit?: number; status?: string }) => {

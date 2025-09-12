@@ -1,33 +1,85 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { z } from 'zod';
+import { useEffect, useState, useRef } from 'react';
+import { gql, useMutation } from '@apollo/client';
 import { useRouter } from 'next/navigation';
 import { blogApi, BlogPost } from '@/lib/blog/blog.api';
 import { generateSlug } from '@/lib/blog/slug';
 import { BlogPostSchema } from '@/lib/blog/validation';
-import TextEditor from './TextEditor';
-import { OutputData } from '@editorjs/editorjs';
+import RichTextEditor, { RichTextEditorRef } from './RichTextEditor';
+import Image from 'next/image';
+import DOMPurify from 'dompurify';
+import useDebounce from '../../../lib/hooks/useDebounce';
+import { Upload, X, Eye, EyeOff, Save, Send, ArrowLeft, ImageIcon, Plus } from 'lucide-react';
+import { getUserFromLocalStorage } from '@/lib/utils/localAuth';
 
 interface PostFormProps {
   initialData?: Partial<BlogPost>;
-  onSave?: (data: BlogPost) => void;
 }
 
-export default function PostForm({ initialData, onSave }: PostFormProps) {
+export default function PostForm({ initialData }: PostFormProps) {
   const [formData, setFormData] = useState<Partial<BlogPost>>(initialData || { status: 'DRAFT' });
   const [message, setMessage] = useState<string | null>(null);
+  const [messageType, setMessageType] = useState<'success' | 'error' | 'info'>('info');
   const [isSaving, setIsSaving] = useState(false);
-  const [editorData, setEditorData] = useState<OutputData | undefined>(
-    initialData?.content ? JSON.parse(initialData.content) : undefined
-  );
+  const [contentHtml, setContentHtml] = useState<string>(initialData?.content || '');
+  const [relatedQuery, setRelatedQuery] = useState('');
+  const [relatedSuggestions, setRelatedSuggestions] = useState<BlogPost[]>([]);
+  const [showPreview, setShowPreview] = useState(false);
+  const [restored, setRestored] = useState(false);
+  const autosaveTimer = useRef<number | null>(null);
+  const debouncedRelated = useDebounce(relatedQuery, 300);
   const router = useRouter();
   const isEdit = Boolean(initialData?.id);
+  const user = getUserFromLocalStorage();
+  const autosaveKey = `blog-draft:${initialData?.id ?? 'new'}`;
 
-  // Autogenerar slug al salir del título
+  const CREATE_POST = gql`
+    mutation CreatePost($input: CreatePostInput!) {
+      createPost(input: $input) {
+        id
+        title
+        excerpt
+        content
+        coverImageUrl
+        blogCategoryId
+        status
+        createdAt
+        tags {
+          tag {
+            id
+          }
+        }
+        slug
+        creator {
+          id
+          name
+          email
+        }
+        __typename
+      }
+    }
+  `;
+
+  const [createPostMutation] = useMutation(CREATE_POST);
+
+  // Auto-generate slug when leaving title field
   const handleTitleBlur = () => {
     if (!formData.slug && formData.title) {
-      setFormData((prev) => ({ ...prev, slug: generateSlug(formData.title!) }));
+      const slug = generateSlug(formData.title!);
+      setFormData((prev) => ({ ...prev, slug }));
+      // Pre-validate uniqueness
+      (async () => {
+        try {
+          const existing = await blogApi.getPostBySlug(slug);
+          if (existing && existing.id !== initialData?.id) {
+            setMessage('El slug ya existe. Modifícalo para que sea único.');
+            setMessageType('error');
+          }
+        } catch (err) {
+          // Not found => OK
+        }
+      })();
     }
   };
 
@@ -38,109 +90,544 @@ export default function PostForm({ initialData, onSave }: PostFormProps) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Guardar el contenido del editor
-  const handleEditorChange = (data: OutputData) => {
-    setEditorData(data); // 👈 solo actualizamos editorData
+  // Enhanced Cover Upload component
+  function CoverUpload({ value, onChange }: { value?: string; onChange: (url: string) => void }) {
+    const [preview, setPreview] = useState<string | null>(value || null);
+    const [isUploading, setIsUploading] = useState(false);
+    const [isDragOver, setIsDragOver] = useState(false);
+
+    const handleFileChange = async (file: File) => {
+      setIsUploading(true);
+      // Simulate upload delay
+      await new Promise((r) => setTimeout(r, 1200));
+      const fileUrl = URL.createObjectURL(file);
+      setPreview(fileUrl);
+      onChange(fileUrl);
+      setIsUploading(false);
+      setMessage('Imagen subida correctamente');
+      setMessageType('success');
+    };
+
+    const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) await handleFileChange(file);
+    };
+
+    const handleDrop = async (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragOver(false);
+      const file = e.dataTransfer.files?.[0];
+      if (file && file.type.startsWith('image/')) {
+        await handleFileChange(file);
+      }
+    };
+
+    return (
+      <div className="space-y-3">
+        {!preview ? (
+          <div
+            className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 ${
+              isDragOver
+                ? 'border-blue-400 bg-blue-500/10'
+                : 'border-gray-600 hover:border-gray-500 hover:bg-gray-800/50'
+            }`}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setIsDragOver(true);
+            }}
+            onDragLeave={() => setIsDragOver(false)}
+            onDrop={handleDrop}
+          >
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleInputChange}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+
+            <div className="flex flex-col items-center space-y-4">
+              {isUploading ? (
+                <div className="w-12 h-12 border-3 border-blue-500 border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center">
+                  <ImageIcon className="w-8 h-8 text-gray-400" />
+                </div>
+              )}
+
+              <div>
+                <p className="text-lg font-medium text-gray-300 mb-1">
+                  {isUploading ? 'Subiendo imagen...' : 'Sube tu imagen de portada'}
+                </p>
+                <p className="text-sm text-gray-500">
+                  Arrastra y suelta o haz clic para seleccionar
+                </p>
+                <p className="text-xs text-gray-600 mt-2">PNG, JPG o WEBP hasta 5MB</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="relative group">
+            <div className="relative overflow-hidden rounded-xl bg-gray-800">
+              <Image
+                src={preview}
+                alt="Cover preview"
+                width={800}
+                height={400}
+                className="w-full h-48 object-cover"
+                unoptimized
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-200" />
+              <button
+                onClick={() => {
+                  setPreview(null);
+                  onChange('');
+                }}
+                className="absolute top-3 right-3 w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <p className="text-sm text-gray-400 mt-2 text-center">Imagen de portada seleccionada</p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Enhanced Rich Text Editor wrapper
+  const rteRef = useRef<RichTextEditorRef | null>(null);
+
+  const handleEditorChange = (html: string) => {
+    setContentHtml(html);
   };
+
+  // Autosave to localStorage
+  useEffect(() => {
+    // Restore draft once
+    if (!restored) {
+      try {
+        const saved = localStorage.getItem(autosaveKey);
+        if (saved) {
+          const parsed = JSON.parse(saved || '{}');
+          const parsedForm = parsed.formData || {};
+          const parsedEditorHtml = parsed.contentHtml;
+
+          const currentFormJson = JSON.stringify(formData || {});
+          const parsedFormJson = JSON.stringify(parsedForm || {});
+
+          // Only set if the restored draft differs from current state
+          if (parsedFormJson && parsedFormJson !== currentFormJson) {
+            setFormData((prev) => ({ ...prev, ...parsedForm }));
+          }
+          if (parsedEditorHtml) {
+            if (parsedEditorHtml !== contentHtml) setContentHtml(parsedEditorHtml);
+          }
+
+          // Notify only when something was actually restored
+          if ((parsedFormJson && parsedFormJson !== currentFormJson) || parsedEditorHtml) {
+            setMessage('Borrador restaurado');
+            setMessageType('info');
+          }
+        }
+      } catch (e) {
+        // Ignore parse errors
+      }
+      setRestored(true);
+    }
+
+    // Save on change (debounced)
+    if (autosaveTimer.current) window.clearTimeout(autosaveTimer.current);
+    autosaveTimer.current = window.setTimeout(() => {
+      const payload = { formData, contentHtml };
+      try {
+        localStorage.setItem(autosaveKey, JSON.stringify(payload));
+      } catch (e) {
+        // Ignore storage errors
+      }
+    }, 1200);
+
+    return () => {
+      if (autosaveTimer.current) window.clearTimeout(autosaveTimer.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData, contentHtml, autosaveKey, restored]);
+
+  // Related posts suggestions
+  useEffect(() => {
+    if (!debouncedRelated || debouncedRelated.length < 2) {
+      setRelatedSuggestions([]);
+      return;
+    }
+    (async () => {
+      try {
+        const res = await blogApi.searchPosts(debouncedRelated);
+        setRelatedSuggestions(res || []);
+      } catch (e) {
+        setRelatedSuggestions([]);
+      }
+    })();
+  }, [debouncedRelated]);
 
   const handleSubmit = async (status: 'DRAFT' | 'PUBLISHED') => {
     try {
       setIsSaving(true);
       setMessage(null);
 
-      // Validación con zod
+      // Client-side required fields check
+      if (!formData.title || formData.title.trim().length === 0) {
+        setMessage('Título requerido');
+        setMessageType('error');
+        setIsSaving(false);
+        return;
+      }
+
+      // Validation with zod
       const parsed = BlogPostSchema.parse({
         ...formData,
-        content: JSON.stringify(editorData || {}),
+        creatorId: user?.id,
+        content: contentHtml || '',
         status,
       });
+
       let saved: BlogPost;
       if (isEdit && initialData?.id) {
         saved = await blogApi.updatePost(initialData.id, parsed);
       } else {
-        saved = await blogApi.createPost(parsed);
+        // Use GraphQL mutation for create
+        const res = await createPostMutation({ variables: { input: parsed } });
+        saved = res?.data?.createPost;
       }
 
-      if (onSave) onSave(saved);
+      // Clear autosave
+      try {
+        localStorage.removeItem(`blog-draft:${initialData?.id ?? 'new'}`);
+      } catch {}
 
-      router.push(`/dashboard/blog/${saved.slug}`);
+      setMessage(
+        status === 'DRAFT' ? 'Borrador guardado correctamente' : 'Artículo publicado exitosamente'
+      );
+      setMessageType('success');
+
+      // Navigate to the post
+      router.push(`/blog-detalle/${saved.slug}`);
     } catch (err: any) {
       console.error(err);
       setMessage(err.message || 'Error al guardar. Intenta nuevamente.');
+      setMessageType('error');
     } finally {
       setIsSaving(false);
     }
   };
 
+  // FileUpload component for inserting images in content
+  function FileUpload({
+    onFile,
+    accept = 'image/*',
+  }: {
+    onFile: (url: string) => void;
+    accept?: string;
+  }) {
+    const [preview, setPreview] = useState<string | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        setIsUploading(true);
+        // Simulate upload latency
+        await new Promise((r) => setTimeout(r, 800));
+        const fileUrl = URL.createObjectURL(file);
+        setPreview(fileUrl);
+        onFile(fileUrl);
+        setIsUploading(false);
+      }
+    };
+
+    return (
+      <div className="mt-2">
+        {!preview ? (
+          <label className="block border-2 border-dashed border-gray-600 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 transition-colors">
+            <input type="file" accept={accept} onChange={handleFileChange} className="hidden" />
+            {isUploading ? (
+              <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+            ) : (
+              <ImageIcon className="w-6 h-6 text-gray-400 mx-auto mb-2" />
+            )}
+            <p className="text-sm text-gray-400">
+              {isUploading ? 'Subiendo...' : 'Haz clic para subir archivo'}
+            </p>
+          </label>
+        ) : (
+          <div className="relative inline-block">
+            <Image
+              src={preview || ''}
+              alt="Preview"
+              width={80}
+              height={80}
+              className="w-20 h-20 object-cover rounded-lg"
+              unoptimized
+            />
+            <button
+              onClick={() => {
+                setPreview(null);
+                onFile('');
+              }}
+              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
-      {message && (
-        <p className="text-sm text-red-500" role="alert">
-          {message}
-        </p>
-      )}
+    <div className="min-h-screen bg-gray-900 text-gray-200">
+      <div className="max-w-4xl mx-auto p-6">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => router.push('/dashboard/blog')}
+              className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <div>
+              <h1 className="text-2xl font-bold">
+                {isEdit ? 'Editar artículo' : 'Nuevo artículo'}
+              </h1>
+              <p className="text-gray-400 text-sm mt-1">
+                {isEdit ? 'Modifica tu contenido' : 'Crea contenido increíble'}
+              </p>
+            </div>
+          </div>
+        </div>
 
-      {/* Title */}
-      <div>
-        <label className="block text-sm font-medium">Título</label>
-        <input
-          type="text"
-          name="title"
-          value={formData.title || ''}
-          onChange={handleChange}
-          onBlur={handleTitleBlur}
-          className="w-full rounded border px-3 py-2"
-          required
-        />
-      </div>
+        {/* Message Alert */}
+        {message && (
+          <div
+            className={`mb-6 p-4 rounded-xl border ${
+              messageType === 'error'
+                ? 'bg-red-500/10 border-red-500/20 text-red-400'
+                : messageType === 'success'
+                  ? 'bg-green-500/10 border-green-500/20 text-green-400'
+                  : 'bg-blue-500/10 border-blue-500/20 text-blue-400'
+            }`}
+          >
+            <p className="font-medium">{message}</p>
+          </div>
+        )}
 
-      {/* Slug */}
-      <div>
-        <label className="block text-sm font-medium">Slug</label>
-        <input
-          type="text"
-          name="slug"
-          value={formData.slug || ''}
-          onChange={handleChange}
-          className="w-full rounded border px-3 py-2"
-        />
-      </div>
+        <div className="space-y-8">
+          {/* Title */}
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-300">Título del artículo</label>
+            <input
+              type="text"
+              name="title"
+              value={formData.title || ''}
+              onChange={handleChange}
+              onBlur={handleTitleBlur}
+              placeholder="Escribe un título atractivo..."
+              className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              required
+            />
+          </div>
 
-      {/* Content (EditorJS) */}
-      <div>
-        <label className="block text-sm font-medium">Contenido</label>
-        <TextEditor
-          data={editorData}
-          onChange={handleEditorChange}
-          placeholder="Escribe el contenido del artículo..."
-        />
-      </div>
+          {/* Slug */}
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-300">URL slug</label>
+            <div className="flex items-center">
+              <span className="px-3 py-3 bg-gray-800 border border-r-0 border-gray-600 rounded-l-xl text-gray-400 text-sm">
+                /blog/
+              </span>
+              <input
+                type="text"
+                name="slug"
+                value={formData.slug || ''}
+                onChange={handleChange}
+                placeholder="url-del-articulo"
+                className="flex-1 px-4 py-3 bg-gray-800 border border-gray-600 rounded-r-xl text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              />
+            </div>
+          </div>
 
-      {/* Actions */}
-      <div className="flex gap-3">
-        <button
-          type="button"
-          disabled={isSaving}
-          onClick={() => handleSubmit('DRAFT')}
-          className="rounded bg-gray-200 text-black px-4 py-2 hover:bg-gray-300"
-        >
-          Guardar borrador
-        </button>
-        <button
-          type="button"
-          disabled={isSaving}
-          onClick={() => handleSubmit('PUBLISHED')}
-          className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-        >
-          {isEdit ? 'Actualizar' : 'Publicar'}
-        </button>
-        <button
-          type="button"
-          onClick={() => router.push('/dashboard/blog')}
-          className="rounded bg-gray-100 text-black px-4 py-2 hover:bg-gray-200"
-        >
-          Cancelar
-        </button>
+          {/* Category and Tags */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Category */}
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-300">Categoría</label>
+              <input
+                type="text"
+                name="blogCategoryId"
+                value={formData.blogCategoryId || ''}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, blogCategoryId: e.target.value }))
+                }
+                placeholder="Escribe la categoría (puede ser nueva)"
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              />
+            </div>
+
+            {/* Tags */}
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-300">Etiquetas</label>
+              <input
+                type="text"
+                name="tags"
+                value={(formData.tagIds || []).join(', ')}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    tags: e.target.value
+                      .split(',')
+                      .map((s) => s.trim())
+                      .filter(Boolean),
+                  }))
+                }
+                placeholder="marketing, ecommerce, startups"
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              />
+              <p className="text-xs text-gray-500">Separa las etiquetas con comas</p>
+            </div>
+          </div>
+
+          {/* Related posts */}
+          {/* <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-300">
+              Artículos relacionados
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                value={relatedQuery}
+                onChange={(e) => setRelatedQuery(e.target.value)}
+                placeholder="Buscar artículos para relacionar..."
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              />
+
+              {relatedSuggestions.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-gray-800 border border-gray-600 rounded-xl shadow-xl z-10">
+                  {relatedSuggestions.map((post) => (
+                    <div
+                      key={post.id}
+                      className="flex items-center justify-between p-3 hover:bg-gray-700 transition-colors first:rounded-t-xl last:rounded-b-xl"
+                    >
+                      <span className="text-gray-200">{post.title}</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFormData((prev) => ({
+                            ...prev,
+                            relatedPosts: Array.from(
+                              new Set([...(prev.relatedPosts || []), post.id!])
+                            ),
+                          }));
+                          setRelatedQuery('');
+                        }}
+                        className="flex items-center gap-1 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition-colors"
+                      >
+                        <Plus className="w-3 h-3" />
+                        Añadir
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {formData.relatedPosts && formData.relatedPosts.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-3">
+                {formData.relatedPosts.map((id, index) => (
+                  <span
+                    key={id}
+                    className="flex items-center gap-2 px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm"
+                  >
+                    Artículo relacionado {index + 1}
+                    <button
+                      onClick={() => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          relatedPosts: prev.relatedPosts?.filter((postId) => postId !== id),
+                        }));
+                      }}
+                      className="text-gray-400 hover:text-red-400 transition-colors"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+          </div> */}
+
+          {/* Content (RichTextEditor) */}
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-300">
+              Contenido del artículo
+            </label>
+            <div className="md:flex md:gap-4">
+              <div className="md:flex-1">
+                <RichTextEditor
+                  ref={rteRef}
+                  value={contentHtml}
+                  onChange={(html) => {
+                    handleEditorChange(html);
+                  }}
+                  onKeyDown={() => {}}
+                  onSubmit={() => {}}
+                  autoFocus={false}
+                  placeholder="Escribe el contenido del artículo..."
+                  maxHeight="700px"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Cover Image */}
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-300">Imagen de portada</label>
+            <CoverUpload
+              value={formData.coverImageUrl}
+              onChange={(url) => setFormData((prev) => ({ ...prev, coverImageUrl: url }))}
+            />
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex items-center justify-between pt-6 border-t border-gray-700">
+            <button
+              type="button"
+              onClick={() => router.push('/dashboard/blog')}
+              className="px-6 py-2 text-gray-400 hover:text-gray-300 transition-colors"
+            >
+              Cancelar
+            </button>
+
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                disabled={isSaving}
+                onClick={() => handleSubmit('DRAFT')}
+                className="flex items-center gap-2 px-6 py-3 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-xl font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Save className="w-4 h-4" />
+                {isSaving ? 'Guardando...' : 'Guardar borrador'}
+              </button>
+
+              <button
+                type="button"
+                disabled={isSaving}
+                onClick={() => handleSubmit('PUBLISHED')}
+                className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Send className="w-4 h-4" />
+                {isSaving ? 'Publicando...' : isEdit ? 'Actualizar' : 'Publicar'}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

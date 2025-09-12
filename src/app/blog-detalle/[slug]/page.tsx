@@ -3,7 +3,7 @@ import { BlogPost } from '@/app/utils/types/BlogPost';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { blogPosts } from '@/app/data/blogData';
+// import { blogPosts } from '@/app/data/blogData';
 import { social } from '@/app/data/data';
 import { FiCalendar, FiClock } from 'react-icons/fi';
 import Switcher from '@/app/components/switcher';
@@ -17,13 +17,55 @@ interface BlogDetailProps {
 export default async function BlogDetailPage({ params }: BlogDetailProps) {
   // Await the params to get the actual values
   const { slug } = await params;
-  const post: BlogPost | undefined = blogPosts.find(
-    (item) => item.slug === `/blog-detalle/${slug}`
-  );
+  // Fetch post from GraphQL by id or slug
+  const query = `query GetPost($idOrSlug: String!) { 
+    getPost(idOrSlug: $idOrSlug) { 
+      id 
+      title
+      slug
+      excerpt 
+      content 
+      status 
+      createdAt
+      updatedAt
+      publishedAt
+      creator { 
+        id 
+        name 
+        email 
+        } 
+      blogCategory { 
+        id 
+        name 
+        slug 
+        } 
+      tags { 
+        tag { 
+          id 
+          name 
+          slug 
+        } 
+      } 
+      relatedPosts { 
+        id 
+        title 
+        slug 
+      } 
+      coverImageUrl 
+    } 
+  }`;
 
-  if (!post) {
-    return notFound();
-  }
+  const endpoint = process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || 'http://localhost:4000/graphql';
+  const resp = await fetch(endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query, variables: { idOrSlug: slug } }),
+    // revalidate can be tuned if you use Next caching
+    next: { revalidate: 60 },
+  });
+  const json = await resp.json();
+  const post = json?.data?.getPost as any | undefined;
+  if (!post) return notFound();
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -43,7 +85,15 @@ export default async function BlogDetailPage({ params }: BlogDetailProps) {
               </li>
               <li className="flex flex-col items-center gap-1">
                 <span className="text-white block font-medium">Fecha:</span>
-                <span>{post.date}</span>
+                <span>
+                  {post.createdAt
+                    ? new Date(post.createdAt).toLocaleDateString('es-ES', {
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric',
+                      })
+                    : ''}
+                </span>
               </li>
               <li className="flex flex-col items-center gap-1">
                 <span className="text-white block font-medium">Tiempo de lectura:</span>
@@ -69,18 +119,16 @@ export default async function BlogDetailPage({ params }: BlogDetailProps) {
       {/* Contenido */}
       <section className="relative md:py-28 py-20">
         <div className="container grid md:grid-cols-12 gap-12 lg:gap-16">
-          {/* Sidebar - ahora a la izquierda */}
-
           {/* Post Content */}
           <div className="lg:col-span-8 md:col-span-7 order-2 md:order-2">
             <div className="relative overflow-hidden rounded-2xl">
               <Image
-                src={post.image}
+                src={post.coverImageUrl || '/images/hero/bg4.jpg'}
                 width={0}
                 height={0}
                 sizes="100vw"
                 style={{ width: '100%', height: 'auto' }}
-                alt={post.imageAlt}
+                alt={post.title || 'Cover image'}
                 className="rounded-t-2xl"
               />
               <div
@@ -126,15 +174,10 @@ export default async function BlogDetailPage({ params }: BlogDetailProps) {
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                       <div>
                         <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
-                          EmprendyUp
+                          {post.creator?.name || 'EmprendyUp'}
                         </h3>
                         <p className="text-fourth-base font-medium text-sm mb-3">
-                          Redactora de Contenido & Experta en Emprendimiento
-                        </p>
-                        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed max-w-lg">
-                          Apasionada por ayudar a emprendedores a construir sus sueños. Creando
-                          contenido que inspira y educa a la comunidad emprendedora desde hace más
-                          de 5 años.
+                          {post.creator?.email || 'Redactor'}
                         </p>
                       </div>
 
@@ -181,14 +224,14 @@ export default async function BlogDetailPage({ params }: BlogDetailProps) {
               <div className="bg-gray-50 dark:bg-slate-800 rounded-xl p-6">
                 <h5 className="text-lg font-semibold mb-6 text-center">Blogs Relacionados</h5>
                 <div className="space-y-6">
-                  {blogPosts.slice(0, 3).map((item: BlogPost, index: number) => (
+                  {(post.relatedPosts || []).slice(0, 3).map((item: any, index: number) => (
                     <div
                       className="group relative bg-white dark:bg-slate-900 rounded-lg overflow-hidden transition-transform hover:-translate-y-1"
                       key={index}
                     >
                       <div className="relative overflow-hidden">
                         <Image
-                          src={item.image}
+                          src={item.coverImageUrl || '/images/hero/bg4.jpg'}
                           width={0}
                           height={0}
                           sizes="100vw"
@@ -201,15 +244,15 @@ export default async function BlogDetailPage({ params }: BlogDetailProps) {
                         <div className="flex items-center gap-3 text-xs text-slate-400 mb-2">
                           <span className="flex items-center gap-1">
                             <FiCalendar className="h-4 w-4 text-slate-600 dark:text-white" />
-                            {item.date}
+                            {new Date(item.publishedAt || item.createdAt).toLocaleDateString()}
                           </span>
                           <span className="flex items-center gap-1">
                             <FiClock className="h-4 w-4 text-slate-600 dark:text-white" />
-                            {item.readTime}
+                            {'5 min'}
                           </span>
                         </div>
                         <Link
-                          href={item.slug}
+                          href={`/blog-detalle/${item.slug}`}
                           className="block text-sm font-semibold hover:text-fourth-base transition-colors leading-snug"
                         >
                           {item.title}

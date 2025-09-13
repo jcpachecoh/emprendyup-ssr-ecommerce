@@ -12,13 +12,22 @@ import DOMPurify from 'dompurify';
 import useDebounce from '../../../lib/hooks/useDebounce';
 import { Upload, X, Eye, EyeOff, Save, Send, ArrowLeft, ImageIcon, Plus } from 'lucide-react';
 import { getUserFromLocalStorage } from '@/lib/utils/localAuth';
+import { SlUmbrella } from 'react-icons/sl';
 
 interface PostFormProps {
   initialData?: Partial<BlogPost>;
 }
 
 export default function PostForm({ initialData }: PostFormProps) {
-  const [formData, setFormData] = useState<Partial<BlogPost>>(initialData || { status: 'DRAFT' });
+  const [formData, setFormData] = useState({
+    title: '',
+    excerpt: '',
+    slug: '',
+    content: '',
+    coverImageUrl: '',
+    blogCategoryId: '',
+    tagIds: [] as string[],
+  });
   const [message, setMessage] = useState<string | null>(null);
   const [messageType, setMessageType] = useState<'success' | 'error' | 'info'>('info');
   const [isSaving, setIsSaving] = useState(false);
@@ -61,7 +70,29 @@ export default function PostForm({ initialData }: PostFormProps) {
     }
   `;
 
+  const UPDATE_POST = gql`
+    mutation UpdatePost($input: UpdatePostInput!) {
+      updatePost(input: $input) {
+        id
+        title
+        slug
+        excerpt
+        content
+        coverImageUrl
+        blogCategoryId
+        status
+        updatedAt
+        tags {
+          tag {
+            id
+          }
+        }
+      }
+    }
+  `;
+
   const [createPostMutation] = useMutation(CREATE_POST);
+  const [updatePostMutation] = useMutation(UPDATE_POST);
 
   // Auto-generate slug when leaving title field
   const handleTitleBlur = () => {
@@ -82,6 +113,19 @@ export default function PostForm({ initialData }: PostFormProps) {
       })();
     }
   };
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        title: initialData.title || '',
+        excerpt: initialData.excerpt || '',
+        slug: initialData.slug || '',
+        content: initialData.content || '',
+        coverImageUrl: initialData.coverImageUrl || '',
+        blogCategoryId: initialData.blogCategory?.name || '',
+        tagIds: initialData.tags?.map((t) => t.tag.id) || [],
+      });
+    }
+  }, [initialData]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -201,57 +245,6 @@ export default function PostForm({ initialData }: PostFormProps) {
     setContentHtml(html);
   };
 
-  // Autosave to localStorage
-  useEffect(() => {
-    // Restore draft once
-    if (!restored) {
-      try {
-        const saved = localStorage.getItem(autosaveKey);
-        if (saved) {
-          const parsed = JSON.parse(saved || '{}');
-          const parsedForm = parsed.formData || {};
-          const parsedEditorHtml = parsed.contentHtml;
-
-          const currentFormJson = JSON.stringify(formData || {});
-          const parsedFormJson = JSON.stringify(parsedForm || {});
-
-          // Only set if the restored draft differs from current state
-          if (parsedFormJson && parsedFormJson !== currentFormJson) {
-            setFormData((prev) => ({ ...prev, ...parsedForm }));
-          }
-          if (parsedEditorHtml) {
-            if (parsedEditorHtml !== contentHtml) setContentHtml(parsedEditorHtml);
-          }
-
-          // Notify only when something was actually restored
-          if ((parsedFormJson && parsedFormJson !== currentFormJson) || parsedEditorHtml) {
-            setMessage('Borrador restaurado');
-            setMessageType('info');
-          }
-        }
-      } catch (e) {
-        // Ignore parse errors
-      }
-      setRestored(true);
-    }
-
-    // Save on change (debounced)
-    if (autosaveTimer.current) window.clearTimeout(autosaveTimer.current);
-    autosaveTimer.current = window.setTimeout(() => {
-      const payload = { formData, contentHtml };
-      try {
-        localStorage.setItem(autosaveKey, JSON.stringify(payload));
-      } catch (e) {
-        // Ignore storage errors
-      }
-    }, 1200);
-
-    return () => {
-      if (autosaveTimer.current) window.clearTimeout(autosaveTimer.current);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData, contentHtml, autosaveKey, restored]);
-
   // Related posts suggestions
   useEffect(() => {
     if (!debouncedRelated || debouncedRelated.length < 2) {
@@ -273,8 +266,7 @@ export default function PostForm({ initialData }: PostFormProps) {
       setIsSaving(true);
       setMessage(null);
 
-      // Client-side required fields check
-      if (!formData.title || formData.title.trim().length === 0) {
+      if (!formData.title.trim()) {
         setMessage('Título requerido');
         setMessageType('error');
         setIsSaving(false);
@@ -285,30 +277,26 @@ export default function PostForm({ initialData }: PostFormProps) {
       const parsed = BlogPostSchema.parse({
         ...formData,
         creatorId: user?.id,
-        content: contentHtml || '',
+        content: contentHtml || formData.content,
         status,
       });
 
       let saved: BlogPost;
       if (isEdit && initialData?.id) {
-        saved = await blogApi.updatePost(initialData.id, parsed);
+        const res = await updatePostMutation({
+          variables: { input: { id: initialData.id, ...parsed } },
+        });
+        saved = res?.data?.updatePost;
+        setMessage('Artículo actualizado correctamente');
       } else {
-        // Use GraphQL mutation for create
         const res = await createPostMutation({ variables: { input: parsed } });
         saved = res?.data?.createPost;
+        setMessage(
+          status === 'DRAFT' ? 'Borrador guardado correctamente' : 'Artículo publicado exitosamente'
+        );
       }
 
-      // Clear autosave
-      try {
-        localStorage.removeItem(`blog-draft:${initialData?.id ?? 'new'}`);
-      } catch {}
-
-      setMessage(
-        status === 'DRAFT' ? 'Borrador guardado correctamente' : 'Artículo publicado exitosamente'
-      );
       setMessageType('success');
-
-      // Navigate to the post
       router.push(`/blog-detalle/${saved.slug}`);
     } catch (err: any) {
       console.error(err);
@@ -318,7 +306,6 @@ export default function PostForm({ initialData }: PostFormProps) {
       setIsSaving(false);
     }
   };
-
   // FileUpload component for inserting images in content
   function FileUpload({
     onFile,

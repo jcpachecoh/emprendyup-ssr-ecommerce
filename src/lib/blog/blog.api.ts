@@ -13,6 +13,9 @@ export interface BlogPost {
   relatedPosts?: string[];
   createdAt: string;
   updatedAt: string;
+
+  blogCategory?: BlogCategory;
+  tags?: { tag: Tag }[];
 }
 
 export interface BlogCategory {

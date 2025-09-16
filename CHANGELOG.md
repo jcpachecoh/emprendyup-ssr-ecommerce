@@ -1,3 +1,9 @@
+# [1.21.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.20.1...v1.21.0) (2025-09-16)
+
+### Features
+
+- create Blog Dashboard ([#13](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/issues/13)) ([61b9d89](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/61b9d8976326dff001f6dcf048757c720bd72e6c))
+
 ## [1.20.1](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.20.0...v1.20.1) (2025-09-10)
 
 ### Bug Fixes

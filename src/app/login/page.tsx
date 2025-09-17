@@ -84,7 +84,7 @@ function LoginForm() {
       if (data.login.user.storeId) {
         router.push('/dashboard/insights');
       } else {
-        router.push('/crear-tienda');
+        router.push('/dashboard/store/new');
       }
     } catch (err: any) {
       setError(err.message || 'Error en el login');

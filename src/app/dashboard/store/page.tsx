@@ -145,7 +145,7 @@ const quickActions = [
   {
     title: 'Store Settings',
     description: 'Configure your store',
-    href: '/dashboard/store/settings',
+    href: '/dashboard/store/list',
     icon: Settings,
     color: 'bg-purple-500',
   },

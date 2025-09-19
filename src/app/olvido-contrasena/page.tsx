@@ -1,13 +1,14 @@
 'use client';
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 
 import BackToHome from '../components/back-to-home';
 import Switcher from '../components/switcher';
+import { LoaderIcon } from 'lucide-react';
 
-export default function ForgotPassword() {
+function ForgotPassword() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get('token');
@@ -248,5 +249,13 @@ export default function ForgotPassword() {
       <BackToHome />
       <Switcher />
     </>
+  );
+}
+
+export default function ForgotPasswordPage() {
+  return (
+    <Suspense fallback={<LoaderIcon />}>
+      <ForgotPassword />
+    </Suspense>
   );
 }

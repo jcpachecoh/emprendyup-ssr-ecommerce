@@ -1,3 +1,9 @@
+## [1.22.1](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.22.0...v1.22.1) (2025-09-19)
+
+### Bug Fixes
+
+- chat store ([48033df](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/48033dfdfb3ba79285da8d107a903805646f4693))
+
 # [1.22.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.21.0...v1.22.0) (2025-09-19)
 
 ### Features

@@ -1,36 +1,28 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   Store,
-  Plus,
   Settings,
   Eye,
-  Edit,
-  Trash2,
-  ExternalLink,
+  Package,
   Users,
   ShoppingCart,
   DollarSign,
   TrendingUp,
-  Package,
   Globe,
-  Palette,
-  CreditCard,
-  BarChart3,
-  Calendar,
   Star,
   MapPin,
-  Clock,
+  ExternalLink,
   CheckCircle,
-  AlertCircle,
-  XCircle,
+  Calendar,
+  BarChart3,
 } from 'lucide-react';
 import KPICard from '../components/KPICard';
 import { useSessionStore } from '@/lib/store/dashboard';
 
-// Types
+// Tipos
 interface StoreData {
   id: string;
   name: string;
@@ -73,11 +65,11 @@ interface StoreData {
   };
 }
 
-// Mock store data
+// Datos de ejemplo
 const mockStore: StoreData = {
   id: 'store-1',
   name: 'EmprendyUp Fashion',
-  description: 'Premium fashion and lifestyle products for modern entrepreneurs',
+  description: 'Productos de moda y estilo de vida premium para emprendedores modernos',
   subdomain: 'emprendyup-fashion',
   customDomain: 'fashion.emprendyup.com',
   logo: '/images/logo-dark.png',
@@ -89,7 +81,7 @@ const mockStore: StoreData = {
   settings: {
     currency: 'USD',
     timezone: 'America/New_York',
-    language: 'en',
+    language: 'es',
     theme: 'modern',
     allowGuestCheckout: true,
     requireEmailVerification: true,
@@ -106,52 +98,52 @@ const mockStore: StoreData = {
     conversionRate: 3.2,
   },
   features: [
-    'Custom Domain',
-    'SSL Certificate',
-    'Payment Processing',
-    'Inventory Management',
-    'Analytics Dashboard',
-    'Email Marketing',
-    'SEO Tools',
-    'Mobile Responsive',
-    'Multi-language Support',
-    'Social Media Integration',
+    'Dominio personalizado',
+    'Certificado SSL',
+    'Procesamiento de pagos',
+    'Gestión de inventario',
+    'Panel de análisis',
+    'Email marketing',
+    'Herramientas SEO',
+    'Diseño responsivo',
+    'Soporte multilenguaje',
+    'Integración redes sociales',
   ],
   address: {
     street: '123 Business Ave',
-    city: 'New York',
+    city: 'Nueva York',
     state: 'NY',
     zipCode: '10001',
-    country: 'United States',
+    country: 'Estados Unidos',
   },
 };
 
 const quickActions = [
   {
-    title: 'Add Product',
-    description: 'Add new products to your store',
+    title: 'Agregar producto',
+    description: 'Añade nuevos productos a tu tienda',
     href: '/dashboard/store/products/new',
     icon: Package,
     color: 'bg-blue-500',
   },
   {
-    title: 'View Store',
-    description: 'Preview your live store',
+    title: 'Ver tienda',
+    description: 'Vista previa de tu tienda en vivo',
     href: '#',
     icon: Eye,
     color: 'bg-green-500',
     external: true,
   },
   {
-    title: 'Store Settings',
-    description: 'Configure your store',
+    title: 'Configuración de la tienda',
+    description: 'Configura tu tienda',
     href: '/dashboard/store/list',
     icon: Settings,
     color: 'bg-purple-500',
   },
   {
-    title: 'Analytics',
-    description: 'View detailed analytics',
+    title: 'Analíticas',
+    description: 'Ver estadísticas detalladas',
     href: '/dashboard/insights',
     icon: BarChart3,
     color: 'bg-orange-500',
@@ -162,32 +154,32 @@ const recentActivity = [
   {
     id: '1',
     type: 'order',
-    description: 'New order #1234 received',
-    timestamp: '2 minutes ago',
+    description: 'Nuevo pedido #1234 recibido',
+    timestamp: 'Hace 2 minutos',
     icon: ShoppingCart,
     color: 'text-green-600',
   },
   {
     id: '2',
     type: 'product',
-    description: 'Product "Summer Dress" updated',
-    timestamp: '15 minutes ago',
+    description: 'Producto "Vestido de verano" actualizado',
+    timestamp: 'Hace 15 minutos',
     icon: Package,
     color: 'text-blue-600',
   },
   {
     id: '3',
     type: 'customer',
-    description: 'New customer registration',
-    timestamp: '1 hour ago',
+    description: 'Nuevo registro de cliente',
+    timestamp: 'Hace 1 hora',
     icon: Users,
     color: 'text-purple-600',
   },
   {
     id: '4',
     type: 'payment',
-    description: 'Payment of $125.50 received',
-    timestamp: '2 hours ago',
+    description: 'Pago de $125.50 recibido',
+    timestamp: 'Hace 2 horas',
     icon: DollarSign,
     color: 'text-green-600',
   },
@@ -196,11 +188,8 @@ const recentActivity = [
 export default function StorePage() {
   const { currentStore, stores } = useSessionStore();
   const [store] = useState<StoreData>(mockStore);
-  const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'orders' | 'settings'>(
-    'overview'
-  );
 
-  // Get status color
+  // Helpers de color según estado/plan
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
@@ -216,7 +205,6 @@ export default function StorePage() {
     }
   };
 
-  // Get plan color
   const getPlanColor = (plan: string) => {
     switch (plan) {
       case 'starter':
@@ -232,7 +220,7 @@ export default function StorePage() {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
+      {/* Encabezado */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div className="flex items-center gap-4">
           <div className="h-16 w-16 rounded-lg bg-fourth-base/10 flex items-center justify-center">
@@ -249,12 +237,12 @@ export default function StorePage() {
               <span
                 className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(store.status)}`}
               >
-                {store.status}
+                {store.status === 'active' ? 'Activo' : store.status}
               </span>
               <span
                 className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getPlanColor(store.plan)}`}
               >
-                {store.plan}
+                {store.plan === 'professional' ? 'Profesional' : store.plan}
               </span>
             </div>
           </div>
@@ -267,14 +255,14 @@ export default function StorePage() {
             className="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
           >
             <ExternalLink className="h-4 w-4 mr-2" />
-            View Store
+            Ver tienda
           </a>
           <Link
             href="/dashboard/store/settings"
             className="inline-flex items-center px-4 py-2 bg-fourth-base text-white rounded-lg hover:bg-fourth-base/90 transition-colors"
           >
             <Settings className="h-4 w-4 mr-2" />
-            Settings
+            Configuración
           </Link>
         </div>
       </div>
@@ -283,20 +271,20 @@ export default function StorePage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">Domain</h3>
+            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">Dominio</h3>
             <Globe className="h-5 w-5 text-fourth-base" />
           </div>
           <p className="text-sm font-medium text-gray-900 dark:text-white">
             {store.customDomain || `${store.subdomain}.emprendyup.com`}
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-            {store.customDomain ? 'Custom Domain' : 'Subdomain'}
+            {store.customDomain ? 'Dominio personalizado' : 'Subdominio'}
           </p>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">Created</h3>
+            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">Creado</h3>
             <Calendar className="h-5 w-5 text-fourth-base" />
           </div>
           <p className="text-sm font-medium text-gray-900 dark:text-white">
@@ -304,13 +292,13 @@ export default function StorePage() {
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             {Math.floor((Date.now() - new Date(store.createdAt).getTime()) / (1000 * 60 * 60 * 24))}{' '}
-            days ago
+            días atrás
           </p>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">Currency</h3>
+            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">Moneda</h3>
             <DollarSign className="h-5 w-5 text-fourth-base" />
           </div>
           <p className="text-sm font-medium text-gray-900 dark:text-white">
@@ -321,47 +309,53 @@ export default function StorePage() {
 
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">Features</h3>
+            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              Características
+            </h3>
             <Star className="h-5 w-5 text-fourth-base" />
           </div>
           <p className="text-sm font-medium text-gray-900 dark:text-white">
-            {store.features.length} active
+            {store.features.length} activas
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Premium features enabled</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            Funciones premium habilitadas
+          </p>
         </div>
       </div>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <KPICard
-          title="Total Products"
+          title="Total de productos"
           value={store.stats.totalProducts}
           icon={Package}
-          description="Products in your store"
+          description="Productos en tu tienda"
         />
         <KPICard
-          title="Total Orders"
+          title="Total de pedidos"
           value={store.stats.totalOrders}
           icon={ShoppingCart}
-          description="Lifetime orders"
+          description="Pedidos de por vida"
         />
         <KPICard
-          title="Total Revenue"
+          title="Ingresos totales"
           value={`$${store.stats.totalRevenue.toLocaleString()}`}
           icon={DollarSign}
-          description="Lifetime revenue"
+          description="Ingresos acumulados"
         />
         <KPICard
-          title="Customers"
+          title="Clientes"
           value={store.stats.totalCustomers}
           icon={Users}
-          description="Registered customers"
+          description="Clientes registrados"
         />
       </div>
 
       {/* Quick Actions */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h2>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          Acciones Rapidas
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {quickActions.map((action) => (
             <Link
@@ -396,7 +390,9 @@ export default function StorePage() {
         {/* Recent Activity */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Recent Activity</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Actividad Reciente
+            </h3>
           </div>
           <div className="p-6">
             <div className="space-y-4">
@@ -417,7 +413,7 @@ export default function StorePage() {
                 href="/dashboard/insights"
                 className="text-sm text-fourth-base hover:text-fourth-base/80 font-medium"
               >
-                View all activity →
+                Ver toda la actividad →
               </Link>
             </div>
           </div>
@@ -427,7 +423,7 @@ export default function StorePage() {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="p-6 border-b border-gray-200 dark:border-gray-700">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              Enabled Features
+              Funciones habilitadas
             </h3>
           </div>
           <div className="p-6">
@@ -444,7 +440,7 @@ export default function StorePage() {
                 href="/dashboard/store/settings"
                 className="text-sm text-fourth-base hover:text-fourth-base/80 font-medium"
               >
-                Manage features →
+                Manejar funciones →
               </Link>
             </div>
           </div>
@@ -455,7 +451,7 @@ export default function StorePage() {
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            Performance Metrics
+            Métricas de rendimiento
           </h3>
         </div>
         <div className="p-6">
@@ -464,11 +460,13 @@ export default function StorePage() {
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
                 ${store.stats.averageOrderValue}
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Average Order Value</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">
+                Valor promedio de pedido
+              </div>
               <div className="mt-2">
                 <div className="text-xs text-green-600 flex items-center justify-center gap-1">
                   <TrendingUp className="h-3 w-3" />
-                  +12% from last month
+                  +12% desde el mes pasado
                 </div>
               </div>
             </div>
@@ -476,11 +474,11 @@ export default function StorePage() {
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
                 {store.stats.conversionRate}%
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Conversion Rate</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">Tasa de Conversion</div>
               <div className="mt-2">
                 <div className="text-xs text-green-600 flex items-center justify-center gap-1">
                   <TrendingUp className="h-3 w-3" />
-                  +0.5% from last month
+                  +0.5% desde el mes pasado
                 </div>
               </div>
             </div>
@@ -488,11 +486,11 @@ export default function StorePage() {
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
                 ${store.stats.monthlyRevenue.toLocaleString()}
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Monthly Revenue</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">Ingresos mensuales</div>
               <div className="mt-2">
                 <div className="text-xs text-green-600 flex items-center justify-center gap-1">
                   <TrendingUp className="h-3 w-3" />
-                  +8% from last month
+                  +8% desde el mes pasado
                 </div>
               </div>
             </div>
@@ -504,7 +502,9 @@ export default function StorePage() {
       {store.address && (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Store Address</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Dirección de tienda
+            </h3>
           </div>
           <div className="p-6">
             <div className="flex items-start gap-3">

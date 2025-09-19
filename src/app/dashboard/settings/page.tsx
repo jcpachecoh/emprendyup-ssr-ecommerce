@@ -62,28 +62,28 @@ export default function SettingsPage() {
   };
 
   const tabs = [
-    { id: 'profile', name: 'Profile', icon: '👤' },
-    { id: 'security', name: 'Security', icon: '🔒' },
-    { id: 'notifications', name: 'Notifications', icon: '🔔' },
-    { id: 'preferences', name: 'Preferences', icon: '⚙️' },
+    { id: 'profile', name: 'Perfil', icon: '👤' },
+    { id: 'security', name: 'Seguridad', icon: '🔒' },
+    { id: 'notifications', name: 'Notificaciones', icon: '🔔' },
+    { id: 'preferences', name: 'Preferencias', icon: '⚙️' },
   ];
 
   return (
     <div className="p-4 lg:p-6 max-w-7xl mx-auto space-y-6">
-      {/* Header */}
+      {/* Encabezado */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Configuración</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
-            Manage your account settings and preferences
+            Administra la configuración de tu cuenta y tus preferencias
           </p>
         </div>
       </div>
 
-      {/* Tabs */}
+      {/* Pestañas */}
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
         <div className="border-b border-gray-200 dark:border-gray-700">
-          <nav className="flex space-x-8 px-6" aria-label="Tabs">
+          <nav className="flex space-x-8 px-6" aria-label="Pestañas">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
@@ -102,7 +102,7 @@ export default function SettingsPage() {
         </div>
 
         <div className="p-6">
-          {/* Profile Tab */}
+          {/* Pestaña Perfil */}
           {activeTab === 'profile' && (
             <div className="space-y-6">
               <div className="flex items-center space-x-6">
@@ -133,7 +133,7 @@ export default function SettingsPage() {
                   <h3 className="text-lg font-medium text-gray-900 dark:text-white">{user.name}</h3>
                   <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
                   <p className="text-sm text-gray-500 dark:text-gray-400 capitalize">
-                    {user.role} account
+                    Cuenta de {user.role}
                   </p>
                 </div>
               </div>
@@ -142,7 +142,7 @@ export default function SettingsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Full Name
+                      Nombre completo
                     </label>
                     <input
                       {...register('name')}
@@ -156,7 +156,7 @@ export default function SettingsPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Email Address
+                      Correo electrónico
                     </label>
                     <input
                       {...register('email')}
@@ -170,7 +170,7 @@ export default function SettingsPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Phone Number
+                      Número de teléfono
                     </label>
                     <input
                       {...register('phone')}
@@ -184,7 +184,7 @@ export default function SettingsPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Company
+                      Empresa
                     </label>
                     <input
                       {...register('company')}
@@ -198,20 +198,20 @@ export default function SettingsPage() {
 
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Timezone
+                      Zona horaria
                     </label>
                     <select
                       {...register('timezone')}
                       disabled={!isEditing}
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-gray-50 dark:disabled:bg-gray-800 disabled:text-gray-500"
                     >
-                      <option value="America/New_York">Eastern Time (ET)</option>
-                      <option value="America/Chicago">Central Time (CT)</option>
-                      <option value="America/Denver">Mountain Time (MT)</option>
-                      <option value="America/Los_Angeles">Pacific Time (PT)</option>
-                      <option value="Europe/London">Greenwich Mean Time (GMT)</option>
-                      <option value="Europe/Paris">Central European Time (CET)</option>
-                      <option value="Asia/Tokyo">Japan Standard Time (JST)</option>
+                      <option value="America/New_York">Hora del Este (ET)</option>
+                      <option value="America/Chicago">Hora Central (CT)</option>
+                      <option value="America/Denver">Hora de la Montaña (MT)</option>
+                      <option value="America/Los_Angeles">Hora del Pacífico (PT)</option>
+                      <option value="Europe/London">Hora de Greenwich (GMT)</option>
+                      <option value="Europe/Paris">Hora Central Europea (CET)</option>
+                      <option value="Asia/Tokyo">Hora Estándar de Japón (JST)</option>
                     </select>
                     {errors.timezone && (
                       <p className="text-red-500 text-sm mt-1">{errors.timezone.message}</p>
@@ -226,7 +226,7 @@ export default function SettingsPage() {
                       onClick={handleEditToggle}
                       className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
                     >
-                      Edit Profile
+                      Editar perfil
                     </button>
                   ) : (
                     <>
@@ -234,14 +234,14 @@ export default function SettingsPage() {
                         type="submit"
                         className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
                       >
-                        Save Changes
+                        Guardar cambios
                       </button>
                       <button
                         type="button"
                         onClick={handleEditToggle}
                         className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition-colors"
                       >
-                        Cancel
+                        Cancelar
                       </button>
                     </>
                   )}
@@ -250,12 +250,12 @@ export default function SettingsPage() {
             </div>
           )}
 
-          {/* Security Tab */}
+          {/* Pestaña Seguridad */}
           {activeTab === 'security' && (
             <div className="space-y-6">
               <div>
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-                  Password & Security
+                  Contraseña y Seguridad
                 </h3>
 
                 <div className="space-y-4">
@@ -263,14 +263,14 @@ export default function SettingsPage() {
                     <div className="flex items-center justify-between">
                       <div>
                         <h4 className="text-sm font-medium text-gray-900 dark:text-white">
-                          Password
+                          Contraseña
                         </h4>
                         <p className="text-sm text-gray-500 dark:text-gray-400">
-                          Last updated 30 days ago
+                          Última actualización hace 30 días
                         </p>
                       </div>
                       <button className="px-3 py-1 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 text-gray-700 dark:text-gray-200 rounded-md text-sm hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors">
-                        Change
+                        Cambiar
                       </button>
                     </div>
                   </div>
@@ -279,14 +279,14 @@ export default function SettingsPage() {
                     <div className="flex items-center justify-between">
                       <div>
                         <h4 className="text-sm font-medium text-gray-900 dark:text-white">
-                          Two-Factor Authentication
+                          Autenticación de dos factores
                         </h4>
                         <p className="text-sm text-gray-500 dark:text-gray-400">
-                          Add an extra layer of security to your account
+                          Agrega una capa extra de seguridad a tu cuenta
                         </p>
                       </div>
                       <button className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm transition-colors">
-                        Enable
+                        Activar
                       </button>
                     </div>
                   </div>
@@ -295,14 +295,14 @@ export default function SettingsPage() {
                     <div className="flex items-center justify-between">
                       <div>
                         <h4 className="text-sm font-medium text-gray-900 dark:text-white">
-                          Active Sessions
+                          Sesiones activas
                         </h4>
                         <p className="text-sm text-gray-500 dark:text-gray-400">
-                          Manage where you re logged in
+                          Administra dónde has iniciado sesión
                         </p>
                       </div>
                       <button className="px-3 py-1 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 text-gray-700 dark:text-gray-200 rounded-md text-sm hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors">
-                        View All
+                        Ver todas
                       </button>
                     </div>
                   </div>
@@ -311,22 +311,22 @@ export default function SettingsPage() {
             </div>
           )}
 
-          {/* Notifications Tab */}
+          {/* Pestaña Notificaciones */}
           {activeTab === 'notifications' && (
             <div className="space-y-6">
               <div>
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-                  Notification Preferences
+                  Preferencias de notificación
                 </h3>
 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="text-sm font-medium text-gray-900 dark:text-white">
-                        Email Notifications
+                        Notificaciones por correo
                       </h4>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Receive updates about your orders and account
+                        Recibe actualizaciones sobre tus pedidos y cuenta
                       </p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
@@ -338,10 +338,10 @@ export default function SettingsPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="text-sm font-medium text-gray-900 dark:text-white">
-                        SMS Notifications
+                        Notificaciones por SMS
                       </h4>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Get text messages for important updates
+                        Recibe mensajes de texto para actualizaciones importantes
                       </p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
@@ -353,10 +353,10 @@ export default function SettingsPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="text-sm font-medium text-gray-900 dark:text-white">
-                        Marketing Emails
+                        Correos de marketing
                       </h4>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Receive promotional offers and news
+                        Recibe ofertas promocionales y noticias
                       </p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
@@ -369,41 +369,41 @@ export default function SettingsPage() {
             </div>
           )}
 
-          {/* Preferences Tab */}
+          {/* Pestaña Preferencias */}
           {activeTab === 'preferences' && (
             <div className="space-y-6">
               <div>
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-                  Application Preferences
+                  Preferencias de la aplicación
                 </h3>
 
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Language
+                      Idioma
                     </label>
                     <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                      <option value="en">English</option>
+                      <option value="en">Inglés</option>
                       <option value="es">Español</option>
-                      <option value="fr">Français</option>
-                      <option value="de">Deutsch</option>
+                      <option value="fr">Francés</option>
+                      <option value="de">Alemán</option>
                     </select>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Theme
+                      Tema
                     </label>
                     <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                      <option value="system">System</option>
-                      <option value="light">Light</option>
-                      <option value="dark">Dark</option>
+                      <option value="system">Sistema</option>
+                      <option value="light">Claro</option>
+                      <option value="dark">Oscuro</option>
                     </select>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Date Format
+                      Formato de fecha
                     </label>
                     <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-transparent">
                       <option value="MM/DD/YYYY">MM/DD/YYYY</option>
@@ -415,10 +415,10 @@ export default function SettingsPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="text-sm font-medium text-gray-900 dark:text-white">
-                        Auto-save Forms
+                        Guardar formularios automáticamente
                       </h4>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Automatically save form data as you type
+                        Guarda automáticamente los datos del formulario mientras escribes
                       </p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
@@ -430,7 +430,7 @@ export default function SettingsPage() {
 
                 <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
                   <button className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors">
-                    Save Preferences
+                    Guardar preferencias
                   </button>
                 </div>
               </div>
@@ -439,21 +439,21 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Danger Zone */}
-      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
-        <h3 className="text-lg font-medium text-red-900 dark:text-red-200 mb-2">Danger Zone</h3>
+      {/* Zona de Peligro */}
+      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg mt-22 p-6">
+        <h3 className="text-lg font-medium text-red-900 dark:text-red-200 mb-2">Zona de peligro</h3>
         <p className="text-sm text-red-700 dark:text-red-300 mb-4">
-          These actions are irreversible. Please proceed with caution.
+          Estas acciones son irreversibles. Por favor procede con precaución.
         </p>
         <div className="flex flex-col sm:flex-row gap-3">
           <button className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors">
-            Delete Account
+            Eliminar cuenta
           </button>
           <button
             onClick={logout}
             className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition-colors"
           >
-            Logout Everywhere
+            Cerrar sesión en todos los dispositivos
           </button>
         </div>
       </div>

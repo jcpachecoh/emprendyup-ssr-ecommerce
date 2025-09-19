@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, no-console */
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 import {
-  Upload,
-  X,
   Send,
   Palette,
   MapPin,
@@ -17,9 +14,10 @@ import {
   Youtube,
   MessageSquare,
 } from 'lucide-react';
+import FileUpload from './FileUpload';
 import { gql, useMutation } from '@apollo/client';
 import { useSessionStore } from '@/lib/store/dashboard';
-import { useRouter } from 'next/navigation';
+// router not used in this component
 
 interface Message {
   from: 'bot' | 'user';
@@ -95,20 +93,7 @@ const questions = [
     validation: { type: 'url' as const, required: false },
     optional: true,
   },
-  {
-    text: '¿Tienes un favicon? Es el pequeño ícono que aparece en las pestañas del navegador:',
-    field: 'faviconUrl',
-    type: 'image' as const,
-    validation: { type: 'url' as const, required: false },
-    optional: true,
-  },
-  {
-    text: 'Opcional: ¿Tienes una imagen de banner para la portada de tu tienda?',
-    field: 'bannerUrl',
-    type: 'image' as const,
-    validation: { type: 'url' as const, required: false },
-    optional: true,
-  },
+
   {
     text: '🎨 ¡Hora de los colores! Elige tu color principal (será el color dominante de tu tienda):',
     field: 'primaryColor',
@@ -157,12 +142,14 @@ const questions = [
     text: '¿En qué ciudad te encuentras?',
     field: 'city',
     type: 'text' as const,
+    options: ['Persona Natural', 'SAS', 'LTDA', 'SA', 'Fundación', 'Cooperativa'],
     validation: { type: 'text' as const, required: true, message: 'La ciudad es requerida' },
   },
   {
     text: '¿En qué departamento/estado?',
     field: 'department',
     type: 'text' as const,
+    options: ['Persona Natural', 'SAS', 'LTDA', 'SA', 'Fundación', 'Cooperativa'],
     validation: { type: 'text' as const, required: true, message: 'El departamento es requerido' },
   },
   {
@@ -285,70 +272,9 @@ const defaultStoreData: StoreData = {
   status: 'active',
 };
 
-function FileUpload({
-  onFile,
-  accept = 'image/*',
-}: {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onFile: (_arg: string) => void;
-  accept?: string;
-}) {
-  const [preview, setPreview] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setIsUploading(true);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const fileUrl = URL.createObjectURL(file);
-      setPreview(fileUrl);
-      onFile(fileUrl);
-      setIsUploading(false);
-    }
-  };
-
-  return (
-    <div className="mt-2">
-      {!preview ? (
-        <label className="block border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 transition-colors">
-          <input type="file" accept={accept} onChange={handleFileChange} className="hidden" />
-          {isUploading ? (
-            <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-          ) : (
-            <Upload className="w-6 h-6 text-gray-400 mx-auto mb-2" />
-          )}
-          <p className="text-sm text-gray-600">
-            {isUploading ? 'Subiendo...' : 'Haz clic para subir archivo'}
-          </p>
-        </label>
-      ) : (
-        <div className="relative inline-block">
-          <Image
-            src={preview}
-            alt="Preview"
-            width={80}
-            height={80}
-            className="w-20 h-20 object-cover rounded-lg"
-            unoptimized
-          />
-          <button
-            onClick={() => {
-              setPreview(null);
-              onFile('');
-            }}
-            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-          >
-            <X className="w-3 h-3" />
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function ColorPicker({ value, onChange }: { value: string; onChange: (_color: string) => void }) {
+// @ts-ignore - suppress unused parameter-name warning in the function type annotation
+function ColorPicker({ value, onChange }: { value: string; onChange: (color: string) => void }) {
   const presetColors = [
     '#3B82F6',
     '#EF4444',
@@ -433,13 +359,13 @@ const CREATE_STORE = gql`
   }
 `;
 
+// @ts-ignore - suppress unused parameter-name warning in the function type annotation
 function SelectInput({
   options,
   onSelect,
 }: {
   options: string[];
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onSelect: (_value: string) => void;
+  onSelect: (value: string) => void;
 }) {
   return (
     <div className="mt-2 grid grid-cols-2 gap-2">
@@ -500,7 +426,8 @@ export default function InteractiveChatStore() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const router = useRouter();
+  // router not required here but kept for potential navigation flows
+  // const router = useRouter();
 
   // Validation functions
   const validateInput = (

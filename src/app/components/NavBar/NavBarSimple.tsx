@@ -4,7 +4,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import { FiSearch, FiUser } from '../../assets/icons/vander';
-import { FaUser } from 'react-icons/fa6';
+import { FaUser, FaChevronDown } from 'react-icons/fa6';
+import { LogOut, User } from 'lucide-react';
+import { toast } from 'sonner';
 
 type NavbarSimpleProps = {
   navClass?: string;
@@ -17,9 +19,24 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
   const [menu, setmenu] = useState<string>('');
   const [submenu, setSubmenu] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState<boolean>(false);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // Check for user session
+      try {
+        const userData = localStorage.getItem('user');
+        if (userData) {
+          const parsedUser = JSON.parse(userData);
+          if (parsedUser && parsedUser.email && parsedUser.name) {
+            setUser(parsedUser);
+          }
+        }
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+      }
+
       const handleScroll = () => {
         const isScrolling = window.scrollY > 50;
         setScrolling(isScrolling);
@@ -27,8 +44,13 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
 
       const handleOutsideClick = (event: MouseEvent) => {
         const target = event.target as HTMLElement;
-        if (!target.closest('#navigation') && !target.closest('.search-dropdown')) {
+        if (
+          !target.closest('#navigation') &&
+          !target.closest('.search-dropdown') &&
+          !target.closest('.user-dropdown')
+        ) {
           setIsOpen(false);
+          setUserDropdownOpen(false);
         }
       };
 
@@ -48,6 +70,31 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
 
   const toggleMenu = () => {
     setToggle(!isToggle);
+  };
+
+  const toggleUserDropdown = () => {
+    setUserDropdownOpen(!userDropdownOpen);
+  };
+
+  const handleLogout = () => {
+    // Show toast notification
+    toast.success('Sesión cerrada exitosamente', {
+      description: 'Has cerrado sesión correctamente. Redirigiendo...',
+      duration: 2000,
+    });
+
+    // Clear localStorage
+    localStorage.removeItem('user');
+    localStorage.removeItem('accessToken');
+
+    // Reset user state
+    setUser(null);
+    setUserDropdownOpen(false);
+
+    // Redirect after a short delay to allow toast to be seen
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 1500);
   };
 
   return (
@@ -313,13 +360,52 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
           </div>
         </div>
         <div className="flex gap-2">
-          <Link
-            href="/login"
-            target="_blank"
-            className="py-2 px-4 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-sm font-medium text-center rounded-full bg-gray-800 hover:bg-gray-700 text-white"
-          >
-            <FaUser />
-          </Link>
+          {/* User Dropdown */}
+          {user ? (
+            <div className="relative user-dropdown">
+              <button
+                onClick={toggleUserDropdown}
+                className="py-2 px-4 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-sm font-medium text-center rounded-full bg-gray-800 hover:bg-gray-700 text-white gap-2"
+              >
+                <FaUser />
+                <span className="hidden md:inline">{user.name?.split(' ')[0] || 'Usuario'}</span>
+                <FaChevronDown
+                  className={`transition-transform duration-200 ${userDropdownOpen ? 'rotate-180' : ''}`}
+                />
+              </button>
+
+              {/* Dropdown Menu */}
+              {userDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+                  <div className="py-1">
+                    <Link
+                      href="/dashboard"
+                      className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                      onClick={() => setUserDropdownOpen(false)}
+                    >
+                      <User className="w-4 h-4" />
+                      Mi Perfil
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Cerrar Sesión
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              target="_blank"
+              className="py-2 px-4 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-sm font-medium text-center rounded-full bg-gray-800 hover:bg-gray-700 text-white"
+            >
+              <FaUser />
+            </Link>
+          )}
 
           <Link
             href="/crear-tienda"
@@ -408,16 +494,48 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
                   Contacto
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/login"
-                  target="_blank"
-                  onClick={() => setToggle(false)}
-                  className="block flex items-center gap-4 text-lg font-medium text-gray-800 dark:text-white py-2"
-                >
-                  <FaUser /> Login
-                </Link>
-              </li>
+
+              {/* User Menu Items */}
+              {user ? (
+                <>
+                  <li className="border-t border-gray-200 dark:border-gray-700 pt-2">
+                    <span className="block text-sm text-gray-500 dark:text-gray-400 py-1">
+                      Hola, {user.name?.split(' ')[0] || 'Usuario'}
+                    </span>
+                  </li>
+                  <li>
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setToggle(false)}
+                      className="block flex items-center gap-4 text-lg font-medium text-gray-800 dark:text-white py-2"
+                    >
+                      <User className="w-5 h-5" /> Mi Perfil
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setToggle(false);
+                        handleLogout();
+                      }}
+                      className="block flex items-center gap-4 text-lg font-medium text-red-600 py-2 w-full text-left"
+                    >
+                      <LogOut className="w-5 h-5" /> Cerrar Sesión
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <li>
+                  <Link
+                    href="/login"
+                    target="_blank"
+                    onClick={() => setToggle(false)}
+                    className="block flex items-center gap-4 text-lg font-medium text-gray-800 dark:text-white py-2"
+                  >
+                    <FaUser /> Login
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
         )}

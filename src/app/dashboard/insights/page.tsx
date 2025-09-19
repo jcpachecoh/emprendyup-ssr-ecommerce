@@ -7,7 +7,7 @@ import LineChart from '../components/LineChart';
 import BarChart from '../components/BarChart';
 import { KPI, ChartData, Customer } from '@/lib/schemas/dashboard';
 
-// Mock data
+// Datos de ejemplo
 const mockKPIs: KPI = {
   totalCustomers: 1234,
   totalOrders: 892,
@@ -29,13 +29,13 @@ const mockChartData: ChartData = {
     { source: 'Instagram', customers: 450, percentage: 35 },
     { source: 'WhatsApp', customers: 380, percentage: 30 },
     { source: 'Facebook', customers: 250, percentage: 20 },
-    { source: 'Direct', customers: 154, percentage: 15 },
+    { source: 'Directo', customers: 154, percentage: 15 },
   ],
   salesFunnel: [
-    { stage: 'Visitors', count: 10000, percentage: 100 },
+    { stage: 'Visitantes', count: 10000, percentage: 100 },
     { stage: 'Leads', count: 1500, percentage: 15 },
-    { stage: 'Prospects', count: 500, percentage: 5 },
-    { stage: 'Customers', count: 150, percentage: 1.5 },
+    { stage: 'Prospectos', count: 500, percentage: 5 },
+    { stage: 'Clientes', count: 150, percentage: 1.5 },
   ],
 };
 
@@ -82,7 +82,7 @@ export default function InsightsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate API call
+    // Simular llamada a API
     const fetchData = async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setKpis(mockKPIs);
@@ -101,59 +101,65 @@ export default function InsightsPage() {
       vip: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
     };
 
+    const etiquetas: Record<string, string> = {
+      lead: 'LEAD',
+      customer: 'CLIENTE',
+      vip: 'VIP',
+    };
+
     return (
       <span
         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[status as keyof typeof styles]}`}
       >
-        {status.toUpperCase()}
+        {etiquetas[status] || status.toUpperCase()}
       </span>
     );
   };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Encabezado */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Insights Dashboard</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Panel de Insights</h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Overview of your store performance and customer insights
+            Vista general del rendimiento de tu tienda y análisis de clientes
           </p>
         </div>
       </div>
 
-      {/* KPI Cards */}
+      {/* Tarjetas KPI */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <KPICard
-          title="Total Customers"
+          title="Clientes Totales"
           value={kpis?.totalCustomers || 0}
           icon={Users}
           trend={{ value: 12.5, isPositive: true }}
           loading={loading}
         />
         <KPICard
-          title="Total Orders"
+          title="Órdenes Totales"
           value={kpis?.totalOrders || 0}
           icon={ShoppingCart}
           trend={{ value: 8.2, isPositive: true }}
           loading={loading}
         />
         <KPICard
-          title="Monthly Revenue"
+          title="Ingresos Mensuales"
           value={kpis ? `$${kpis.monthlyRevenue.toLocaleString()}` : '$0'}
           icon={DollarSign}
           trend={{ value: 15.3, isPositive: true }}
           loading={loading}
         />
         <KPICard
-          title="Conversion Rate"
+          title="Tasa de Conversión"
           value={kpis ? `${kpis.conversionRate}%` : '0%'}
           icon={TrendingUp}
           trend={{ value: -2.1, isPositive: false }}
           loading={loading}
         />
         <KPICard
-          title="Avg Order Value"
+          title="Valor Promedio de Orden"
           value={kpis ? `$${kpis.averageOrderValue}` : '$0'}
           icon={DollarSign}
           trend={{ value: 5.7, isPositive: true }}
@@ -161,7 +167,7 @@ export default function InsightsPage() {
         />
       </div>
 
-      {/* Charts */}
+      {/* Gráficas */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {chartData ? (
           <>
@@ -169,14 +175,14 @@ export default function InsightsPage() {
               data={chartData.customersGrowth}
               xKey="date"
               yKey="customers"
-              title="Customer Growth"
+              title="Crecimiento de Clientes"
               color="#22c55e"
             />
             <BarChart
               data={chartData.topSources}
               xKey="source"
               yKey="customers"
-              title="Top Traffic Sources"
+              title="Principales Fuentes de Tráfico"
               color="#3b82f6"
             />
           </>
@@ -192,10 +198,10 @@ export default function InsightsPage() {
         )}
       </div>
 
-      {/* Recent Leads Table */}
+      {/* Tabla de Leads Recientes */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Recent Leads</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Leads Recientes</h3>
         </div>
 
         <div className="overflow-x-auto">
@@ -217,16 +223,16 @@ export default function InsightsPage() {
               <thead className="bg-gray-50 dark:bg-gray-900">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Customer
+                    Cliente
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Status
+                    Estado
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Total Spent
+                    Total Gastado
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Last Contact
+                    Último Contacto
                   </th>
                 </tr>
               </thead>

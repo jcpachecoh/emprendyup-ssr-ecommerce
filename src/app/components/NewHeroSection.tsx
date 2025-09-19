@@ -133,6 +133,45 @@ const NewHeroSection = () => {
         </div>
       </section>
 
+      {/* Floating AI Chat Button */}
+      <button
+        onClick={() => setChatOpen(true)}
+        className="fixed bottom-6 right-6 z-40 group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-600 px-4 py-3 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-300"
+        aria-label="Pregunta a AI Alex"
+      >
+        <svg
+          className="w-5 h-5 transition-transform group-hover:scale-110"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <path
+            d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M8 9h8"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M8 13h6"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        <span className="hidden sm:inline">Ask AI Alex</span>
+        <span className="sm:hidden">AI</span>
+      </button>
+
       {chatOpen && (
         <div className="fixed bottom-20 right-6 z-50 w-[92%] max-w-md">
           <div className="bg-transparent">
@@ -154,60 +193,3 @@ const NewHeroSection = () => {
 };
 
 export default NewHeroSection;
-
-function AnimatedHeadline() {
-  const fullLeft = 'Herramientas digitales para';
-  const highlighted = ' emprendedores que quieren escalar su negocio con IA, tecnología';
-  const fullRight = ' y una comunidad que impulsa su crecimiento';
-
-  const [displayLeft, setDisplayLeft] = useState('');
-  const [displayHighlighted, setDisplayHighlighted] = useState('');
-  const [displayRight, setDisplayRight] = useState('');
-  const [cursorVisible, setCursorVisible] = useState(true);
-
-  useEffect(() => {
-    let cancelled = false;
-    const speed = 20;
-
-    async function type() {
-      for (let i = 0; i <= fullLeft.length; i++) {
-        if (cancelled) return;
-        setDisplayLeft(fullLeft.slice(0, i));
-        // eslint-disable-next-line no-await-in-loop
-        await new Promise((r) => setTimeout(r, speed));
-      }
-
-      for (let i = 0; i <= highlighted.length; i++) {
-        if (cancelled) return;
-        setDisplayHighlighted(highlighted.slice(0, i));
-        // eslint-disable-next-line no-await-in-loop
-        await new Promise((r) => setTimeout(r, speed));
-      }
-
-      for (let i = 0; i <= fullRight.length; i++) {
-        if (cancelled) return;
-        setDisplayRight(fullRight.slice(0, i));
-        // eslint-disable-next-line no-await-in-loop
-        await new Promise((r) => setTimeout(r, speed));
-      }
-    }
-
-    type();
-
-    const blink = setInterval(() => setCursorVisible((v) => !v), 500);
-    return () => {
-      cancelled = true;
-      clearInterval(blink);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return (
-    <span>
-      {displayLeft}
-      <span className="text-fourth-base">{displayHighlighted}</span>
-      {displayRight}
-      <span className={`ml-1 inline-block ${cursorVisible ? 'opacity-100' : 'opacity-0'}`}>|</span>
-    </span>
-  );
-}

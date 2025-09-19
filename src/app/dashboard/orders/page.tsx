@@ -5,7 +5,7 @@ import { Search, Filter, Download, Eye, ShoppingCart } from 'lucide-react';
 import { Order } from '@/lib/schemas/dashboard';
 import { useDashboardUIStore } from '@/lib/store/dashboard';
 
-// Mock orders data
+// Datos de pedidos de prueba
 const mockOrders: Order[] = [
   {
     id: '1',
@@ -51,50 +51,49 @@ const mockOrders: Order[] = [
   },
 ];
 
-export default function OrdersPage() {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [loading, setLoading] = useState(true);
+export default function PaginaPedidos() {
+  const [pedidos, setPedidos] = useState<Order[]>([]);
+  const [pedidosFiltrados, setPedidosFiltrados] = useState<Order[]>([]);
+  const [busqueda, setBusqueda] = useState('');
+  const [filtroEstado, setFiltroEstado] = useState('all');
+  const [cargando, setCargando] = useState(true);
 
   const { setSelectedOrderId, setOrderDrawerOpen } = useDashboardUIStore();
 
   useEffect(() => {
-    // Simulate API call
+    // Simula llamada a API
     const fetchOrders = async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      setOrders(mockOrders);
-      setFilteredOrders(mockOrders);
-      setLoading(false);
+      setPedidos(mockOrders);
+      setPedidosFiltrados(mockOrders);
+      setCargando(false);
     };
-
     fetchOrders();
   }, []);
 
   useEffect(() => {
-    let filtered = orders;
+    let filtrados = pedidos;
 
-    // Filter by search query
-    if (searchQuery) {
-      filtered = filtered.filter(
+    // Filtrar por búsqueda
+    if (busqueda) {
+      filtrados = filtrados.filter(
         (order) =>
-          order.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          order.customerEmail.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          order.id.toLowerCase().includes(searchQuery.toLowerCase())
+          order.customerName.toLowerCase().includes(busqueda.toLowerCase()) ||
+          order.customerEmail.toLowerCase().includes(busqueda.toLowerCase()) ||
+          order.id.toLowerCase().includes(busqueda.toLowerCase())
       );
     }
 
-    // Filter by status
-    if (statusFilter !== 'all') {
-      filtered = filtered.filter((order) => order.status === statusFilter);
+    // Filtrar por estado
+    if (filtroEstado !== 'all') {
+      filtrados = filtrados.filter((order) => order.status === filtroEstado);
     }
 
-    setFilteredOrders(filtered);
-  }, [orders, searchQuery, statusFilter]);
+    setPedidosFiltrados(filtrados);
+  }, [pedidos, busqueda, filtroEstado]);
 
-  const getStatusBadge = (status: string) => {
-    const styles = {
+  const obtenerBadgeEstado = (estado: string) => {
+    const estilos = {
       pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
       processing: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
       shipped: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
@@ -104,22 +103,24 @@ export default function OrdersPage() {
 
     return (
       <span
-        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[status as keyof typeof styles]}`}
+        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+          estilos[estado as keyof typeof estilos]
+        }`}
       >
-        {status.charAt(0).toUpperCase() + status.slice(1)}
+        {estado.charAt(0).toUpperCase() + estado.slice(1)}
       </span>
     );
   };
 
-  const handleViewOrder = (orderId: string) => {
-    setSelectedOrderId(orderId);
+  const verPedido = (idPedido: string) => {
+    setSelectedOrderId(idPedido);
     setOrderDrawerOpen(true);
   };
 
-  const exportToCsv = () => {
+  const exportarCSV = () => {
     const csvContent = [
-      ['Order ID', 'Customer', 'Email', 'Total', 'Status', 'Date'].join(','),
-      ...filteredOrders.map((order) =>
+      ['ID Pedido', 'Cliente', 'Correo', 'Total', 'Estado', 'Fecha'].join(','),
+      ...pedidosFiltrados.map((order) =>
         [
           order.id,
           order.customerName,
@@ -135,66 +136,68 @@ export default function OrdersPage() {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'orders.csv';
+    a.download = 'pedidos.csv';
     a.click();
     window.URL.revokeObjectURL(url);
   };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Encabezado */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Orders</h1>
-          <p className="text-gray-600 dark:text-gray-400">Manage and track your store orders</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Pedidos</h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Administra y rastrea los pedidos de tu tienda
+          </p>
         </div>
 
         <button
-          onClick={exportToCsv}
+          onClick={exportarCSV}
           className="inline-flex items-center px-4 py-2 bg-fourth-base text-black rounded-lg hover:bg-fourth-base/90 transition-colors"
         >
           <Download className="h-4 w-4 mr-2" />
-          Export CSV
+          Exportar CSV
         </button>
       </div>
 
-      {/* Filters */}
+      {/* Filtros */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
         <div className="flex flex-col sm:flex-row gap-4">
-          {/* Search */}
+          {/* Búsqueda */}
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
               type="text"
-              placeholder="Search orders by customer name, email, or order ID..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar pedidos por nombre, correo o ID..."
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-fourth-base focus:border-transparent"
             />
           </div>
 
-          {/* Status Filter */}
+          {/* Filtro por estado */}
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-gray-400" />
             <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
+              value={filtroEstado}
+              onChange={(e) => setFiltroEstado(e.target.value)}
               className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-fourth-base focus:border-transparent"
             >
-              <option value="all">All Status</option>
-              <option value="pending">Pending</option>
-              <option value="processing">Processing</option>
-              <option value="shipped">Shipped</option>
-              <option value="delivered">Delivered</option>
-              <option value="cancelled">Cancelled</option>
+              <option value="all">Todos</option>
+              <option value="pending">Pendiente</option>
+              <option value="processing">Procesando</option>
+              <option value="shipped">Enviado</option>
+              <option value="delivered">Entregado</option>
+              <option value="cancelled">Cancelado</option>
             </select>
           </div>
         </div>
       </div>
 
-      {/* Orders Table */}
+      {/* Tabla de Pedidos */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        {loading ? (
+        {cargando ? (
           <div className="p-6">
             <div className="animate-pulse space-y-4">
               {[...Array(5)].map((_, i) => (
@@ -210,33 +213,33 @@ export default function OrdersPage() {
           </div>
         ) : (
           <>
-            {/* Desktop Table */}
+            {/* Tabla escritorio */}
             <div className="hidden md:block overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-900">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Order ID
+                      ID Pedido
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Customer
+                      Cliente
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Total
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Status
+                      Estado
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Date
+                      Fecha
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Actions
+                      Acciones
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  {filteredOrders.map((order) => (
+                  {pedidosFiltrados.map((order) => (
                     <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                         #{order.id}
@@ -255,18 +258,18 @@ export default function OrdersPage() {
                         ${order.total.toFixed(2)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        {getStatusBadge(order.status)}
+                        {obtenerBadgeEstado(order.status)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                         {new Date(order.createdAt).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <button
-                          onClick={() => handleViewOrder(order.id)}
+                          onClick={() => verPedido(order.id)}
                           className="text-fourth-base hover:text-fourth-base/80 flex items-center gap-1"
                         >
                           <Eye className="h-4 w-4" />
-                          View
+                          Ver
                         </button>
                       </td>
                     </tr>
@@ -275,9 +278,9 @@ export default function OrdersPage() {
               </table>
             </div>
 
-            {/* Mobile Cards */}
+            {/* Tarjetas móvil */}
             <div className="md:hidden space-y-4 p-4">
-              {filteredOrders.map((order) => (
+              {pedidosFiltrados.map((order) => (
                 <div
                   key={order.id}
                   className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 space-y-3"
@@ -289,7 +292,7 @@ export default function OrdersPage() {
                         {order.customerName}
                       </p>
                     </div>
-                    {getStatusBadge(order.status)}
+                    {obtenerBadgeEstado(order.status)}
                   </div>
 
                   <div className="flex justify-between items-center">
@@ -303,10 +306,10 @@ export default function OrdersPage() {
                     </div>
 
                     <button
-                      onClick={() => handleViewOrder(order.id)}
+                      onClick={() => verPedido(order.id)}
                       className="px-3 py-2 bg-fourth-base text-black rounded-lg text-sm hover:bg-fourth-base/90 transition-colors"
                     >
-                      View Details
+                      Ver Detalles
                     </button>
                   </div>
                 </div>
@@ -315,18 +318,18 @@ export default function OrdersPage() {
           </>
         )}
 
-        {!loading && filteredOrders.length === 0 && (
+        {!cargando && pedidosFiltrados.length === 0 && (
           <div className="text-center py-12">
             <div className="text-gray-400 mb-4">
               <ShoppingCart className="h-12 w-12 mx-auto" />
             </div>
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-              No orders found
+              No se encontraron pedidos
             </h3>
             <p className="text-gray-500 dark:text-gray-400">
-              {searchQuery || statusFilter !== 'all'
-                ? 'Try adjusting your filters to see more results.'
-                : 'Your orders will appear here once customers start placing orders.'}
+              {busqueda || filtroEstado !== 'all'
+                ? 'Prueba ajustando tus filtros para ver más resultados.'
+                : 'Tus pedidos aparecerán aquí cuando los clientes comiencen a realizar compras.'}
             </p>
           </div>
         )}

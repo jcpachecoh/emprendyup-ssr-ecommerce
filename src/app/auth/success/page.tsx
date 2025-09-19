@@ -7,13 +7,22 @@ export default function GoogleAuthSuccess() {
   const router = useRouter();
 
   useEffect(() => {
-    // You can add any success logic here
-    // Store user data, show success message, etc.
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-    // Then redirect to dashboard
+    // Check if user has a valid session
+    if (!user || !user.email || !user.name || user.role !== 'ADMIN') {
+      // No valid session, redirect to index
+      router.push('/');
+      return;
+    }
+
     const timer = setTimeout(() => {
-      router.push('/dashboard/insights');
-    }, 2000); // Wait 2 seconds to show success message
+      if (user?.storeId) {
+        router.push('/dashboard/insights');
+      } else {
+        router.push('/dashboard/store/new');
+      }
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, [router]);

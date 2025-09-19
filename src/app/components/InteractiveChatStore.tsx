@@ -16,6 +16,8 @@ import {
   Twitter,
   Youtube,
   MessageSquare,
+  Bot,
+  User,
 } from 'lucide-react';
 import { gql, useMutation } from '@apollo/client';
 import { useSessionStore } from '@/lib/store/dashboard';
@@ -288,10 +290,12 @@ const defaultStoreData: StoreData = {
 function FileUpload({
   onFile,
   accept = 'image/*',
+  storeId,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onFile: (_arg: string) => void;
   accept?: string;
+  storeId?: string;
 }) {
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -302,8 +306,29 @@ function FileUpload({
       setIsUploading(true);
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const fileUrl = URL.createObjectURL(file);
-      setPreview(fileUrl);
-      onFile(fileUrl);
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+
+      const formData = new FormData();
+      formData.append('images', blob, file.name);
+      // Add the business name as folder parameter (directly in uploads folder)
+      if (storeId) {
+        formData.append('folderName', storeId.replace(/[^a-zA-Z0-9-_]/g, '_'));
+      }
+      const uploadResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/images`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error(`Upload failed: ${uploadResponse.statusText}`);
+      }
+
+      const uploadResult = await uploadResponse.json();
+      console.log('🚀 ~ handleFileChange ~ uploadResult:', uploadResult);
+      const awsImage = process.env.NEXT_PUBLIC_AWS_BUCKET_URL + uploadResult[0]?.key;
+      setPreview(awsImage);
+      onFile(awsImage);
       setIsUploading(false);
     }
   };
@@ -536,7 +561,6 @@ export default function InteractiveChatStore() {
           return { isValid: false, error: 'Formato válido: +57 300 123 4567' };
         }
         break;
-
       case 'url':
         if (value && value.trim() !== '') {
           // Accept blob: and data: temporary URLs (used by browser previews)
@@ -703,8 +727,19 @@ export default function InteractiveChatStore() {
   };
 
   const renderMessageContent = (msg: Message) => {
-    if (msg.from === 'user') {
-      return <span>{msg.text}</span>;
+    const messageIsValidUrl = msg.text.startsWith('http://') || msg.text.startsWith('https://');
+    console.log('🚀 ~ renderMessageContent ~ messageIsValidUrl:', messageIsValidUrl, msg.text);
+
+    if (messageIsValidUrl) {
+      return (
+        <Image
+          src={msg.text}
+          alt="Uploaded"
+          width={80}
+          height={80}
+          className="w-20 h-20 object-cover rounded-lg"
+        />
+      );
     }
 
     switch (msg.type) {
@@ -714,7 +749,7 @@ export default function InteractiveChatStore() {
             <span>{msg.text}</span>
             {currentStep === questions.findIndex((q) => q.field === msg.field) && (
               <div>
-                <FileUpload onFile={handleResponse} accept="image/*" />
+                <FileUpload onFile={handleResponse} accept="image/*" storeId={storeData?.storeId} />
                 {msg.optional && (
                   <button
                     onClick={handleSkip}
@@ -798,7 +833,7 @@ export default function InteractiveChatStore() {
     };
     return iconMap[field || ''] || null;
   };
-
+  console.log('messages', messages);
   return (
     <div className="max-w-4xl mx-auto p-6 bg-slate-900 min-h-screen">
       <div className="bg-slate-800 rounded-3xl shadow-2xl overflow-hidden">
@@ -823,6 +858,21 @@ export default function InteractiveChatStore() {
               key={idx}
               className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'}`}
             >
+              {/* Bot Avatar */}
+              {msg.from === 'bot' ? (
+                <div className="flex-shrink-0 mr-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
+                    <Bot className="w-4 h-4 text-white" />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex-shrink-0 ml-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
+                    <User className="w-4 h-4 text-white" />
+                  </div>
+                </div>
+              )}
+
               <div
                 className={`max-w-md p-4 rounded-2xl shadow-sm transform transition-all duration-300 hover:scale-[1.02] ${
                   msg.from === 'bot'
@@ -843,6 +893,13 @@ export default function InteractiveChatStore() {
 
           {isTyping && (
             <div className="flex justify-start">
+              {/* Bot Avatar for typing indicator */}
+              <div className="flex-shrink-0 mr-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
+                  <Bot className="w-4 h-4 text-white" />
+                </div>
+              </div>
+
               <div className="bg-slate-700 p-4 rounded-2xl shadow-sm animate-pulse">
                 <div className="flex space-x-1">
                   <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce" />
@@ -932,90 +989,96 @@ export default function InteractiveChatStore() {
         {currentStep >= questions.length && (
           <div className="p-6 bg-slate-800 border-t border-slate-700">
             <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto">
-                <span className="text-white text-2xl">✓</span>
-              </div>
-              <h2 className="text-xl font-bold text-white">¡Tu tienda está lista!</h2>
-              <p className="text-slate-300">
-                Hemos recopilado toda la información necesaria para crear tu tienda online.
-              </p>
-              <button
-                onClick={async () => {
-                  setCreateError(null);
-                  setCreating(true);
+              {!createdStoreId ? (
+                <>
+                  <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto">
+                    <span className="text-white text-2xl">✓</span>
+                  </div>
+                  <h2 className="text-xl font-bold text-white">¡Tu tienda está lista!</h2>
+                  <p className="text-slate-300">
+                    Hemos recopilado toda la información necesaria para crear tu tienda online.
+                  </p>
 
-                  // const userId = session?.user?.id;
-                  // if (!userId) {
-                  //   setCreateError('Por favor inicia sesión antes de crear la tienda');
-                  //   setCreating(false);
-                  //   return;
-                  // }
-
-                  try {
-                    const input = {
-                      name: storeData.name,
-                      status: 'active',
-                      userId: session?.user?.id || 'anonymous',
-                      storeId: storeData.storeId,
-                      description: storeData.description,
-                      logoUrl: storeData.logoUrl,
-                      faviconUrl: storeData.faviconUrl,
-                      bannerUrl: storeData.bannerUrl,
-                      primaryColor: storeData.primaryColor,
-                      secondaryColor: storeData.secondaryColor,
-                      accentColor: storeData.accentColor,
-                      backgroundColor: storeData.backgroundColor,
-                      textColor: storeData.textColor,
-                      email: storeData.email,
-                      phone: storeData.phone,
-                      address: storeData.address,
-                      city: storeData.city,
-                      department: storeData.department,
-                      country: storeData.country,
-                      businessType: storeData.businessType,
-                      taxId: storeData.taxId,
-                      businessName: storeData.businessName,
-                      facebookUrl: storeData.facebookUrl,
-                      instagramUrl: storeData.instagramUrl,
-                      twitterUrl: storeData.twitterUrl,
-                      youtubeUrl: storeData.youtubeUrl,
-                      tiktokUrl: storeData.tiktokUrl,
-                      whatsappNumber: storeData.whatsappNumber,
-                    };
-
-                    const { data } = await createStoreMutation({ variables: { input } });
-                    const created = data?.createStore;
-                    if (created) {
-                      setCreatedStoreId(created.storeId);
-                      // persist into session store
+                  <button
+                    onClick={async () => {
+                      setCreateError(null);
+                      setCreating(true);
                       try {
-                        session.setCurrentStore?.(created as any);
-                        session.addStore?.(created as any);
-                      } catch (e) {
-                        // ignore
+                        const input = {
+                          name: storeData.name,
+                          status: 'active',
+                          userId: session?.user?.id || 'anonymous',
+                          storeId: storeData.storeId,
+                          description: storeData.description,
+                          logoUrl: storeData.logoUrl,
+                          faviconUrl: storeData.faviconUrl,
+                          bannerUrl: storeData.bannerUrl,
+                          primaryColor: storeData.primaryColor,
+                          secondaryColor: storeData.secondaryColor,
+                          accentColor: storeData.accentColor,
+                          backgroundColor: storeData.backgroundColor,
+                          textColor: storeData.textColor,
+                          email: storeData.email,
+                          phone: storeData.phone,
+                          address: storeData.address,
+                          city: storeData.city,
+                          department: storeData.department,
+                          country: storeData.country,
+                          businessType: storeData.businessType,
+                          taxId: storeData.taxId,
+                          businessName: storeData.businessName,
+                          facebookUrl: storeData.facebookUrl,
+                          instagramUrl: storeData.instagramUrl,
+                          twitterUrl: storeData.twitterUrl,
+                          youtubeUrl: storeData.youtubeUrl,
+                          tiktokUrl: storeData.tiktokUrl,
+                          whatsappNumber: storeData.whatsappNumber,
+                        };
+
+                        const { data } = await createStoreMutation({ variables: { input } });
+                        const created = data?.createStore;
+                        if (created) {
+                          setCreatedStoreId(created.storeId);
+                          try {
+                            session.setCurrentStore?.(created as any);
+                            session.addStore?.(created as any);
+                          } catch (e) {
+                            // ignore
+                          }
+                        }
+                      } catch (err: any) {
+                        setCreateError(err?.message || 'Error al crear la tienda');
+                      } finally {
+                        setCreating(false);
                       }
-                      // navigate to store overview if route exists
-                      const target = created.storeId
-                        ? `/dashboard/store/${created.storeId}/overview`
-                        : '/dashboard/store';
-                      router.push(target);
-                    }
-                  } catch (err: any) {
-                    setCreateError(err?.message || 'Error al crear la tienda');
-                  } finally {
-                    setCreating(false);
-                  }
-                }}
-                disabled={creating}
-                className={`px-8 py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors font-semibold transform hover:scale-105 ${
-                  creating ? 'opacity-60 cursor-not-allowed' : ''
-                }`}
-              >
-                {creating ? 'Creando...' : 'Crear mi tienda'}
-              </button>
-              {createError && <div className="text-red-300 text-sm">{createError}</div>}
-              {createdStoreId && (
-                <div className="text-green-300 text-sm">Tienda creada: {createdStoreId}</div>
+                    }}
+                    disabled={creating}
+                    className={`px-8 py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors font-semibold transform hover:scale-105 ${
+                      creating ? 'opacity-60 cursor-not-allowed' : ''
+                    }`}
+                  >
+                    {creating ? 'Creando...' : 'Crear mi tienda'}
+                  </button>
+
+                  {createError && <div className="text-red-300 text-sm">{createError}</div>}
+                </>
+              ) : (
+                <>
+                  <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto">
+                    <span className="text-white text-2xl">✓</span>
+                  </div>
+                  <h2 className="text-xl font-bold text-white">¡Tu tienda ha sido creada!</h2>
+                  <p className="text-slate-300">
+                    Ahora puedes administrar y personalizar tu tienda desde el panel de
+                    administración.
+                  </p>
+                  <a
+                    href="http://${storeId}.emprendyup/admin/store"
+                    className="inline-block px-8 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors font-semibold transform hover:scale-105"
+                  >
+                    Ir al panel de administración
+                  </a>
+                </>
               )}
             </div>
           </div>

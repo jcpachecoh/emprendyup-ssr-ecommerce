@@ -335,15 +335,19 @@ export default function ChatWidget(): React.ReactElement {
 
   return (
     <div
-      className={`${isMobile ? 'fixed bottom-4 right-4 z-50 w-[92%] max-w-sm' : 'w-full max-w-md'} bg-black rounded-lg shadow-lg p-3 text-sm`}
+      className={`${
+        isMobile
+          ? 'fixed bottom-4 right-4 z-50 w-[90vw] max-w-[350px] max-h-[70vh]'
+          : 'w-full max-w-sm max-h-[500px]'
+      } bg-black rounded-lg shadow-lg p-2 text-sm overflow-hidden`}
     >
       {isMobile && (
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-2 px-1">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-rose-400 via-orange-300 to-yellow-300 flex items-center justify-center text-white">
+            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-rose-400 via-orange-300 to-yellow-300 flex items-center justify-center text-white text-xs font-bold">
               A
             </div>
-            <div className="text-sm font-semibold">Asistente Emprendyup</div>
+            <div className="text-xs font-semibold text-white truncate">Asistente Emprendyup</div>
           </div>
           <div>
             <button onClick={toggleCollapsed} aria-label="Minimizar chat" className="p-1">
@@ -365,26 +369,32 @@ export default function ChatWidget(): React.ReactElement {
           </div>
         </div>
       )}
-      <div className="w-full max-w-lg mx-auto bg-gradient-to-br from-slate-50 via-white to-slate-50 rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 p-4 text-white relative overflow-hidden">
+      <div className="w-full max-w-full max-h-full mx-auto bg-gradient-to-br from-slate-50 via-white to-slate-50 rounded-2xl shadow-xl border border-white/20 overflow-hidden flex flex-col">
+        {/* Header - Compact for mobile */}
+        <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 p-2 sm:p-3 text-white relative overflow-hidden flex-shrink-0">
           <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/20 via-purple-600/20 to-pink-600/20 animate-pulse"></div>
-          <div className="relative flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30">
-              <Sparkles className="w-5 h-5 text-white" />
+          <div className="relative flex items-center gap-2">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30">
+              <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
             </div>
-            <div>
-              <h3 className="font-semibold text-white">Emprendyup Assistant</h3>
-              <p className="text-xs text-white/80">Tu asistente inteligente de negocios</p>
+            <div className="min-w-0 flex-1">
+              <h3 className="font-semibold text-white text-sm sm:text-base truncate">Alex AI</h3>
+              <p className="text-xs text-white/80 truncate hidden sm:block">
+                Tu asistente inteligente de negocios
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Chat Container */}
+        {/* Messages Container - Scrollable */}
         <div
           ref={containerRef}
-          className="h-96 overflow-y-auto space-y-4 p-4  scroll-smooth"
-          style={{ scrollbarWidth: 'thin', scrollbarColor: '#e2e8f0 transparent' }}
+          className="flex-1 min-h-0 overflow-y-auto space-y-3 p-3 sm:p-4 scroll-smooth scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+          style={{
+            scrollbarWidth: 'thin',
+            scrollbarColor: '#cbd5e1 #f1f5f9',
+            maxHeight: 'calc(70vh - 160px)',
+          }}
         >
           {history.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full text-center space-y-3 opacity-60">
@@ -459,123 +469,123 @@ export default function ChatWidget(): React.ReactElement {
             </div>
           </div>
         )}
+      </div>
 
-        {/* Contact Form */}
-        {contactMode && (
-          <div className="mx-4 mb-4 p-4 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl border border-indigo-100 animate-fade-in">
+      {/* Contact Form - Fixed position */}
+      {contactMode && (
+        <div className="flex-shrink-0 mx-4 mb-4 p-4 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl border border-indigo-100 animate-fade-in">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 mb-3">
+              <Sparkles className="w-4 h-4 text-indigo-600" />
+              <h4 className="font-semibold text-slate-800">Información de contacto</h4>
+            </div>
+
             <div className="space-y-3">
-              <div className="flex items-center gap-2 mb-3">
-                <Sparkles className="w-4 h-4 text-indigo-600" />
-                <h4 className="font-semibold text-slate-800">Información de contacto</h4>
-              </div>
-
-              <div className="space-y-3">
-                <input
-                  value={contactProduct}
-                  onChange={(e) => setContactProduct(e.target.value)}
-                  placeholder="Tipo de producto/servicio"
-                  className="w-full p-3 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-300 transition-all duration-200"
-                />
-                <input
-                  value={contactEmail}
-                  onChange={(e) => setContactEmail(e.target.value)}
-                  placeholder="Tu correo electrónico"
-                  type="email"
-                  className="w-full p-3 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-300 transition-all duration-200"
-                />
-              </div>
-
-              <div className="flex gap-2 pt-2">
-                <button
-                  onClick={() =>
-                    contactProduct.trim() && contactEmail.trim() && handleContactSubmit()
-                  }
-                  disabled={!contactProduct.trim() || !contactEmail.trim()}
-                  className="flex-1 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-slate-300 disabled:to-slate-400 text-white rounded-xl text-sm font-medium transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 shadow-lg hover:shadow-xl disabled:shadow-sm"
-                >
-                  Enviar y generar
-                </button>
-                <button
-                  onClick={() => setContactMode(false)}
-                  className="px-4 py-2.5 bg-white/80 backdrop-blur-sm hover:bg-slate-50 border border-slate-200 hover:border-slate-300 text-slate-700 rounded-xl text-sm font-medium transition-all duration-200"
-                >
-                  Cancelar
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Input Area */}
-        <div className="p-4 bg-gradient-to-r from-slate-50 to-white border-t border-slate-100">
-          <div className="flex gap-3 items-end">
-            <div className="flex-1 relative">
-              <textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Escribe tu mensaje aquí..."
-                className="w-full min-h-[48px] max-h-32 p-3 pr-12 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-2xl resize-none text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-300 transition-all duration-200 placeholder-slate-400 !text-black"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSend(input);
-                  }
-                }}
+              <input
+                value={contactProduct}
+                onChange={(e) => setContactProduct(e.target.value)}
+                placeholder="Tipo de producto/servicio"
+                className="w-full p-3 bg-white/80 text-black backdrop-blur-sm border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-300 transition-all duration-200"
               />
-              <div className="absolute bottom-2 right-2 text-xs text-slate-400">
-                {input.length > 0 && <span>Enter para enviar</span>}
-              </div>
+              <input
+                value={contactEmail}
+                onChange={(e) => setContactEmail(e.target.value)}
+                placeholder="Tu correo electrónico"
+                type="email"
+                className="w-full p-3 bg-white/80 text-black backdrop-blur-sm border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-300 transition-all duration-200"
+              />
             </div>
 
-            <button
-              onClick={() => handleSend(input)}
-              disabled={!input.trim() || loading}
-              className="w-12 h-12 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-slate-300 disabled:to-slate-400 text-white rounded-2xl disabled:opacity-50 transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 shadow-lg hover:shadow-xl disabled:shadow-sm flex items-center justify-center"
-            >
-              {loading ? (
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-              ) : (
-                <Send className="w-5 h-5" />
-              )}
-            </button>
+            <div className="flex gap-2 pt-2">
+              <button
+                onClick={() =>
+                  contactProduct.trim() && contactEmail.trim() && handleContactSubmit()
+                }
+                disabled={!contactProduct.trim() || !contactEmail.trim()}
+                className="flex-1 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-slate-300 disabled:to-slate-400 text-white rounded-xl text-sm font-medium transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 shadow-lg hover:shadow-xl disabled:shadow-sm"
+              >
+                Enviar y generar
+              </button>
+              <button
+                onClick={() => setContactMode(false)}
+                className="px-4 py-2.5 bg-white/80 backdrop-blur-sm hover:bg-slate-50 border border-slate-200 hover:border-slate-300 text-slate-700 rounded-xl text-sm font-medium transition-all duration-200"
+              >
+                Cancelar
+              </button>
+            </div>
           </div>
         </div>
+      )}
 
-        <style jsx>{`
-          @keyframes fadeInUp {
-            from {
-              opacity: 0;
-              transform: translateY(10px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
+      {/* Input Area - Fixed at bottom */}
+      <div className="flex-shrink-0 p-4 bg-gradient-to-r from-slate-50 to-white border-t border-slate-100">
+        <div className="flex gap-3 items-end">
+          <div className="flex-1 relative">
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Escribe tu mensaje aquí..."
+              className="w-full min-h-[48px] max-h-32 p-3 pr-12 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-2xl resize-none text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-300 transition-all duration-200 placeholder-slate-400 !text-black"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend(input);
+                }
+              }}
+            />
+            <div className="absolute bottom-2 right-2 text-xs text-slate-400">
+              {input.length > 0 && <span>Enter para enviar</span>}
+            </div>
+          </div>
 
-          .animate-fade-in {
-            animation: fadeInUp 0.4s ease-out forwards;
-          }
-
-          /* Custom scrollbar */
-          ::-webkit-scrollbar {
-            width: 6px;
-          }
-
-          ::-webkit-scrollbar-track {
-            background: transparent;
-          }
-
-          ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 3px;
-          }
-
-          ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-          }
-        `}</style>
+          <button
+            onClick={() => handleSend(input)}
+            disabled={!input.trim() || loading}
+            className="w-12 h-12 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-slate-300 disabled:to-slate-400 text-white rounded-2xl disabled:opacity-50 transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 shadow-lg hover:shadow-xl disabled:shadow-sm flex items-center justify-center"
+          >
+            {loading ? (
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            ) : (
+              <Send className="w-5 h-5" />
+            )}
+          </button>
+        </div>
       </div>
+      <style jsx global>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-fade-in {
+          animation: fadeInUp 0.4s ease-out forwards;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: #cbd5e1;
+          border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: #94a3b8;
+        }
+      `}</style>
     </div>
   );
 }

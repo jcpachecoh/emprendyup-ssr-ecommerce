@@ -3,12 +3,24 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-
+import { getUserFromLocalStorage } from '@/lib/utils/localAuth';
+import { gql, useMutation } from '@apollo/client';
+const DELETE_POST = gql`
+  mutation DeletePost($id: ID!) {
+    deletePost(id: $id) {
+      id
+      title
+      slug
+    }
+  }
+`;
 export default function BlogListPage() {
   const [posts, setPosts] = useState<any[] | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-
+  const [deletePostMutation] = useMutation(DELETE_POST);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const user = getUserFromLocalStorage();
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -31,7 +43,10 @@ export default function BlogListPage() {
         const resp = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ query, variables: { categoryId: null, page: 1, pageSize: 10 } }),
+          body: JSON.stringify({
+            query,
+            variables: { categoryId: null, page: 1, pageSize: 10 },
+          }),
         });
         const json = await resp.json();
         const data = json?.data?.listPostsPaginated;
@@ -54,6 +69,31 @@ export default function BlogListPage() {
       month: 'short',
       day: 'numeric',
     });
+  };
+  const userId = user.id;
+
+  const handleDelete = async (id: string) => {
+    const ok = window.confirm(
+      '¿Seguro que quieres borrar este artículo? Esta acción es irreversible.'
+    );
+    if (!ok) return;
+
+    const prev = posts;
+    // optimistic remove
+    setPosts((curr) => (curr ? curr.filter((p) => p.id !== id) : curr));
+    setDeletingId(id);
+
+    try {
+      const result = await deletePostMutation({ variables: { id, userId } });
+      if (result?.errors && result.errors.length) {
+        throw new Error(result.errors.map((e: any) => e.message).join(', '));
+      }
+      setDeletingId(null);
+    } catch (err: any) {
+      setPosts(prev);
+      setDeletingId(null);
+      alert('Error borrando el artículo: ' + (err?.message || err));
+    }
   };
 
   const getStatusBadge = (status: string) => {
@@ -252,6 +292,31 @@ export default function BlogListPage() {
                             />
                           </svg>
                           Editar
+                        </button>
+                        <button
+                          onClick={() => handleDelete(post.id)}
+                          disabled={deletingId === post.id}
+                          className="inline-flex items-center gap-2 text-red-500 hover:text-red-700 font-medium text-sm transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                          aria-label={`Borrar ${post.title}`}
+                        >
+                          {deletingId === post.id ? (
+                            <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"
+                              />
+                            </svg>
+                          )}
+                          Borrar
                         </button>
                       </div>
                     </div>

@@ -13,7 +13,6 @@ export default function ConditionalLayout({ children }: ConditionalLayoutProps) 
   const [isAuthRoute, setIsAuthRoute] = useState(false);
 
   useEffect(() => {
-    // Rutas que no deben mostrar navbar ni footer
     const authRoutes = [
       '/login',
       '/signup',
@@ -27,15 +26,23 @@ export default function ConditionalLayout({ children }: ConditionalLayoutProps) 
       '/dashboard/store',
       '/dashboard/settings',
       '/dashboard/admin',
-      '/dashboard/store/settings',
+      '/dashboard/store/list',
       '/dashboard/store/new',
       '/dashboard/blog/new',
-      '/dashboard/blog/edit/[slug]',
       '/dashboard/blog',
       '/dashboard/store/products',
       '/dashboard/store/products/new',
     ];
-    setIsAuthRoute(authRoutes.includes(pathname));
+
+    const dynamicAuthRoutes = [
+      /^\/dashboard\/store\/settings\/[^/]+$/,
+      /^\/dashboard\/blog\/edit\/[^/]+$/,
+    ];
+
+    const isStatic = authRoutes.includes(pathname);
+    const isDynamic = dynamicAuthRoutes.some((regex) => regex.test(pathname));
+
+    setIsAuthRoute(isStatic || isDynamic);
   }, [pathname]);
 
   // Si la ruta pertenece a `authRoutes`, no renderizar el navbar ni el footer

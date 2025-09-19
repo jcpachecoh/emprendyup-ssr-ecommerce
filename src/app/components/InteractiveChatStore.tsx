@@ -932,90 +932,96 @@ export default function InteractiveChatStore() {
         {currentStep >= questions.length && (
           <div className="p-6 bg-slate-800 border-t border-slate-700">
             <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto">
-                <span className="text-white text-2xl">✓</span>
-              </div>
-              <h2 className="text-xl font-bold text-white">¡Tu tienda está lista!</h2>
-              <p className="text-slate-300">
-                Hemos recopilado toda la información necesaria para crear tu tienda online.
-              </p>
-              <button
-                onClick={async () => {
-                  setCreateError(null);
-                  setCreating(true);
+              {!createdStoreId ? (
+                <>
+                  <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto">
+                    <span className="text-white text-2xl">✓</span>
+                  </div>
+                  <h2 className="text-xl font-bold text-white">¡Tu tienda está lista!</h2>
+                  <p className="text-slate-300">
+                    Hemos recopilado toda la información necesaria para crear tu tienda online.
+                  </p>
 
-                  // const userId = session?.user?.id;
-                  // if (!userId) {
-                  //   setCreateError('Por favor inicia sesión antes de crear la tienda');
-                  //   setCreating(false);
-                  //   return;
-                  // }
-
-                  try {
-                    const input = {
-                      name: storeData.name,
-                      status: 'active',
-                      userId: session?.user?.id || 'anonymous',
-                      storeId: storeData.storeId,
-                      description: storeData.description,
-                      logoUrl: storeData.logoUrl,
-                      faviconUrl: storeData.faviconUrl,
-                      bannerUrl: storeData.bannerUrl,
-                      primaryColor: storeData.primaryColor,
-                      secondaryColor: storeData.secondaryColor,
-                      accentColor: storeData.accentColor,
-                      backgroundColor: storeData.backgroundColor,
-                      textColor: storeData.textColor,
-                      email: storeData.email,
-                      phone: storeData.phone,
-                      address: storeData.address,
-                      city: storeData.city,
-                      department: storeData.department,
-                      country: storeData.country,
-                      businessType: storeData.businessType,
-                      taxId: storeData.taxId,
-                      businessName: storeData.businessName,
-                      facebookUrl: storeData.facebookUrl,
-                      instagramUrl: storeData.instagramUrl,
-                      twitterUrl: storeData.twitterUrl,
-                      youtubeUrl: storeData.youtubeUrl,
-                      tiktokUrl: storeData.tiktokUrl,
-                      whatsappNumber: storeData.whatsappNumber,
-                    };
-
-                    const { data } = await createStoreMutation({ variables: { input } });
-                    const created = data?.createStore;
-                    if (created) {
-                      setCreatedStoreId(created.storeId);
-                      // persist into session store
+                  <button
+                    onClick={async () => {
+                      setCreateError(null);
+                      setCreating(true);
                       try {
-                        session.setCurrentStore?.(created as any);
-                        session.addStore?.(created as any);
-                      } catch (e) {
-                        // ignore
+                        const input = {
+                          name: storeData.name,
+                          status: 'active',
+                          userId: session?.user?.id || 'anonymous',
+                          storeId: storeData.storeId,
+                          description: storeData.description,
+                          logoUrl: storeData.logoUrl,
+                          faviconUrl: storeData.faviconUrl,
+                          bannerUrl: storeData.bannerUrl,
+                          primaryColor: storeData.primaryColor,
+                          secondaryColor: storeData.secondaryColor,
+                          accentColor: storeData.accentColor,
+                          backgroundColor: storeData.backgroundColor,
+                          textColor: storeData.textColor,
+                          email: storeData.email,
+                          phone: storeData.phone,
+                          address: storeData.address,
+                          city: storeData.city,
+                          department: storeData.department,
+                          country: storeData.country,
+                          businessType: storeData.businessType,
+                          taxId: storeData.taxId,
+                          businessName: storeData.businessName,
+                          facebookUrl: storeData.facebookUrl,
+                          instagramUrl: storeData.instagramUrl,
+                          twitterUrl: storeData.twitterUrl,
+                          youtubeUrl: storeData.youtubeUrl,
+                          tiktokUrl: storeData.tiktokUrl,
+                          whatsappNumber: storeData.whatsappNumber,
+                        };
+
+                        const { data } = await createStoreMutation({ variables: { input } });
+                        const created = data?.createStore;
+                        if (created) {
+                          setCreatedStoreId(created.storeId);
+                          try {
+                            session.setCurrentStore?.(created as any);
+                            session.addStore?.(created as any);
+                          } catch (e) {
+                            // ignore
+                          }
+                        }
+                      } catch (err: any) {
+                        setCreateError(err?.message || 'Error al crear la tienda');
+                      } finally {
+                        setCreating(false);
                       }
-                      // navigate to store overview if route exists
-                      const target = created.storeId
-                        ? `/dashboard/store/${created.storeId}/overview`
-                        : '/dashboard/store';
-                      router.push(target);
-                    }
-                  } catch (err: any) {
-                    setCreateError(err?.message || 'Error al crear la tienda');
-                  } finally {
-                    setCreating(false);
-                  }
-                }}
-                disabled={creating}
-                className={`px-8 py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors font-semibold transform hover:scale-105 ${
-                  creating ? 'opacity-60 cursor-not-allowed' : ''
-                }`}
-              >
-                {creating ? 'Creando...' : 'Crear mi tienda'}
-              </button>
-              {createError && <div className="text-red-300 text-sm">{createError}</div>}
-              {createdStoreId && (
-                <div className="text-green-300 text-sm">Tienda creada: {createdStoreId}</div>
+                    }}
+                    disabled={creating}
+                    className={`px-8 py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors font-semibold transform hover:scale-105 ${
+                      creating ? 'opacity-60 cursor-not-allowed' : ''
+                    }`}
+                  >
+                    {creating ? 'Creando...' : 'Crear mi tienda'}
+                  </button>
+
+                  {createError && <div className="text-red-300 text-sm">{createError}</div>}
+                </>
+              ) : (
+                <>
+                  <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto">
+                    <span className="text-white text-2xl">✓</span>
+                  </div>
+                  <h2 className="text-xl font-bold text-white">¡Tu tienda ha sido creada!</h2>
+                  <p className="text-slate-300">
+                    Ahora puedes administrar y personalizar tu tienda desde el panel de
+                    administración.
+                  </p>
+                  <a
+                    href="http://${storeId}.emprendyup/admin/store"
+                    className="inline-block px-8 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors font-semibold transform hover:scale-105"
+                  >
+                    Ir al panel de administración
+                  </a>
+                </>
               )}
             </div>
           </div>

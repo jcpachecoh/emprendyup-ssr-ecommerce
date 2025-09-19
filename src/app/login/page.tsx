@@ -33,6 +33,10 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [loginMutation] = useMutation(LOGIN_MUTATION);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotError, setForgotError] = useState('');
+  const [forgotSuccess, setForgotSuccess] = useState('');
 
   // Handle OAuth errors from URL params
   useEffect(() => {
@@ -93,10 +97,44 @@ function LoginForm() {
     }
   };
 
+  // Handle forgot password submit
+  const handleForgotSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setForgotError('');
+    setForgotSuccess('');
+    if (!forgotEmail) {
+      setForgotError('Por favor ingresa tu correo electrónico.');
+      return;
+    }
+    setForgotLoading(true);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/request-password-reset`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: forgotEmail }),
+      });
+      if (res.ok) {
+        setForgotSuccess(
+          'Si el correo está registrado, recibirás instrucciones para restablecer tu contraseña.'
+        );
+        setForgotEmail('');
+      } else {
+        const data = await res.json();
+        setForgotError(data.message || 'Error al solicitar el restablecimiento.');
+      }
+    } catch (err) {
+      setForgotError('Error de red o servidor.');
+    } finally {
+      setForgotLoading(false);
+    }
+  };
+
   const handleGoogleSignIn = async () => {
     setError('');
 
-    // Check if Google OAuth is configured
+    // Check if Google OAuth is configurado
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
     if (!clientId) {
       setError('Google OAuth no está configurado. Contacta al administrador.');
@@ -169,8 +207,15 @@ function LoginForm() {
                     />
                   </div>
 
-                  {error && <p className="text-red-500 mb-3">{error}</p>}
-
+                  <div className="mb-2 text-right">
+                    <button
+                      type="button"
+                      className="text-fourth-base text-sm hover:underline focus:outline-none"
+                      onClick={() => router.push('/olvido-contrasena')}
+                    >
+                      ¿Olvidaste tu contraseña?
+                    </button>
+                  </div>
                   <button
                     type="submit"
                     disabled={loading}
@@ -221,6 +266,7 @@ function LoginForm() {
                   </div>
                 </div>
               </form>
+              {/* Forgot Password Modal removed, now only redirect button remains */}
             </div>
           </div>
         </div>

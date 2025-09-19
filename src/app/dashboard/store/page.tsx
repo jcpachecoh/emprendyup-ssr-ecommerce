@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, Filter, Download, Edit, Store, Globe, Phone, Mail } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { gql, useQuery } from '@apollo/client';
+import Image from 'next/image';
 
 // Store interface based on your GraphQL query
 interface Store {
@@ -324,10 +325,12 @@ export default function StoresPage() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           {store.logoUrl && (
-                            <img
+                            <Image
                               className="h-10 w-10 rounded-full mr-3"
                               src={store.logoUrl}
                               alt={`${store.name} logo`}
+                              width={40}
+                              height={40}
                             />
                           )}
                           <div>

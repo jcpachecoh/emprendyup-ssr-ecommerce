@@ -16,6 +16,8 @@ import {
   Twitter,
   Youtube,
   MessageSquare,
+  Bot,
+  User,
 } from 'lucide-react';
 import { gql, useMutation } from '@apollo/client';
 import { useSessionStore } from '@/lib/store/dashboard';
@@ -288,10 +290,12 @@ const defaultStoreData: StoreData = {
 function FileUpload({
   onFile,
   accept = 'image/*',
+  storeId,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onFile: (_arg: string) => void;
   accept?: string;
+  storeId?: string;
 }) {
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -302,8 +306,29 @@ function FileUpload({
       setIsUploading(true);
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const fileUrl = URL.createObjectURL(file);
-      setPreview(fileUrl);
-      onFile(fileUrl);
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+
+      const formData = new FormData();
+      formData.append('images', blob, file.name);
+      // Add the business name as folder parameter (directly in uploads folder)
+      if (storeId) {
+        formData.append('folderName', storeId.replace(/[^a-zA-Z0-9-_]/g, '_'));
+      }
+      const uploadResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/images`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error(`Upload failed: ${uploadResponse.statusText}`);
+      }
+
+      const uploadResult = await uploadResponse.json();
+      console.log('🚀 ~ handleFileChange ~ uploadResult:', uploadResult);
+      const awsImage = process.env.NEXT_PUBLIC_AWS_BUCKET_URL + uploadResult[0]?.key;
+      setPreview(awsImage);
+      onFile(awsImage);
       setIsUploading(false);
     }
   };
@@ -536,7 +561,6 @@ export default function InteractiveChatStore() {
           return { isValid: false, error: 'Formato válido: +57 300 123 4567' };
         }
         break;
-
       case 'url':
         if (value && value.trim() !== '') {
           // Accept blob: and data: temporary URLs (used by browser previews)
@@ -703,8 +727,19 @@ export default function InteractiveChatStore() {
   };
 
   const renderMessageContent = (msg: Message) => {
-    if (msg.from === 'user') {
-      return <span>{msg.text}</span>;
+    const messageIsValidUrl = msg.text.startsWith('http://') || msg.text.startsWith('https://');
+    console.log('🚀 ~ renderMessageContent ~ messageIsValidUrl:', messageIsValidUrl, msg.text);
+
+    if (messageIsValidUrl) {
+      return (
+        <Image
+          src={msg.text}
+          alt="Uploaded"
+          width={80}
+          height={80}
+          className="w-20 h-20 object-cover rounded-lg"
+        />
+      );
     }
 
     switch (msg.type) {
@@ -714,7 +749,7 @@ export default function InteractiveChatStore() {
             <span>{msg.text}</span>
             {currentStep === questions.findIndex((q) => q.field === msg.field) && (
               <div>
-                <FileUpload onFile={handleResponse} accept="image/*" />
+                <FileUpload onFile={handleResponse} accept="image/*" storeId={storeData?.storeId} />
                 {msg.optional && (
                   <button
                     onClick={handleSkip}
@@ -798,7 +833,7 @@ export default function InteractiveChatStore() {
     };
     return iconMap[field || ''] || null;
   };
-
+  console.log('messages', messages);
   return (
     <div className="max-w-4xl mx-auto p-6 bg-slate-900 min-h-screen">
       <div className="bg-slate-800 rounded-3xl shadow-2xl overflow-hidden">
@@ -823,6 +858,21 @@ export default function InteractiveChatStore() {
               key={idx}
               className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'}`}
             >
+              {/* Bot Avatar */}
+              {msg.from === 'bot' ? (
+                <div className="flex-shrink-0 mr-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
+                    <Bot className="w-4 h-4 text-white" />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex-shrink-0 ml-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
+                    <User className="w-4 h-4 text-white" />
+                  </div>
+                </div>
+              )}
+
               <div
                 className={`max-w-md p-4 rounded-2xl shadow-sm transform transition-all duration-300 hover:scale-[1.02] ${
                   msg.from === 'bot'
@@ -843,6 +893,13 @@ export default function InteractiveChatStore() {
 
           {isTyping && (
             <div className="flex justify-start">
+              {/* Bot Avatar for typing indicator */}
+              <div className="flex-shrink-0 mr-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
+                  <Bot className="w-4 h-4 text-white" />
+                </div>
+              </div>
+
               <div className="bg-slate-700 p-4 rounded-2xl shadow-sm animate-pulse">
                 <div className="flex space-x-1">
                   <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce" />

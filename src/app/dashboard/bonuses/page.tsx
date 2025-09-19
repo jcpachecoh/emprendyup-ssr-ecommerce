@@ -289,14 +289,21 @@ export default function BonusesPage() {
     }
   };
 
+  const statusLabels: Record<string, string> = {
+    active: 'Activo',
+    inactive: 'Inactivo',
+    expired: 'Expirado',
+    scheduled: 'Programado',
+  };
+
   return (
     <div className="space-y-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Bonuses & Promotions</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Bonos y Promociones</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
-            Manage promotional codes and customer bonuses
+            Gestiona códigos promocionales y bonos para clientes
           </p>
         </div>
         <button
@@ -304,35 +311,35 @@ export default function BonusesPage() {
           className="inline-flex items-center px-4 py-2 bg-fourth-base text-white rounded-lg hover:bg-fourth-base/90 transition-colors"
         >
           <Plus className="h-4 w-4 mr-2" />
-          Create Bonus
+          Crear bono
         </button>
       </div>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <KPICard
-          title="Active Bonuses"
+          title="Bonos activos"
           value={kpis.activeBonuses}
           icon={Gift}
-          description="Currently running promotions"
+          description="Promociones actualmente vigentes"
         />
         <KPICard
-          title="Total Usage"
+          title="Uso total"
           value={kpis.totalUsage}
           icon={Users}
-          description="Times bonuses were used"
+          description="Veces que se han utilizado los bonos"
         />
         <KPICard
-          title="Average Usage Rate"
+          title="Tasa promedio de uso"
           value={`${kpis.avgUsageRate}%`}
           icon={TrendingUp}
-          description="Percentage of bonus limits used"
+          description="Porcentaje del límite de bonos utilizado"
         />
         <KPICard
-          title="Expiring Soon"
+          title="Expiran pronto"
           value={kpis.expiringThisMonth}
           icon={Calendar}
-          description="Bonuses expiring this month"
+          description="Bonos que expiran este mes"
         />
       </div>
 
@@ -342,7 +349,7 @@ export default function BonusesPage() {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Search bonuses..."
+            placeholder="Buscar bonos..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-fourth-base focus:border-transparent"
@@ -353,11 +360,11 @@ export default function BonusesPage() {
           onChange={(e) => setStatusFilter(e.target.value)}
           className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-fourth-base focus:border-transparent"
         >
-          <option value="all">All Status</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-          <option value="expired">Expired</option>
-          <option value="scheduled">Scheduled</option>
+          <option value="all">Todos</option>
+          <option value="active">Activo</option>
+          <option value="inactive">Inactivo</option>
+          <option value="expired">Expirado</option>
+          <option value="scheduled">Programado</option>
         </select>
       </div>
 
@@ -368,25 +375,25 @@ export default function BonusesPage() {
             <thead className="bg-gray-50 dark:bg-gray-900">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Bonus
+                  Bono
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Code
+                  Código
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Type & Value
+                  Tipo y Valor
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Usage
+                  Uso
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Period
+                  Período
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Status
+                  Estado
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Actions
+                  Acciones
                 </th>
               </tr>
             </thead>
@@ -416,7 +423,7 @@ export default function BonusesPage() {
                       <button
                         onClick={() => copyCode(bonus.code)}
                         className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-                        title="Copy code"
+                        title="Copiar código"
                       >
                         {copiedCode === bonus.code ? (
                           <Check className="h-4 w-4 text-green-600" />
@@ -433,7 +440,7 @@ export default function BonusesPage() {
                     </div>
                     {bonus.minPurchase && bonus.minPurchase > 0 && (
                       <div className="text-xs text-gray-500 dark:text-gray-400">
-                        Min: ${bonus.minPurchase}
+                        Mín: ${bonus.minPurchase}
                       </div>
                     )}
                   </td>
@@ -459,14 +466,14 @@ export default function BonusesPage() {
                       {new Date(bonus.startDate).toLocaleDateString()}
                     </div>
                     <div className="text-sm text-gray-500 dark:text-gray-400">
-                      to {new Date(bonus.endDate).toLocaleDateString()}
+                      a {new Date(bonus.endDate).toLocaleDateString()}
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     <span
                       className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(bonus.status)}`}
                     >
-                      {bonus.status}
+                      {statusLabels[bonus.status] || bonus.status}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
@@ -500,7 +507,7 @@ export default function BonusesPage() {
           <div className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                {editingBonus ? 'Edit Bonus' : 'Create New Bonus'}
+                {editingBonus ? 'Editar bono' : 'Crear nuevo bono'}
               </h2>
               <button
                 onClick={() => {
@@ -517,7 +524,7 @@ export default function BonusesPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Title
+                    Título
                   </label>
                   <input
                     type="text"
@@ -525,13 +532,13 @@ export default function BonusesPage() {
                     value={formData.title}
                     onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
                     className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-fourth-base focus:border-transparent"
-                    placeholder="e.g., New Customer Welcome"
+                    placeholder="p. ej., Bienvenida para nuevos clientes"
                   />
                 </div>
 
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Description
+                    Descripción
                   </label>
                   <textarea
                     required
@@ -541,13 +548,13 @@ export default function BonusesPage() {
                     }
                     rows={3}
                     className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-fourth-base focus:border-transparent"
-                    placeholder="Describe the bonus offer..."
+                    placeholder="Describe la oferta del bono..."
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Type
+                    Tipo
                   </label>
                   <select
                     value={formData.type}
@@ -559,15 +566,15 @@ export default function BonusesPage() {
                     }
                     className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-fourth-base focus:border-transparent"
                   >
-                    <option value="percentage">Percentage</option>
-                    <option value="fixed">Fixed Amount</option>
-                    <option value="tiered">Tiered</option>
+                    <option value="percentage">Porcentaje</option>
+                    <option value="fixed">Cantidad fija</option>
+                    <option value="tiered">Por niveles</option>
                   </select>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Value {formData.type === 'percentage' ? '(%)' : '($)'}
+                    Valor {formData.type === 'percentage' ? '(%)' : '($)'}
                   </label>
                   <input
                     type="number"
@@ -583,7 +590,7 @@ export default function BonusesPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Minimum Purchase ($)
+                    Compra mínima ($)
                   </label>
                   <input
                     type="number"
@@ -599,7 +606,7 @@ export default function BonusesPage() {
                 {formData.type === 'percentage' && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Maximum Discount ($)
+                      Descuento máximo ($)
                     </label>
                     <input
                       type="number"
@@ -615,7 +622,7 @@ export default function BonusesPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Bonus Code
+                    Código del bono
                   </label>
                   <div className="flex gap-2">
                     <input
@@ -633,14 +640,14 @@ export default function BonusesPage() {
                       onClick={generateCode}
                       className="px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                     >
-                      Generate
+                      Generar
                     </button>
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Usage Limit
+                    Límite de uso
                   </label>
                   <input
                     type="number"
@@ -656,7 +663,7 @@ export default function BonusesPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Start Date
+                    Fecha de inicio
                   </label>
                   <input
                     type="date"
@@ -671,7 +678,7 @@ export default function BonusesPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    End Date
+                    Fecha de finalización
                   </label>
                   <input
                     type="date"
@@ -684,7 +691,7 @@ export default function BonusesPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Target Users
+                    Usuarios objetivo
                   </label>
                   <select
                     value={formData.targetUsers}
@@ -696,16 +703,16 @@ export default function BonusesPage() {
                     }
                     className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-fourth-base focus:border-transparent"
                   >
-                    <option value="all">All Users</option>
-                    <option value="new">New Customers</option>
-                    <option value="returning">Returning Customers</option>
-                    <option value="vip">VIP Members</option>
+                    <option value="all">Todos</option>
+                    <option value="new">Nuevos clientes</option>
+                    <option value="returning">Clientes recurrentes</option>
+                    <option value="vip">Miembros VIP</option>
                   </select>
                 </div>
 
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Categories (Optional)
+                    Categorías (Opcional)
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {categories.map((category) => (
@@ -752,13 +759,13 @@ export default function BonusesPage() {
                   }}
                   className="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
-                  Cancel
+                  Cancelar
                 </button>
                 <button
                   type="submit"
                   className="px-4 py-2 bg-fourth-base text-white rounded-lg hover:bg-fourth-base/90 transition-colors"
                 >
-                  {editingBonus ? 'Update Bonus' : 'Create Bonus'}
+                  {editingBonus ? 'Actualizar bono' : 'Crear bono'}
                 </button>
               </div>
             </form>

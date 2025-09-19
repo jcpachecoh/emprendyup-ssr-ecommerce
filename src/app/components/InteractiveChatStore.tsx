@@ -1016,7 +1016,7 @@ export default function InteractiveChatStore() {
                     administración.
                   </p>
                   <a
-                    href="http://localhost:3000/admin/store"
+                    href="http://${storeId}.emprendyup/admin/store"
                     className="inline-block px-8 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors font-semibold transform hover:scale-105"
                   >
                     Ir al panel de administración

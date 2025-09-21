@@ -17,6 +17,7 @@ import {
 import FileUpload from './FileUpload';
 import { gql, useMutation } from '@apollo/client';
 import { useSessionStore } from '@/lib/store/dashboard';
+import StoreSummary from './StoreSummary';
 // router not used in this component
 
 interface Message {
@@ -141,15 +142,58 @@ const questions = [
   {
     text: '¿En qué ciudad te encuentras?',
     field: 'city',
-    type: 'text' as const,
-    options: ['Persona Natural', 'SAS', 'LTDA', 'SA', 'Fundación', 'Cooperativa'],
+    type: 'select' as const,
+    options: [
+      'Bogotá',
+      'Medellín',
+      'Cali',
+      'Barranquilla',
+      'Cartagena',
+      'Bucaramanga',
+      'Manizales',
+      'Pereira',
+      'Cúcuta',
+      'Santa Marta',
+    ],
     validation: { type: 'text' as const, required: true, message: 'La ciudad es requerida' },
   },
   {
-    text: '¿En qué departamento/estado?',
+    text: '¿En qué departamento?',
     field: 'department',
-    type: 'text' as const,
-    options: ['Persona Natural', 'SAS', 'LTDA', 'SA', 'Fundación', 'Cooperativa'],
+    type: 'select' as const,
+    options: [
+      'Amazonas',
+      'Antioquia',
+      'Atlántico',
+      'Bolívar',
+      'Boyacá',
+      'Caldas',
+      'Caquetá',
+      'Casanare',
+      'Cauca',
+      'Cesar',
+      'Chocó',
+      'Córdoba',
+      'Cundinamarca',
+      'Guaviare',
+      'Guainía',
+      'Huila',
+      'La Guajira',
+      'Magdalena',
+      'Meta',
+      'Nariño',
+      'Norte de Santander',
+      'Putumayo',
+      'Quindío',
+      'Risaralda',
+      'San Andrés y Providencia',
+      'Santander',
+      'Sucre',
+      'Tolima',
+      'Valle del Cauca',
+      'Vaupés',
+      'Vichada',
+    ],
     validation: { type: 'text' as const, required: true, message: 'El departamento es requerido' },
   },
   {
@@ -159,6 +203,7 @@ const questions = [
     options: ['Persona Natural', 'SAS', 'LTDA', 'SA', 'Fundación', 'Cooperativa'],
     validation: { type: 'text' as const, required: true },
   },
+
   {
     text: '¿Cuál es tu número de identificación tributaria (NIT/RUT)?',
     field: 'taxId',
@@ -861,16 +906,12 @@ export default function InteractiveChatStore() {
             <div className="text-center space-y-4">
               {!createdStoreId ? (
                 <>
-                  <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto">
-                    <span className="text-white text-2xl">✓</span>
-                  </div>
-                  <h2 className="text-xl font-bold text-white">¡Tu tienda está lista!</h2>
-                  <p className="text-slate-300">
-                    Hemos recopilado toda la información necesaria para crear tu tienda online.
-                  </p>
-
-                  <button
-                    onClick={async () => {
+                  <StoreSummary
+                    data={storeData}
+                    onUpdate={(field, value) => {
+                      setStoreData((prev) => ({ ...prev, [field]: value }));
+                    }}
+                    onCreate={async () => {
                       setCreateError(null);
                       setCreating(true);
                       try {
@@ -909,12 +950,8 @@ export default function InteractiveChatStore() {
                         const created = data?.createStore;
                         if (created) {
                           setCreatedStoreId(created.storeId);
-                          try {
-                            session.setCurrentStore?.(created as any);
-                            session.addStore?.(created as any);
-                          } catch (e) {
-                            // ignore
-                          }
+                          session.setCurrentStore?.(created as any);
+                          session.addStore?.(created as any);
                         }
                       } catch (err: any) {
                         setCreateError(err?.message || 'Error al crear la tienda');
@@ -922,15 +959,9 @@ export default function InteractiveChatStore() {
                         setCreating(false);
                       }
                     }}
-                    disabled={creating}
-                    className={`px-8 py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors font-semibold transform hover:scale-105 ${
-                      creating ? 'opacity-60 cursor-not-allowed' : ''
-                    }`}
-                  >
-                    {creating ? 'Creando...' : 'Crear mi tienda'}
-                  </button>
+                  />
 
-                  {createError && <div className="text-red-300 text-sm">{createError}</div>}
+                  {createError && <div className="text-red-300 text-sm mt-4">{createError}</div>}
                 </>
               ) : (
                 <>

@@ -128,8 +128,8 @@ function SignupForm() {
         setPassword('');
         setStoreId('');
         setAcceptTerms(false);
-        router.push('/login');
-      }, 3000);
+        router.push(`/otp-confirmation?email=${encodeURIComponent(email)}`);
+      }, 6000);
     } catch (err: any) {
       setError(err.message || 'Error en el registro');
     } finally {
@@ -314,7 +314,8 @@ function SignupForm() {
             <div className="flex-1">
               <p className="font-medium">¡Registro exitoso!</p>
               <p className="text-sm text-green-100">
-                Serás redirigido al login en unos momentos...
+                Serás redirigido para verificar tu correo electrónico con un código OTP. Por favor
+                revisa tu bandeja de entrada y sigue las instrucciones.{' '}
               </p>
             </div>
             <button

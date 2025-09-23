@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import FileUpload from './FileUpload';
 import Image from 'next/image';
+import { useSessionStore } from '@/lib/store/dashboard';
 
 interface StoreSummaryProps {
   open: boolean;
@@ -13,6 +14,7 @@ interface StoreSummaryProps {
 export default function StoreSummary({ open, onClose, data, onConfirm }: StoreSummaryProps) {
   const [formData, setFormData] = useState<any>(data || {});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const user = useSessionStore();
 
   // Resolve stored keys to full URLs and allow blob/data/http(s) to pass through
   const resolveImageUrl = (value?: string) => {
@@ -31,7 +33,11 @@ export default function StoreSummary({ open, onClose, data, onConfirm }: StoreSu
   // Actualiza el formulario cuando cambian los datos iniciales
   useEffect(() => {
     if (data) {
-      setFormData({ ...data });
+      // Move phone into whatsappNumber for the modal and clear phone field in the form
+      setFormData({
+        ...data,
+        whatsappNumber: data.whatsappNumber || data.phone || '',
+      });
     }
   }, [data]);
 
@@ -39,6 +45,26 @@ export default function StoreSummary({ open, onClose, data, onConfirm }: StoreSu
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    // If the user changes the store name, try to auto-update storeId
+    if (name === 'name') {
+      setFormData((prev: any) => {
+        const prevName = (prev.name || '').trim().toLowerCase();
+        const normalizedPrev = prevName.replace(/[\s-]+/g, '_').replace(/[^a-z0-9_]/g, '');
+        const normalizedNew = value
+          .trim()
+          .toLowerCase()
+          .replace(/[\s-]+/g, '_')
+          .replace(/[^a-z0-9_]/g, '');
+        const shouldUpdateStoreId = !prev.storeId || prev.storeId === normalizedPrev;
+        return {
+          ...prev,
+          name: value,
+          storeId: shouldUpdateStoreId ? normalizedNew : prev.storeId,
+        };
+      });
+      return;
+    }
+
     setFormData((prev: any) => ({ ...prev, [name]: value }));
   };
 
@@ -103,15 +129,6 @@ export default function StoreSummary({ open, onClose, data, onConfirm }: StoreSu
               value={formData.name || ''}
               onChange={handleChange}
               placeholder="Nombre de la tienda"
-              className={inputClassName}
-              disabled={isSubmitting}
-            />
-            <input
-              type="text"
-              name="storeId"
-              value={formData.storeId || ''}
-              onChange={handleChange}
-              placeholder="ID de la tienda"
               className={inputClassName}
               disabled={isSubmitting}
             />
@@ -224,21 +241,13 @@ export default function StoreSummary({ open, onClose, data, onConfirm }: StoreSu
               <input
                 type="email"
                 name="email"
-                value={formData.email || ''}
+                value={user.user?.email || formData.email || ''}
                 onChange={handleChange}
                 placeholder="Email"
                 className={inputClassName}
                 disabled={isSubmitting}
               />
-              <input
-                type="text"
-                name="phone"
-                value={formData.phone || ''}
-                onChange={handleChange}
-                placeholder="Teléfono"
-                className={inputClassName}
-                disabled={isSubmitting}
-              />
+              {/* Phone removed: phone value is migrated into whatsappNumber on load */}
             </div>
             <input
               type="text"
@@ -256,15 +265,6 @@ export default function StoreSummary({ open, onClose, data, onConfirm }: StoreSu
                 value={formData.city || ''}
                 onChange={handleChange}
                 placeholder="Ciudad"
-                className={inputClassName}
-                disabled={isSubmitting}
-              />
-              <input
-                type="text"
-                name="department"
-                value={formData.department || ''}
-                onChange={handleChange}
-                placeholder="Departamento"
                 className={inputClassName}
                 disabled={isSubmitting}
               />

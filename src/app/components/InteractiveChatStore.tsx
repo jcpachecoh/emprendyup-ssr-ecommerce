@@ -78,12 +78,6 @@ const questions = [
     validation: { type: 'text' as const, required: true, message: 'El nombre es requerido' },
   },
   {
-    text: 'Elige un identificador único (storeId) para tu tienda: una sola palabra sin espacios.',
-    field: 'storeId',
-    type: 'text' as const,
-    validation: { type: 'text' as const, required: true, message: 'El identificador es requerido' },
-  },
-  {
     text: 'Perfecto! Ahora cuéntame brevemente sobre tu negocio. ¿Qué productos o servicios ofreces?',
     field: 'description',
     type: 'text' as const,
@@ -119,17 +113,7 @@ const questions = [
     optional: true,
   },
   {
-    text: '📧 Información de contacto: ¿Cuál es tu email principal?',
-    field: 'email',
-    type: 'text' as const,
-    validation: {
-      type: 'email' as const,
-      required: true,
-      message: 'Por favor ingresa un email válido',
-    },
-  },
-  {
-    text: '📱 ¿Cuál es tu número de teléfono?',
+    text: '📱 ¿Cuál es tu número de celular?',
     field: 'phone',
     type: 'text' as const,
     validation: { type: 'phone' as const, required: false, message: 'Formato: +57 300 123 4567' },
@@ -157,24 +141,9 @@ const questions = [
       'Pereira',
       'Cúcuta',
       'Santa Marta',
+      'Otra',
     ],
     validation: { type: 'text' as const, required: true, message: 'La ciudad es requerida' },
-  },
-  {
-    text: '¿En qué departamento?',
-    field: 'department',
-    type: 'select' as const,
-    options: [
-      'Amazonas',
-      'Antioquia',
-      'Atlántico',
-      'Bolívar',
-      'Boyacá',
-      'Caldas',
-      'Caquetá',
-      'Cundinamarca',
-    ],
-    validation: { type: 'text' as const, required: true, message: 'El departamento es requerido' },
   },
   {
     text: '🏢 Información legal: ¿Qué tipo de negocio es?',
@@ -250,17 +219,6 @@ const questions = [
       type: 'url' as const,
       required: false,
       message: 'Ejemplo: https://tiktok.com/tuusuario',
-    },
-    optional: true,
-  },
-  {
-    text: '📞 Por último, ¿tienes WhatsApp Business? Comparte tu número:',
-    field: 'whatsappNumber',
-    type: 'text' as const,
-    validation: {
-      type: 'whatsapp' as const,
-      required: false,
-      message: 'Formato: +57 300 123 4567',
     },
     optional: true,
   },
@@ -422,6 +380,8 @@ export default function InteractiveChatStore() {
   const chatRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [showSummary, setShowSummary] = useState(false);
+  const [customCityOpen, setCustomCityOpen] = useState(false);
+  const [customCityValue, setCustomCityValue] = useState('');
 
   const [createStoreMutation] = useMutation(CREATE_STORE);
   const session = useSessionStore();
@@ -603,6 +563,17 @@ export default function InteractiveChatStore() {
       value = normalized;
     }
 
+    // If the user provided the store name, auto-generate storeId from name
+    if (field === 'name') {
+      const normalized = value
+        .trim()
+        .toLowerCase()
+        .replace(/[\s-]+/g, '_')
+        .replace(/[^a-z0-9_]/g, '');
+      // only set storeId if it's empty to avoid overwriting explicit choices
+      setStoreData((prev) => ({ ...prev, storeId: prev.storeId || normalized }));
+    }
+
     // Validate input
     if (currentQuestion.validation) {
       const validation = validateInput(value, currentQuestion.validation);
@@ -622,7 +593,17 @@ export default function InteractiveChatStore() {
     setMessages((prev) => [...prev, { from: 'user', text: displayValue, type: messageType }]);
 
     // 📦 Guardar en storeData
-    setStoreData((prev) => ({ ...prev, [field]: value }));
+    setStoreData((prev) => ({
+      ...prev,
+      [field]: value,
+      ...(field === 'phone' ? { whatsappNumber: value } : {}),
+    }));
+
+    // if we were in custom city flow, close it after receiving a manual city
+    if (field === 'city' && customCityOpen) {
+      setCustomCityOpen(false);
+      setCustomCityValue('');
+    }
 
     // 🚀 Avanzar o mostrar resumen
     if (currentStep + 1 < questions.length) {
@@ -636,6 +617,30 @@ export default function InteractiveChatStore() {
 
     // 🧹 Reset input
     setInput('');
+  };
+
+  // Auto-fill email from session when the email question appears
+  useEffect(() => {
+    const isEmailQuestion =
+      currentStep < questions.length && questions[currentStep]?.field === 'email';
+    const sessionEmail = (session as any)?.user?.email;
+    if (isEmailQuestion && sessionEmail && !(storeData.email && storeData.email.length > 0)) {
+      // small timeout so UI updates feel natural
+      const t = setTimeout(() => handleResponse(sessionEmail), 300);
+      return () => clearTimeout(t);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentStep, (session as any)?.user?.email]);
+
+  // Helper to open summary ensuring email is present in storeData (from session if available)
+  const openSummary = () => {
+    const sessionEmail = (session as any)?.user?.email;
+    setStoreData((prev) => ({
+      ...prev,
+      email: prev.email || sessionEmail || '',
+      whatsappNumber: prev.whatsappNumber || prev.phone || '',
+    }));
+    setShowSummary(true);
   };
 
   const handleSkip = () => {
@@ -758,7 +763,48 @@ export default function InteractiveChatStore() {
             <span>{msg.text}</span>
             {currentStep === questions.findIndex((q) => q.field === msg.field) && msg.options && (
               <div>
-                <SelectInput options={msg.options} onSelect={handleResponse} />
+                {/* If this is the city field, handle 'Otra' to open a custom input */}
+                {msg.field === 'city' ? (
+                  <div>
+                    {!customCityOpen ? (
+                      <SelectInput
+                        options={msg.options}
+                        onSelect={(val: string) => {
+                          if (val === 'Otra') {
+                            setCustomCityOpen(true);
+                          } else {
+                            handleResponse(val);
+                          }
+                        }}
+                      />
+                    ) : (
+                      <div className="mt-3 flex gap-2">
+                        <input
+                          type="text"
+                          value={customCityValue}
+                          onChange={(e) => setCustomCityValue(e.target.value)}
+                          placeholder="Escribe tu ciudad"
+                          className="flex-1 px-3 py-2 rounded border bg-slate-700 text-white"
+                        />
+                        <button
+                          onClick={() => {
+                            if (customCityValue.trim()) {
+                              handleResponse(customCityValue.trim());
+                            }
+                          }}
+                          className="px-4 py-2 bg-blue-600 rounded text-white"
+                        >
+                          Aceptar
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div>
+                    <SelectInput options={msg.options} onSelect={handleResponse} />
+                  </div>
+                )}
+
                 {msg.optional && (
                   <button
                     onClick={handleSkip}
@@ -797,7 +843,6 @@ export default function InteractiveChatStore() {
     };
     return iconMap[field || ''] || null;
   };
-  console.log('messages', messages);
   return (
     <div className="max-w-4xl mx-auto p-6 bg-slate-900 min-h-screen">
       <div className="bg-slate-800 rounded-3xl shadow-2xl overflow-hidden">
@@ -960,15 +1005,14 @@ export default function InteractiveChatStore() {
                 </div>
                 <h2 className="text-xl font-bold text-white">¡Tu tienda ha sido creada!</h2>
                 <p className="text-slate-300">
-                  Ahora puedes administrar y personalizar tu tienda desde el panel de
-                  administración.
+                  Proximamente recibirás un email con los detalles de acceso.
                 </p>
                 <div className="flex items-center justify-center gap-4">
                   <a
-                    href={`http://${createdStoreId}.emprendyup/admin/store`}
+                    href={`http://emprendyup.com`}
                     className="px-6 py-3 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition-colors"
                   >
-                    Ir al panel de administración
+                    Ir a la pagina principal
                   </a>
                 </div>
               </div>
@@ -977,7 +1021,7 @@ export default function InteractiveChatStore() {
               <>
                 <div className="text-center mb-4 text-slate-300">
                   <button
-                    onClick={() => setShowSummary(true)}
+                    onClick={() => openSummary()}
                     className="px-6 pl-6 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition-colors"
                     disabled={creating}
                   >

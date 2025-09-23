@@ -49,7 +49,7 @@ export default function OTPConfirmationPage() {
       const data = await res.json();
       if (res.ok) {
         setSuccess('¡Verificación exitosa! Bienvenido.');
-        setTimeout(() => router.push('/dashboard/insights'), 2000);
+        setTimeout(() => router.push('/login'), 2000);
       } else {
         setError(data.message || 'Código OTP inválido o expirado.');
       }

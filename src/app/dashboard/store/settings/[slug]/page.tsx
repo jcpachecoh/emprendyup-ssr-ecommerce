@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import DetailsStore from '@/app/components/Detalles';
+import FileUpload from '@/app/components/FileUpload';
 
 const GET_STORE_CONFIG = gql`
   query GetStore($storeId: String!) {
@@ -77,20 +78,46 @@ const UPDATE_STORE_CONFIG = gql`
       storeId
       name
       businessName
-      textColor
-      accentColor
-      address
-      language
-      country
-      mercadoPagoEnabled
-      department
-      description
       primaryColor
       secondaryColor
+      accentColor
+      backgroundColor
+      textColor
+      description
+      email
+      phone
+      address
+      city
+      department
+      country
+      businessType
+      taxId
+      currency
+      language
+      timezone
       metaTitle
       metaDescription
       metaKeywords
-      updatedAt
+      logoUrl
+      faviconUrl
+      bannerUrl
+      whatsappNumber
+      facebookUrl
+      instagramUrl
+      twitterUrl
+      youtubeUrl
+      tiktokUrl
+      freeShippingThreshold
+      standardShippingCost
+      expressShippingCost
+      taxRate
+      includeTaxInPrice
+      mercadoPagoEnabled
+      mercadoPagoPublicKey
+      wompiEnabled
+      wompiPublicKey
+      ePaycoEnabled
+      ePaycoPublicKey
       __typename
     }
   }
@@ -123,6 +150,21 @@ export default function StoreSettingsPage() {
     setFormData((prev: any) => ({ ...prev, [name]: value }));
   };
 
+  const resolveImageUrl = (value?: string) => {
+    if (!value) return '';
+    // allow full http(s), data: and blob: preview URLs to be used as-is
+    if (
+      value.startsWith('http') ||
+      value.startsWith('https') ||
+      value.startsWith('blob:') ||
+      value.startsWith('data:')
+    ) {
+      return value;
+    }
+    // otherwise assume it's a key/path stored for S3
+    return `https://emprendyup-images.s3.us-east-1.amazonaws.com/${value}`;
+  };
+
   const handleSave = async () => {
     setSaveStatus('saving');
     try {
@@ -142,6 +184,18 @@ export default function StoreSettingsPage() {
       setSaveStatus('error');
       setTimeout(() => setSaveStatus('idle'), 3000);
     }
+  };
+
+  const handleRemoveLogo = () => {
+    setFormData((prev: any) => ({ ...prev, logoUrl: '' }));
+  };
+
+  const handleRemoveFavicon = () => {
+    setFormData((prev: any) => ({ ...prev, faviconUrl: '' }));
+  };
+
+  const handleRemoveBanner = () => {
+    setFormData((prev: any) => ({ ...prev, bannerUrl: '' }));
   };
 
   const tabs = [
@@ -373,42 +427,41 @@ export default function StoreSettingsPage() {
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Logo
                           </label>
-                          <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center">
+                          <div className=" border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center">
                             {formData.logoUrl ? (
                               <div className="space-y-2">
-                                <Image
-                                  src={
-                                    formData.logoUrl?.startsWith('http')
-                                      ? formData.logoUrl
-                                      : `https://emprendyup-images.s3.us-east-1.amazonaws.com/${formData.logoUrl}`
-                                  }
-                                  alt="Logo"
-                                  width={300}
-                                  height={100}
-                                  className="w-full h-16 mx-auto rounded object-cover"
-                                />
-                                <div className="flex gap-2">
-                                  <input
-                                    type="url"
-                                    name="logoUrl"
-                                    value={formData.logoUrl || ''}
-                                    onChange={handleInputChange}
-                                    className="flex-1 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                                    placeholder="URL del logo"
+                                <div className="relative inline-block">
+                                  <Image
+                                    src={resolveImageUrl(formData.logoUrl)}
+                                    alt="Logo"
+                                    width={300}
+                                    height={100}
+                                    className="w-full h-16 mx-auto rounded object-cover"
+                                    unoptimized={Boolean(
+                                      formData.logoUrl?.startsWith('blob:') ||
+                                        formData.logoUrl?.startsWith('data:')
+                                    )}
                                   />
+                                  <button
+                                    type="button"
+                                    onClick={handleRemoveLogo}
+                                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 hover:bg-red-700 text-white rounded-full text-xs flex items-center justify-center transition-colors"
+                                    disabled={saveStatus === 'saving'}
+                                  >
+                                    ✕
+                                  </button>
                                 </div>
                               </div>
                             ) : (
                               <div>
-                                <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                                <input
-                                  type="url"
-                                  name="logoUrl"
-                                  value={formData.logoUrl || ''}
-                                  onChange={handleInputChange}
-                                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                                  placeholder="URL del logo"
-                                />
+                                <div className="mt-3">
+                                  <FileUpload
+                                    onFile={(url) =>
+                                      setFormData((prev: any) => ({ ...prev, logoUrl: url }))
+                                    }
+                                    storeId={formData.storeId || urlStoreId}
+                                  />
+                                </div>
                               </div>
                             )}
                           </div>
@@ -421,40 +474,41 @@ export default function StoreSettingsPage() {
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Favicon
                           </label>
-                          <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center">
+                          <div className=" border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center">
                             {formData.faviconUrl ? (
                               <div className="space-y-2">
-                                <Image
-                                  src={
-                                    formData.faviconUrl?.startsWith('http')
-                                      ? formData.faviconUrl
-                                      : `https://emprendyup-images.s3.us-east-1.amazonaws.com/${formData.faviconUrl}`
-                                  }
-                                  alt="Favicon"
-                                  width={300}
-                                  height={100}
-                                  className="w-full h-16 mx-auto rounded object-cover"
-                                />
-                                <input
-                                  type="url"
-                                  name="faviconUrl"
-                                  value={formData.faviconUrl || ''}
-                                  onChange={handleInputChange}
-                                  className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                                  placeholder="URL del favicon"
-                                />
+                                <div className="relative inline-block">
+                                  <Image
+                                    src={resolveImageUrl(formData.faviconUrl)}
+                                    alt="Favicon"
+                                    width={300}
+                                    height={100}
+                                    className="w-full h-16 mx-auto rounded object-cover"
+                                    unoptimized={Boolean(
+                                      formData.faviconUrl?.startsWith('blob:') ||
+                                        formData.faviconUrl?.startsWith('data:')
+                                    )}
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={handleRemoveFavicon}
+                                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 hover:bg-red-700 text-white rounded-full text-xs flex items-center justify-center transition-colors"
+                                    disabled={saveStatus === 'saving'}
+                                  >
+                                    ✕
+                                  </button>
+                                </div>
                               </div>
                             ) : (
                               <div>
-                                <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                                <input
-                                  type="url"
-                                  name="faviconUrl"
-                                  value={formData.faviconUrl || ''}
-                                  onChange={handleInputChange}
-                                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                                  placeholder="URL del favicon"
-                                />
+                                <div className="mt-3">
+                                  <FileUpload
+                                    onFile={(url) =>
+                                      setFormData((prev: any) => ({ ...prev, faviconUrl: url }))
+                                    }
+                                    storeId={formData.storeId || urlStoreId}
+                                  />
+                                </div>
                               </div>
                             )}
                           </div>
@@ -467,40 +521,41 @@ export default function StoreSettingsPage() {
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Banner
                           </label>
-                          <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center">
+                          <div className=" border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center">
                             {formData.bannerUrl ? (
                               <div className="space-y-2">
-                                <Image
-                                  src={
-                                    formData.bannerUrl?.startsWith('http')
-                                      ? formData.bannerUrl
-                                      : `https://emprendyup-images.s3.us-east-1.amazonaws.com/${formData.bannerUrl}`
-                                  }
-                                  alt="Banner"
-                                  width={400}
-                                  height={100}
-                                  className="w-full h-16 mx-auto rounded object-cover"
-                                />
-                                <input
-                                  type="url"
-                                  name="bannerUrl"
-                                  value={formData.bannerUrl || ''}
-                                  onChange={handleInputChange}
-                                  className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                                  placeholder="URL del banner"
-                                />
+                                <div className="relative inline-block">
+                                  <Image
+                                    src={resolveImageUrl(formData.bannerUrl)}
+                                    alt="Banner"
+                                    width={400}
+                                    height={100}
+                                    className="w-full h-16 mx-auto rounded object-cover"
+                                    unoptimized={Boolean(
+                                      formData.bannerUrl?.startsWith('blob:') ||
+                                        formData.bannerUrl?.startsWith('data:')
+                                    )}
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={handleRemoveBanner}
+                                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 hover:bg-red-700 text-white rounded-full text-xs flex items-center justify-center transition-colors"
+                                    disabled={saveStatus === 'saving'}
+                                  >
+                                    ✕
+                                  </button>
+                                </div>
                               </div>
                             ) : (
                               <div>
-                                <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                                <input
-                                  type="url"
-                                  name="bannerUrl"
-                                  value={formData.bannerUrl || ''}
-                                  onChange={handleInputChange}
-                                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                                  placeholder="URL del banner"
-                                />
+                                <div className="mt-3">
+                                  <FileUpload
+                                    onFile={(url) =>
+                                      setFormData((prev: any) => ({ ...prev, bannerUrl: url }))
+                                    }
+                                    storeId={formData.storeId || urlStoreId}
+                                  />
+                                </div>
                               </div>
                             )}
                           </div>

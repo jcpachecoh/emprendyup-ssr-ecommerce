@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, no-console */
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 import {
-  Upload,
-  X,
   Send,
   Palette,
   MapPin,
@@ -19,9 +16,12 @@ import {
   Bot,
   User,
 } from 'lucide-react';
+import FileUpload from './FileUpload';
 import { gql, useMutation } from '@apollo/client';
 import { useSessionStore } from '@/lib/store/dashboard';
-import { useRouter } from 'next/navigation';
+import StoreSummary from './StoreSummary';
+import Image from 'next/image';
+// router not used in this component
 
 interface Message {
   from: 'bot' | 'user';
@@ -78,12 +78,6 @@ const questions = [
     validation: { type: 'text' as const, required: true, message: 'El nombre es requerido' },
   },
   {
-    text: 'Elige un identificador único (storeId) para tu tienda: una sola palabra sin espacios.',
-    field: 'storeId',
-    type: 'text' as const,
-    validation: { type: 'text' as const, required: true, message: 'El identificador es requerido' },
-  },
-  {
     text: 'Perfecto! Ahora cuéntame brevemente sobre tu negocio. ¿Qué productos o servicios ofreces?',
     field: 'description',
     type: 'text' as const,
@@ -97,20 +91,7 @@ const questions = [
     validation: { type: 'url' as const, required: false },
     optional: true,
   },
-  {
-    text: '¿Tienes un favicon? Es el pequeño ícono que aparece en las pestañas del navegador:',
-    field: 'faviconUrl',
-    type: 'image' as const,
-    validation: { type: 'url' as const, required: false },
-    optional: true,
-  },
-  {
-    text: 'Opcional: ¿Tienes una imagen de banner para la portada de tu tienda?',
-    field: 'bannerUrl',
-    type: 'image' as const,
-    validation: { type: 'url' as const, required: false },
-    optional: true,
-  },
+
   {
     text: '🎨 ¡Hora de los colores! Elige tu color principal (será el color dominante de tu tienda):',
     field: 'primaryColor',
@@ -132,17 +113,7 @@ const questions = [
     optional: true,
   },
   {
-    text: '📧 Información de contacto: ¿Cuál es tu email principal?',
-    field: 'email',
-    type: 'text' as const,
-    validation: {
-      type: 'email' as const,
-      required: true,
-      message: 'Por favor ingresa un email válido',
-    },
-  },
-  {
-    text: '📱 ¿Cuál es tu número de teléfono?',
+    text: '📱 ¿Cuál es tu número de celular?',
     field: 'phone',
     type: 'text' as const,
     validation: { type: 'phone' as const, required: false, message: 'Formato: +57 300 123 4567' },
@@ -158,14 +129,21 @@ const questions = [
   {
     text: '¿En qué ciudad te encuentras?',
     field: 'city',
-    type: 'text' as const,
+    type: 'select' as const,
+    options: [
+      'Bogotá',
+      'Medellín',
+      'Cali',
+      'Barranquilla',
+      'Cartagena',
+      'Bucaramanga',
+      'Manizales',
+      'Pereira',
+      'Cúcuta',
+      'Santa Marta',
+      'Otra',
+    ],
     validation: { type: 'text' as const, required: true, message: 'La ciudad es requerida' },
-  },
-  {
-    text: '¿En qué departamento/estado?',
-    field: 'department',
-    type: 'text' as const,
-    validation: { type: 'text' as const, required: true, message: 'El departamento es requerido' },
   },
   {
     text: '🏢 Información legal: ¿Qué tipo de negocio es?',
@@ -174,6 +152,7 @@ const questions = [
     options: ['Persona Natural', 'SAS', 'LTDA', 'SA', 'Fundación', 'Cooperativa'],
     validation: { type: 'text' as const, required: true },
   },
+
   {
     text: '¿Cuál es tu número de identificación tributaria (NIT/RUT)?',
     field: 'taxId',
@@ -239,18 +218,7 @@ const questions = [
     validation: {
       type: 'url' as const,
       required: false,
-      message: 'Ejemplo: https://tiktok.com/@tuusuario',
-    },
-    optional: true,
-  },
-  {
-    text: '📞 Por último, ¿tienes WhatsApp Business? Comparte tu número:',
-    field: 'whatsappNumber',
-    type: 'text' as const,
-    validation: {
-      type: 'whatsapp' as const,
-      required: false,
-      message: 'Formato: +57 300 123 4567',
+      message: 'Ejemplo: https://tiktok.com/tuusuario',
     },
     optional: true,
   },
@@ -287,93 +255,9 @@ const defaultStoreData: StoreData = {
   status: 'active',
 };
 
-function FileUpload({
-  onFile,
-  accept = 'image/*',
-  storeId,
-}: {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onFile: (_arg: string) => void;
-  accept?: string;
-  storeId?: string;
-}) {
-  const [preview, setPreview] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setIsUploading(true);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const fileUrl = URL.createObjectURL(file);
-      const response = await fetch(fileUrl);
-      const blob = await response.blob();
-
-      const formData = new FormData();
-      formData.append('images', blob, file.name);
-      // Add the business name as folder parameter (directly in uploads folder)
-      if (storeId) {
-        formData.append('folderName', storeId.replace(/[^a-zA-Z0-9-_]/g, '_'));
-      }
-      const uploadResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/images`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!uploadResponse.ok) {
-        throw new Error(`Upload failed: ${uploadResponse.statusText}`);
-      }
-
-      const uploadResult = await uploadResponse.json();
-      console.log('🚀 ~ handleFileChange ~ uploadResult:', uploadResult);
-      const awsImage = process.env.NEXT_PUBLIC_AWS_BUCKET_URL + uploadResult[0]?.key;
-      setPreview(awsImage);
-      onFile(awsImage);
-      setIsUploading(false);
-    }
-  };
-
-  return (
-    <div className="mt-2">
-      {!preview ? (
-        <label className="block border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 transition-colors">
-          <input type="file" accept={accept} onChange={handleFileChange} className="hidden" />
-          {isUploading ? (
-            <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-          ) : (
-            <Upload className="w-6 h-6 text-gray-400 mx-auto mb-2" />
-          )}
-          <p className="text-sm text-gray-600">
-            {isUploading ? 'Subiendo...' : 'Haz clic para subir archivo'}
-          </p>
-        </label>
-      ) : (
-        <div className="relative inline-block">
-          <Image
-            src={preview}
-            alt="Preview"
-            width={80}
-            height={80}
-            className="w-20 h-20 object-cover rounded-lg"
-            unoptimized
-          />
-          <button
-            onClick={() => {
-              setPreview(null);
-              onFile('');
-            }}
-            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-          >
-            <X className="w-3 h-3" />
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function ColorPicker({ value, onChange }: { value: string; onChange: (_color: string) => void }) {
+// @ts-ignore - suppress unused parameter-name warning in the function type annotation
+function ColorPicker({ value, onChange }: { value: string; onChange: (color: string) => void }) {
   const presetColors = [
     '#3B82F6',
     '#EF4444',
@@ -458,13 +342,13 @@ const CREATE_STORE = gql`
   }
 `;
 
+// @ts-ignore - suppress unused parameter-name warning in the function type annotation
 function SelectInput({
   options,
   onSelect,
 }: {
   options: string[];
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onSelect: (_value: string) => void;
+  onSelect: (value: string) => void;
 }) {
   return (
     <div className="mt-2 grid grid-cols-2 gap-2">
@@ -492,10 +376,13 @@ export default function InteractiveChatStore() {
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
   const [createdStoreId, setCreatedStoreId] = useState<string | null>(null);
+  const [createdStore, setCreatedStore] = useState<any>(null);
   const chatRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const [showSummary, setShowSummary] = useState(false);
+  const [customCityOpen, setCustomCityOpen] = useState(false);
+  const [customCityValue, setCustomCityValue] = useState('');
 
-  // Apollo mutation
   const [createStoreMutation] = useMutation(CREATE_STORE);
   const session = useSessionStore();
   // hydrate session from server cookie if not present
@@ -525,9 +412,6 @@ export default function InteractiveChatStore() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const router = useRouter();
-
-  // Validation functions
   const validateInput = (
     value: string,
     validation: ValidationRule
@@ -679,6 +563,17 @@ export default function InteractiveChatStore() {
       value = normalized;
     }
 
+    // If the user provided the store name, auto-generate storeId from name
+    if (field === 'name') {
+      const normalized = value
+        .trim()
+        .toLowerCase()
+        .replace(/[\s-]+/g, '_')
+        .replace(/[^a-z0-9_]/g, '');
+      // only set storeId if it's empty to avoid overwriting explicit choices
+      setStoreData((prev) => ({ ...prev, storeId: prev.storeId || normalized }));
+    }
+
     // Validate input
     if (currentQuestion.validation) {
       const validation = validateInput(value, currentQuestion.validation);
@@ -690,20 +585,62 @@ export default function InteractiveChatStore() {
 
     setValidationError(null);
 
-    // Add user message
     let displayValue = value;
-    if (value.trim() === '' && currentQuestion.optional) {
+    if ((!value || value.trim() === '') && currentQuestion.optional) {
       displayValue = '⏭️ Saltado';
     }
-    setMessages((prev) => [...prev, { from: 'user', text: displayValue, type: 'text' }]);
+    const messageType = currentQuestion.type || 'text';
+    setMessages((prev) => [...prev, { from: 'user', text: displayValue, type: messageType }]);
 
-    // Update store data
-    setStoreData((prev) => ({ ...prev, [field]: value }));
+    // 📦 Guardar en storeData
+    setStoreData((prev) => ({
+      ...prev,
+      [field]: value,
+      ...(field === 'phone' ? { whatsappNumber: value } : {}),
+    }));
 
-    // Move to next step
-    setCurrentStep((prev) => prev + 1);
-    addBotMessage(currentStep + 1);
+    // if we were in custom city flow, close it after receiving a manual city
+    if (field === 'city' && customCityOpen) {
+      setCustomCityOpen(false);
+      setCustomCityValue('');
+    }
+
+    // 🚀 Avanzar o mostrar resumen
+    if (currentStep + 1 < questions.length) {
+      // Todavía hay más preguntas
+      setCurrentStep((prev) => prev + 1);
+      addBotMessage(currentStep + 1);
+    } else {
+      setCurrentStep(questions.length);
+      // NOTE: do not auto-open modal; user will click "Revisar información" to open it
+    }
+
+    // 🧹 Reset input
     setInput('');
+  };
+
+  // Auto-fill email from session when the email question appears
+  useEffect(() => {
+    const isEmailQuestion =
+      currentStep < questions.length && questions[currentStep]?.field === 'email';
+    const sessionEmail = (session as any)?.user?.email;
+    if (isEmailQuestion && sessionEmail && !(storeData.email && storeData.email.length > 0)) {
+      // small timeout so UI updates feel natural
+      const t = setTimeout(() => handleResponse(sessionEmail), 300);
+      return () => clearTimeout(t);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentStep, (session as any)?.user?.email]);
+
+  // Helper to open summary ensuring email is present in storeData (from session if available)
+  const openSummary = () => {
+    const sessionEmail = (session as any)?.user?.email;
+    setStoreData((prev) => ({
+      ...prev,
+      email: prev.email || sessionEmail || '',
+      whatsappNumber: prev.whatsappNumber || prev.phone || '',
+    }));
+    setShowSummary(true);
   };
 
   const handleSkip = () => {
@@ -727,10 +664,28 @@ export default function InteractiveChatStore() {
   };
 
   const renderMessageContent = (msg: Message) => {
-    const messageIsValidUrl = msg.text.startsWith('http://') || msg.text.startsWith('https://');
-    console.log('🚀 ~ renderMessageContent ~ messageIsValidUrl:', messageIsValidUrl, msg.text);
+    const isImageUrl = (value: string) => {
+      if (!value) return false;
+      if (value.startsWith('blob:') || value.startsWith('data:')) return true;
+      // try URL parsing to inspect hostname and pathname
+      try {
+        const u = new URL(value);
+        const path = (u.pathname || '').toLowerCase();
+        if (path.match(/\.(png|jpe?g|gif|webp|avif|svg)$/)) return true;
+        if (
+          /s3[.-]amazonaws[.-]com/.test(u.hostname) ||
+          u.hostname.includes('emprendyup-images.s3.us-east-1.amazonaws.com')
+        )
+          return true;
+        return false;
+      } catch (e) {
+        return value.match(/\.(png|jpe?g|gif|webp|avif|svg)$/i) !== null;
+      }
+    };
 
-    if (messageIsValidUrl) {
+    const messageIsImage = isImageUrl(msg.text);
+
+    if (messageIsImage) {
       return (
         <Image
           src={msg.text}
@@ -738,7 +693,22 @@ export default function InteractiveChatStore() {
           width={80}
           height={80}
           className="w-20 h-20 object-cover rounded-lg"
+          unoptimized={msg.text.startsWith('blob:') || msg.text.startsWith('data:')}
         />
+      );
+    }
+
+    const isHttpUrl = msg.text.startsWith('http://') || msg.text.startsWith('https://');
+    if (isHttpUrl) {
+      return (
+        <a
+          href={msg.text}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-200 underline"
+        >
+          {msg.text}
+        </a>
       );
     }
 
@@ -763,7 +733,6 @@ export default function InteractiveChatStore() {
             )}
           </div>
         );
-
       case 'color':
         return (
           <div>
@@ -794,7 +763,48 @@ export default function InteractiveChatStore() {
             <span>{msg.text}</span>
             {currentStep === questions.findIndex((q) => q.field === msg.field) && msg.options && (
               <div>
-                <SelectInput options={msg.options} onSelect={handleResponse} />
+                {/* If this is the city field, handle 'Otra' to open a custom input */}
+                {msg.field === 'city' ? (
+                  <div>
+                    {!customCityOpen ? (
+                      <SelectInput
+                        options={msg.options}
+                        onSelect={(val: string) => {
+                          if (val === 'Otra') {
+                            setCustomCityOpen(true);
+                          } else {
+                            handleResponse(val);
+                          }
+                        }}
+                      />
+                    ) : (
+                      <div className="mt-3 flex gap-2">
+                        <input
+                          type="text"
+                          value={customCityValue}
+                          onChange={(e) => setCustomCityValue(e.target.value)}
+                          placeholder="Escribe tu ciudad"
+                          className="flex-1 px-3 py-2 rounded border bg-slate-700 text-white"
+                        />
+                        <button
+                          onClick={() => {
+                            if (customCityValue.trim()) {
+                              handleResponse(customCityValue.trim());
+                            }
+                          }}
+                          className="px-4 py-2 bg-blue-600 rounded text-white"
+                        >
+                          Aceptar
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div>
+                    <SelectInput options={msg.options} onSelect={handleResponse} />
+                  </div>
+                )}
+
                 {msg.optional && (
                   <button
                     onClick={handleSkip}
@@ -833,7 +843,6 @@ export default function InteractiveChatStore() {
     };
     return iconMap[field || ''] || null;
   };
-  console.log('messages', messages);
   return (
     <div className="max-w-4xl mx-auto p-6 bg-slate-900 min-h-screen">
       <div className="bg-slate-800 rounded-3xl shadow-2xl overflow-hidden">
@@ -850,25 +859,19 @@ export default function InteractiveChatStore() {
             Paso {currentStep + 1} de {questions.length} • {Math.round(progress)}% completado
           </p>
         </div>
-
         {/* Chat Area */}
         <div ref={chatRef} className="h-96 overflow-y-auto p-6 space-y-4 bg-slate-800">
           {messages.map((msg, idx) => (
             <div
               key={idx}
-              className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'}`}
+              className={`flex ${msg.from === 'user' ? 'justify-end items-end' : 'justify-start items-start'}`}
             >
-              {/* Bot Avatar */}
-              {msg.from === 'bot' ? (
+              {/* For bot messages: avatar on the left, then bubble. For user messages: bubble first, then avatar on the right */}
+
+              {msg.from === 'bot' && (
                 <div className="flex-shrink-0 mr-3">
                   <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
                     <Bot className="w-4 h-4 text-white" />
-                  </div>
-                </div>
-              ) : (
-                <div className="flex-shrink-0 ml-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
-                    <User className="w-4 h-4 text-white" />
                   </div>
                 </div>
               )}
@@ -888,6 +891,14 @@ export default function InteractiveChatStore() {
                 )}
                 {renderMessageContent(msg)}
               </div>
+
+              {msg.from === 'user' && (
+                <div className="flex-shrink-0 ml-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
+                    <User className="w-4 h-4 text-white" />
+                  </div>
+                </div>
+              )}
             </div>
           ))}
 
@@ -917,7 +928,6 @@ export default function InteractiveChatStore() {
           )}
           <div ref={bottomRef} />
         </div>
-
         {/* Input Area */}
         {currentStep < questions.length &&
           !['image', 'color', 'select'].includes(questions[currentStep]?.type) && (
@@ -985,102 +995,87 @@ export default function InteractiveChatStore() {
             </div>
           )}
 
-        {/* Completion State */}
         {currentStep >= questions.length && (
-          <div className="p-6 bg-slate-800 border-t border-slate-700">
-            <div className="text-center space-y-4">
-              {!createdStoreId ? (
-                <>
-                  <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto">
-                    <span className="text-white text-2xl">✓</span>
-                  </div>
-                  <h2 className="text-xl font-bold text-white">¡Tu tienda está lista!</h2>
-                  <p className="text-slate-300">
-                    Hemos recopilado toda la información necesaria para crear tu tienda online.
-                  </p>
-
-                  <button
-                    onClick={async () => {
-                      setCreateError(null);
-                      setCreating(true);
-                      try {
-                        const input = {
-                          name: storeData.name,
-                          status: 'active',
-                          userId: session?.user?.id || 'anonymous',
-                          storeId: storeData.storeId,
-                          description: storeData.description,
-                          logoUrl: storeData.logoUrl,
-                          faviconUrl: storeData.faviconUrl,
-                          bannerUrl: storeData.bannerUrl,
-                          primaryColor: storeData.primaryColor,
-                          secondaryColor: storeData.secondaryColor,
-                          accentColor: storeData.accentColor,
-                          backgroundColor: storeData.backgroundColor,
-                          textColor: storeData.textColor,
-                          email: storeData.email,
-                          phone: storeData.phone,
-                          address: storeData.address,
-                          city: storeData.city,
-                          department: storeData.department,
-                          country: storeData.country,
-                          businessType: storeData.businessType,
-                          taxId: storeData.taxId,
-                          businessName: storeData.businessName,
-                          facebookUrl: storeData.facebookUrl,
-                          instagramUrl: storeData.instagramUrl,
-                          twitterUrl: storeData.twitterUrl,
-                          youtubeUrl: storeData.youtubeUrl,
-                          tiktokUrl: storeData.tiktokUrl,
-                          whatsappNumber: storeData.whatsappNumber,
-                        };
-
-                        const { data } = await createStoreMutation({ variables: { input } });
-                        const created = data?.createStore;
-                        if (created) {
-                          setCreatedStoreId(created.storeId);
-                          try {
-                            session.setCurrentStore?.(created as any);
-                            session.addStore?.(created as any);
-                          } catch (e) {
-                            // ignore
-                          }
-                        }
-                      } catch (err: any) {
-                        setCreateError(err?.message || 'Error al crear la tienda');
-                      } finally {
-                        setCreating(false);
-                      }
-                    }}
-                    disabled={creating}
-                    className={`px-8 py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors font-semibold transform hover:scale-105 ${
-                      creating ? 'opacity-60 cursor-not-allowed' : ''
-                    }`}
-                  >
-                    {creating ? 'Creando...' : 'Crear mi tienda'}
-                  </button>
-
-                  {createError && <div className="text-red-300 text-sm">{createError}</div>}
-                </>
-              ) : (
-                <>
-                  <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto">
-                    <span className="text-white text-2xl">✓</span>
-                  </div>
-                  <h2 className="text-xl font-bold text-white">¡Tu tienda ha sido creada!</h2>
-                  <p className="text-slate-300">
-                    Ahora puedes administrar y personalizar tu tienda desde el panel de
-                    administración.
-                  </p>
+          <div className="mt-6">
+            {createdStoreId ? (
+              // Mensaje de éxito cuando la tienda ya fue creada
+              <div className="text-center space-y-4 py-6">
+                <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto">
+                  <span className="text-white text-2xl">✓</span>
+                </div>
+                <h2 className="text-xl font-bold text-white">¡Tu tienda ha sido creada!</h2>
+                <p className="text-slate-300">
+                  Proximamente recibirás un email con los detalles de acceso.
+                </p>
+                <div className="flex items-center justify-center gap-4">
                   <a
-                    href="http://${storeId}.emprendyup/admin/store"
-                    className="inline-block px-8 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors font-semibold transform hover:scale-105"
+                    href={`http://emprendyup.com`}
+                    className="px-6 py-3 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition-colors"
                   >
-                    Ir al panel de administración
+                    Ir a la pagina principal
                   </a>
-                </>
-              )}
-            </div>
+                </div>
+              </div>
+            ) : (
+              // Botón para revisar datos antes de crear (cuando aún no se ha creado)
+              <>
+                <div className="text-center mb-4 text-slate-300">
+                  <button
+                    onClick={() => openSummary()}
+                    className="px-6 pl-6 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition-colors"
+                    disabled={creating}
+                  >
+                    {creating ? 'Creando tienda...' : 'Revisar información'}
+                  </button>
+                </div>
+
+                {/* Modal StoreSummary */}
+                <StoreSummary
+                  open={showSummary}
+                  onClose={() => setShowSummary(false)}
+                  data={createdStore || storeData}
+                  onConfirm={async (updatedData) => {
+                    setCreateError(null);
+                    setCreating(true);
+                    try {
+                      const input = {
+                        ...updatedData,
+                        status: 'active',
+                        userId: session?.user?.id || 'anonymous',
+                      };
+                      const { data } = await createStoreMutation({ variables: { input } });
+                      const created = data?.createStore;
+                      if (created) {
+                        setCreatedStoreId(created.storeId);
+                        setCreatedStore(created);
+                        session.setCurrentStore?.(created as any);
+                        session.addStore?.(created as any);
+                      }
+                      setShowSummary(false);
+                    } catch (err: any) {
+                      setCreateError(err?.message || 'Error al crear la tienda');
+                    } finally {
+                      setCreating(false);
+                    }
+                  }}
+                />
+              </>
+            )}
+
+            {/* Mostrar error si existe */}
+            {createError && (
+              <div className="mt-4 p-3 bg-red-900 border border-red-700 text-red-300 rounded">
+                {createError}
+              </div>
+            )}
+
+            {/* Mostrar estado de creación */}
+            {creating && (
+              <div className="mt-4 p-3 bg-blue-900 border border-blue-700 text-blue-300 rounded flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"></div>
+                Creando tienda...
+              </div>
+            )}
           </div>
         )}
       </div>

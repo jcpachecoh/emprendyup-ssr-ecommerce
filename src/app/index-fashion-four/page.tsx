@@ -15,8 +15,6 @@ import ScrollToTop from '../components/scroll-to-top';
 export default function IndexFour() {
   return (
     <>
-      <TaglineLight />
-      <Navbar navClass="defaultscroll is-sticky tagline-height" navlight={true} />
       <section className="relative md:flex table w-full items-center md:h-screen py-36 bg-[url('/images/hero/bg4.jpg')] bg-center bg-no-repeat bg-cover">
         <div className="absolute inset-0 bg-gradient-to-t to-transparent via-slate-900/50 from-slate-900/90"></div>
         <div className="container relative">
@@ -347,7 +345,6 @@ export default function IndexFour() {
 
         <Client />
       </section>
-      <Footer />
       <Switcher />
       <ScrollToTop />
     </>

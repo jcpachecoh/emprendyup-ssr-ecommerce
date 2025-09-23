@@ -142,6 +142,7 @@ export const UserProfileSchema = z.object({
   phone: z.string().optional(),
   company: z.string().optional(),
   timezone: z.string().optional(),
+  storeId: z.string().optional(),
 });
 
 export const UpdateProfileSchema = z.object({

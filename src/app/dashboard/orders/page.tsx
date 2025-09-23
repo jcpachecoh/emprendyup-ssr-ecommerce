@@ -4,52 +4,45 @@ import React, { useState, useEffect } from 'react';
 import { Search, Filter, Download, Eye, ShoppingCart } from 'lucide-react';
 import { Order } from '@/lib/schemas/dashboard';
 import { useDashboardUIStore } from '@/lib/store/dashboard';
+import { gql, useQuery } from '@apollo/client';
+import { useSessionStore } from '@/lib/store/dashboard';
+import { useParams } from 'next/navigation';
 
-// Datos de pedidos de prueba
-const mockOrders: Order[] = [
-  {
-    id: '1',
-    storeId: 'store-1',
-    customerId: 'customer-1',
-    customerName: 'María González',
-    customerEmail: 'maria@example.com',
-    items: [
-      { id: '1', name: 'Producto A', quantity: 2, price: 25.0 },
-      { id: '2', name: 'Producto B', quantity: 1, price: 30.0 },
-    ],
-    total: 80.0,
-    status: 'delivered',
-    createdAt: '2024-09-01T10:00:00Z',
-    updatedAt: '2024-09-03T15:30:00Z',
-  },
-  {
-    id: '2',
-    storeId: 'store-1',
-    customerId: 'customer-2',
-    customerName: 'Carlos López',
-    customerEmail: 'carlos@example.com',
-    items: [{ id: '3', name: 'Producto C', quantity: 1, price: 45.0 }],
-    total: 45.0,
-    status: 'processing',
-    createdAt: '2024-09-02T14:20:00Z',
-    updatedAt: '2024-09-02T14:20:00Z',
-  },
-  {
-    id: '3',
-    storeId: 'store-1',
-    customerId: 'customer-3',
-    customerName: 'Ana Rodríguez',
-    customerEmail: 'ana@example.com',
-    items: [
-      { id: '4', name: 'Producto D', quantity: 3, price: 15.0 },
-      { id: '5', name: 'Producto E', quantity: 2, price: 22.5 },
-    ],
-    total: 90.0,
-    status: 'shipped',
-    createdAt: '2024-09-03T09:15:00Z',
-    updatedAt: '2024-09-04T11:45:00Z',
-  },
-];
+const GET_ORDERS_BY_STORE = gql`
+  query OrdersByStore($storeId: String!) {
+    ordersByStore(storeId: $storeId) {
+      id
+      status
+      total
+      subtotal
+      tax
+      shipping
+      createdAt
+      userName
+      items {
+        id
+        productName
+        quantity
+        price
+        product {
+          name
+          images {
+            url
+          }
+        }
+      }
+      address {
+        name
+        street
+      }
+      store {
+        id
+        name
+        logoUrl
+      }
+    }
+  }
+`;
 
 export default function PaginaPedidos() {
   const [pedidos, setPedidos] = useState<Order[]>([]);
@@ -57,19 +50,55 @@ export default function PaginaPedidos() {
   const [busqueda, setBusqueda] = useState('');
   const [filtroEstado, setFiltroEstado] = useState('all');
   const [cargando, setCargando] = useState(true);
+  const params = useParams();
+  const urlStoreId = params?.slug as string;
 
   const { setSelectedOrderId, setOrderDrawerOpen } = useDashboardUIStore();
+  const { currentStore } = useSessionStore();
+
+  const storeId = currentStore?.id || '';
+  const { data, loading, error } = useQuery(GET_ORDERS_BY_STORE, {
+    variables: { storeId: urlStoreId || '' },
+    skip: !urlStoreId,
+  });
 
   useEffect(() => {
-    // Simula llamada a API
-    const fetchOrders = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setPedidos(mockOrders);
-      setPedidosFiltrados(mockOrders);
+    if (loading) {
+      setCargando(true);
+      return;
+    }
+
+    if (error) {
+      console.error('Error fetching orders:', error);
       setCargando(false);
-    };
-    fetchOrders();
-  }, []);
+      return;
+    }
+
+    if (data?.ordersByStore) {
+      // Map GraphQL response to local Order[] shape
+      const mapped: Order[] = data.ordersByStore.map((o: any) => ({
+        id: o.id,
+        storeId: o.store?.id || storeId,
+        customerId: '',
+        customerName: o.userName || (o.address?.name ?? 'Cliente'),
+        customerEmail: '',
+        items: (o.items || []).map((it: any) => ({
+          id: it.id,
+          name: it.productName || it.product?.name || '',
+          quantity: it.quantity,
+          price: it.price,
+        })),
+        total: o.total || 0,
+        status: o.status || 'pending',
+        createdAt: o.createdAt,
+        updatedAt: o.updatedAt || o.createdAt,
+      }));
+
+      setPedidos(mapped);
+      setPedidosFiltrados(mapped);
+      setCargando(false);
+    }
+  }, [data, loading, error, storeId]);
 
   useEffect(() => {
     let filtrados = pedidos;

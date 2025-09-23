@@ -9,6 +9,13 @@ export default function GoogleAuthSuccess() {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
 
+    // Check if user has a valid session
+    if (!user || !user.email || !user.name || user.role !== 'ADMIN') {
+      // No valid session, redirect to index
+      router.push('/');
+      return;
+    }
+
     const timer = setTimeout(() => {
       if (user?.storeId) {
         router.push('/dashboard/insights');

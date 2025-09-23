@@ -485,7 +485,6 @@ export default function InteractiveChatStore() {
           return { isValid: false, error: 'Formato válido: +57 300 123 4567' };
         }
         break;
-
       case 'url':
         if (value && value.trim() !== '') {
           // Accept blob: and data: temporary URLs (used by browser previews)
@@ -716,7 +715,6 @@ export default function InteractiveChatStore() {
             {currentStep === questions.findIndex((q) => q.field === msg.field) && (
               <div>
                 <FileUpload onFile={handleResponse} accept="image/*" storeId={storeData?.storeId} />
-
                 {msg.optional && (
                   <button
                     onClick={handleSkip}
@@ -799,7 +797,7 @@ export default function InteractiveChatStore() {
     };
     return iconMap[field || ''] || null;
   };
-
+  console.log('messages', messages);
   return (
     <div className="max-w-4xl mx-auto p-6 bg-slate-900 min-h-screen">
       <div className="bg-slate-800 rounded-3xl shadow-2xl overflow-hidden">

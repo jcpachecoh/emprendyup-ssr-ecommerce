@@ -21,6 +21,8 @@ import {
 import Image from 'next/image';
 import { useDashboardUIStore, useSessionStore } from '@/lib/store/dashboard';
 import { getCurrentUser } from '@/lib/utils/rbac';
+import { useAuth } from '../hooks/useAuth';
+import { toast } from 'sonner';
 
 const navigation = [
   { name: 'Estadísticas', href: '/dashboard/insights', icon: BarChart3 },
@@ -35,6 +37,9 @@ const navigation = [
 const adminNavigation = [{ name: 'Admin', href: '/dashboard/admin', icon: User }];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  // Auth protection - redirect to index if no valid session
+  const { isAuthenticated, isLoading } = useAuth();
+
   const pathname = usePathname();
   const { user, setUser, currentStore } = useSessionStore();
   const [mounted, setMounted] = useState(false);
@@ -53,12 +58,33 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [setUser]);
 
   const handleLogout = () => {
+    // Show toast notification
+    toast.success('Sesión cerrada exitosamente', {
+      description: 'Has cerrado sesión correctamente. Redirigiendo...',
+      duration: 2000,
+    });
+
+    // Clear localStorage
     localStorage.removeItem('user');
     localStorage.removeItem('accessToken');
-    window.location.href = '/';
+
+    // Redirect after a short delay to allow toast to be seen
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 1500);
   };
 
-  if (!mounted) {
+  // Show loading spinner while checking authentication
+  if (isLoading || !mounted) {
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  // If not authenticated, don't render anything (redirect is happening)
+  if (!isAuthenticated) {
     return null;
   }
 
@@ -158,10 +184,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
                 <button
                   onClick={handleLogout}
-                  className="p-2 rounded-md text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  title="Salir"
+                  className="p-2 rounded-md text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                  title="Cerrar Sesión"
                 >
-                  <ChevronRight className="w-5 h-5 text-white" />
+                  <LogOut className="w-5 h-5" />
                 </button>
               </div>
             ) : (
@@ -176,10 +202,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 />
                 <button
                   onClick={handleLogout}
-                  className="p-1 rounded-md text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  title="Salir"
+                  className="p-1 rounded-md text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                  title="Cerrar Sesión"
                 >
-                  <ChevronRight className="w-4 h-4 text-white" />
+                  <LogOut className="w-4 h-4" />
                 </button>
               </div>
             )}
@@ -228,14 +254,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     }`}
                   >
                     <item.icon
-                      className={`mr-3 h-5 w-5 ${
-                        isActive ? 'text-black' : 'text-gray-400 group-hover:text-gray-500'
-                      }`}
+                      className={`mr-3 h-5 w-5 ${isActive ? 'text-black' : 'text-gray-400 group-hover:text-gray-500'}`}
                     />
                     <span className="truncate">{item.name}</span>
                   </Link>
                 );
               })}
+
+              {/* Logout button in mobile navigation */}
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  handleLogout();
+                }}
+                className="group flex items-center w-full px-2 py-2 text-sm font-medium rounded-md transition-colors text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+              >
+                <LogOut className="mr-3 h-5 w-5 text-red-500 group-hover:text-red-600" />
+                <span className="truncate">Cerrar Sesión</span>
+              </button>
             </div>
 
             {/* Pie del menú móvil */}
@@ -258,10 +294,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="p-1 rounded-md text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  title="Salir"
+                  className="p-1 rounded-md text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                  title="Cerrar Sesión"
                 >
-                  <ChevronRight className="w-4 h-4 text-white" />
+                  <LogOut className="w-4 h-4" />
                 </button>
               </div>
             </div>

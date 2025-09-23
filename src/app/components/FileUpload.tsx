@@ -1,13 +1,18 @@
+'use client';
+
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { Upload, X } from 'lucide-react';
 
-type FileUploadProps = {
-  onFile: (file: string) => void;
+function FileUpload({
+  onFile,
+  accept = 'image/*',
+  storeId,
+}: {
+  onFile: (fileUrl: string) => void;
   accept?: string;
-};
-
-export default function FileUpload({ onFile, accept = 'image/*' }: FileUploadProps) {
+  storeId?: string;
+}) {
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -15,11 +20,35 @@ export default function FileUpload({ onFile, accept = 'image/*' }: FileUploadPro
     const file = e.target.files?.[0];
     if (file) {
       setIsUploading(true);
-      // simulate upload latency for client preview
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const fileUrl = URL.createObjectURL(file);
-      setPreview(fileUrl);
-      onFile(fileUrl);
+
+      const localUrl = URL.createObjectURL(file);
+      setPreview(localUrl);
+
+      const formData = new FormData();
+      formData.append('images', file, file.name);
+
+      if (storeId) {
+        formData.append('folderName', storeId.replace(/[^a-zA-Z0-9-_]/g, '_'));
+      }
+
+      try {
+        const uploadResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/images`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error('Error al subir la imagen');
+        }
+
+        const data = await uploadResponse.json();
+        onFile(data.url); // ✅ enviar la URL al flujo
+      } catch (err) {
+        console.error('Error al subir imagen:', err);
+        setPreview(null);
+        onFile('');
+      }
+
       setIsUploading(false);
     }
   };
@@ -62,3 +91,5 @@ export default function FileUpload({ onFile, accept = 'image/*' }: FileUploadPro
     </div>
   );
 }
+
+export default FileUpload;

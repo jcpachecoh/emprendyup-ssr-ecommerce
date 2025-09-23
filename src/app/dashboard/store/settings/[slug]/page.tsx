@@ -78,20 +78,46 @@ const UPDATE_STORE_CONFIG = gql`
       storeId
       name
       businessName
-      textColor
-      accentColor
-      address
-      language
-      country
-      mercadoPagoEnabled
-      department
-      description
       primaryColor
       secondaryColor
+      accentColor
+      backgroundColor
+      textColor
+      description
+      email
+      phone
+      address
+      city
+      department
+      country
+      businessType
+      taxId
+      currency
+      language
+      timezone
       metaTitle
       metaDescription
       metaKeywords
-      updatedAt
+      logoUrl
+      faviconUrl
+      bannerUrl
+      whatsappNumber
+      facebookUrl
+      instagramUrl
+      twitterUrl
+      youtubeUrl
+      tiktokUrl
+      freeShippingThreshold
+      standardShippingCost
+      expressShippingCost
+      taxRate
+      includeTaxInPrice
+      mercadoPagoEnabled
+      mercadoPagoPublicKey
+      wompiEnabled
+      wompiPublicKey
+      ePaycoEnabled
+      ePaycoPublicKey
       __typename
     }
   }
@@ -393,7 +419,11 @@ export default function StoreSettingsPage() {
                             {formData.logoUrl ? (
                               <div className="space-y-2">
                                 <Image
-                                  src={resolveImageUrl(formData.logoUrl)}
+                                  src={
+                                    formData.logoUrl?.startsWith('http')
+                                      ? formData.logoUrl
+                                      : `https://emprendyup-images.s3.us-east-1.amazonaws.com/${formData.logoUrl}`
+                                  }
                                   alt="Logo"
                                   width={300}
                                   height={100}
@@ -403,14 +433,6 @@ export default function StoreSettingsPage() {
                                       formData.logoUrl?.startsWith('data:')
                                   )}
                                 />
-
-                                <div>
-                                  <FileUpload
-                                    onFile={(url) =>
-                                      setFormData((prev: any) => ({ ...prev, logoUrl: url }))
-                                    }
-                                  />
-                                </div>
                               </div>
                             ) : (
                               <div>
@@ -437,7 +459,11 @@ export default function StoreSettingsPage() {
                             {formData.faviconUrl ? (
                               <div className="space-y-2">
                                 <Image
-                                  src={resolveImageUrl(formData.faviconUrl)}
+                                  src={
+                                    formData.faviconUrl?.startsWith('http')
+                                      ? formData.faviconUrl
+                                      : `https://emprendyup-images.s3.us-east-1.amazonaws.com/${formData.logoUrl}`
+                                  }
                                   alt="Favicon"
                                   width={300}
                                   height={100}
@@ -447,14 +473,6 @@ export default function StoreSettingsPage() {
                                       formData.faviconUrl?.startsWith('data:')
                                   )}
                                 />
-
-                                <div>
-                                  <FileUpload
-                                    onFile={(url) =>
-                                      setFormData((prev: any) => ({ ...prev, faviconUrl: url }))
-                                    }
-                                  />
-                                </div>
                               </div>
                             ) : (
                               <div>
@@ -481,7 +499,11 @@ export default function StoreSettingsPage() {
                             {formData.bannerUrl ? (
                               <div className="space-y-2">
                                 <Image
-                                  src={resolveImageUrl(formData.bannerUrl)}
+                                  src={
+                                    formData.bannerUrl?.startsWith('http')
+                                      ? formData.bannerUrl
+                                      : `https://emprendyup-images.s3.us-east-1.amazonaws.com/${formData.logoUrl}`
+                                  }
                                   alt="Banner"
                                   width={400}
                                   height={100}
@@ -491,14 +513,6 @@ export default function StoreSettingsPage() {
                                       formData.bannerUrl?.startsWith('data:')
                                   )}
                                 />
-
-                                <div>
-                                  <FileUpload
-                                    onFile={(url) =>
-                                      setFormData((prev: any) => ({ ...prev, bannerUrl: url }))
-                                    }
-                                  />
-                                </div>
                               </div>
                             ) : (
                               <div>

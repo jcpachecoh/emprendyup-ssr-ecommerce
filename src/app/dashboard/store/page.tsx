@@ -174,7 +174,7 @@ export default function StoresPage() {
       <span
         className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${styles[platform as keyof typeof styles] || styles.custom}`}
       >
-        {platform.charAt(0).toUpperCase() + platform.slice(1)}
+        {platform?.charAt(0).toUpperCase() + platform?.slice(1)}
       </span>
     );
   };

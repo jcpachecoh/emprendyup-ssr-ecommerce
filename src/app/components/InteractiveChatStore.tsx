@@ -440,8 +440,8 @@ export default function InteractiveChatStore() {
   const [createdStoreId, setCreatedStoreId] = useState<string | null>(null);
   const chatRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const [showSummary, setShowSummary] = useState(false);
 
-  // Apollo mutation
   const [createStoreMutation] = useMutation(CREATE_STORE);
   const session = useSessionStore();
   // hydrate session from server cookie if not present
@@ -638,19 +638,28 @@ export default function InteractiveChatStore() {
 
     setValidationError(null);
 
-    // Add user message
+    // 💬 Mensaje del usuario
     let displayValue = value;
-    if (value.trim() === '' && currentQuestion.optional) {
+    if ((!value || value.trim() === '') && currentQuestion.optional) {
       displayValue = '⏭️ Saltado';
     }
     setMessages((prev) => [...prev, { from: 'user', text: displayValue, type: 'text' }]);
 
-    // Update store data
+    // 📦 Guardar en storeData
     setStoreData((prev) => ({ ...prev, [field]: value }));
 
-    // Move to next step
-    setCurrentStep((prev) => prev + 1);
-    addBotMessage(currentStep + 1);
+    // 🚀 Avanzar o mostrar resumen
+    if (currentStep + 1 < questions.length) {
+      // Todavía hay más preguntas
+      setCurrentStep((prev) => prev + 1);
+      addBotMessage(currentStep + 1);
+    } else {
+      // ✅ Última pregunta → abrir StoreSummary automáticamente
+      setCurrentStep(questions.length);
+      setShowSummary(true);
+    }
+
+    // 🧹 Reset input
     setInput('');
   };
 
@@ -686,7 +695,38 @@ export default function InteractiveChatStore() {
             <span>{msg.text}</span>
             {currentStep === questions.findIndex((q) => q.field === msg.field) && (
               <div>
-                <FileUpload onFile={handleResponse} accept="image/*" />
+                <FileUpload
+                  onFile={(url) => {
+                    console.log('Image uploaded:', url);
+                    // Actualizar storeData inmediatamente para mostrar preview
+                    const field = msg.field as keyof StoreData;
+                    setStoreData((prev) => ({ ...prev, [field]: url }));
+                    // Avanzar después de un breve delay
+                    setTimeout(() => handleResponse(url), 800);
+                  }}
+                  accept="image/*"
+                />
+
+                {storeData[msg.field as keyof StoreData] && (
+                  <div className="mt-3">
+                    <img
+                      src={storeData[msg.field as keyof StoreData] as string}
+                      alt="Logo preview"
+                      className="h-20 w-20 object-contain rounded-lg border"
+                    />
+                    {/* Botón para continuar */}
+                    <button
+                      onClick={() =>
+                        handleResponse(storeData[msg.field as keyof StoreData] as string)
+                      }
+                      className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm flex items-center gap-2"
+                    >
+                      <span>✓</span>
+                      Continuar con esta imagen
+                    </button>
+                  </div>
+                )}
+
                 {msg.optional && (
                   <button
                     onClick={handleSkip}
@@ -700,7 +740,6 @@ export default function InteractiveChatStore() {
             )}
           </div>
         );
-
       case 'color':
         return (
           <div>
@@ -787,7 +826,6 @@ export default function InteractiveChatStore() {
             Paso {currentStep + 1} de {questions.length} • {Math.round(progress)}% completado
           </p>
         </div>
-
         {/* Chat Area */}
         <div ref={chatRef} className="h-96 overflow-y-auto p-6 space-y-4 bg-slate-800">
           {messages.map((msg, idx) => (
@@ -832,7 +870,6 @@ export default function InteractiveChatStore() {
           )}
           <div ref={bottomRef} />
         </div>
-
         {/* Input Area */}
         {currentStep < questions.length &&
           !['image', 'color', 'select'].includes(questions[currentStep]?.type) && (
@@ -900,88 +937,83 @@ export default function InteractiveChatStore() {
             </div>
           )}
 
-        {/* Completion State */}
         {currentStep >= questions.length && (
-          <div className="p-6 bg-slate-800 border-t border-slate-700">
-            <div className="text-center space-y-4">
-              {!createdStoreId ? (
-                <>
-                  <StoreSummary
-                    data={storeData}
-                    onUpdate={(field, value) => {
-                      setStoreData((prev) => ({ ...prev, [field]: value }));
-                    }}
-                    onCreate={async () => {
-                      setCreateError(null);
-                      setCreating(true);
-                      try {
-                        const input = {
-                          name: storeData.name,
-                          status: 'active',
-                          userId: session?.user?.id || 'anonymous',
-                          storeId: storeData.storeId,
-                          description: storeData.description,
-                          logoUrl: storeData.logoUrl,
-                          faviconUrl: storeData.faviconUrl,
-                          bannerUrl: storeData.bannerUrl,
-                          primaryColor: storeData.primaryColor,
-                          secondaryColor: storeData.secondaryColor,
-                          accentColor: storeData.accentColor,
-                          backgroundColor: storeData.backgroundColor,
-                          textColor: storeData.textColor,
-                          email: storeData.email,
-                          phone: storeData.phone,
-                          address: storeData.address,
-                          city: storeData.city,
-                          department: storeData.department,
-                          country: storeData.country,
-                          businessType: storeData.businessType,
-                          taxId: storeData.taxId,
-                          businessName: storeData.businessName,
-                          facebookUrl: storeData.facebookUrl,
-                          instagramUrl: storeData.instagramUrl,
-                          twitterUrl: storeData.twitterUrl,
-                          youtubeUrl: storeData.youtubeUrl,
-                          tiktokUrl: storeData.tiktokUrl,
-                          whatsappNumber: storeData.whatsappNumber,
-                        };
+          <div className="mt-6">
+            {createdStoreId ? (
+              // Mensaje de éxito cuando la tienda ya fue creada
+              <div className="text-center space-y-4 py-6">
+                <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto">
+                  <span className="text-white text-2xl">✓</span>
+                </div>
+                <h2 className="text-xl font-bold text-white">¡Tu tienda ha sido creada!</h2>
+                <p className="text-slate-300">
+                  Ahora puedes administrar y personalizar tu tienda desde el panel de
+                  administración.
+                </p>
+                <a
+                  href={`http://${createdStoreId}.emprendyup/admin/store`}
+                  className="inline-block px-8 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors font-semibold transform hover:scale-105"
+                >
+                  Ir al panel de administración
+                </a>
+              </div>
+            ) : (
+              // Botón para revisar datos antes de crear (cuando aún no se ha creado)
+              <>
+                <button
+                  onClick={() => setShowSummary(true)}
+                  className="px-6 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition-colors"
+                  disabled={creating}
+                >
+                  {creating ? 'Creando tienda...' : 'Revisar datos antes de crear'}
+                </button>
 
-                        const { data } = await createStoreMutation({ variables: { input } });
-                        const created = data?.createStore;
-                        if (created) {
-                          setCreatedStoreId(created.storeId);
-                          session.setCurrentStore?.(created as any);
-                          session.addStore?.(created as any);
-                        }
-                      } catch (err: any) {
-                        setCreateError(err?.message || 'Error al crear la tienda');
-                      } finally {
-                        setCreating(false);
+                {/* Modal StoreSummary */}
+                <StoreSummary
+                  open={showSummary}
+                  onClose={() => setShowSummary(false)}
+                  data={storeData}
+                  onConfirm={async (updatedData) => {
+                    setCreateError(null);
+                    setCreating(true);
+                    try {
+                      const input = {
+                        ...updatedData,
+                        status: 'active',
+                        userId: session?.user?.id || 'anonymous',
+                      };
+                      const { data } = await createStoreMutation({ variables: { input } });
+                      const created = data?.createStore;
+                      if (created) {
+                        setCreatedStoreId(created.storeId);
+                        session.setCurrentStore?.(created as any);
+                        session.addStore?.(created as any);
                       }
-                    }}
-                  />
+                      setShowSummary(false);
+                    } catch (err: any) {
+                      setCreateError(err?.message || 'Error al crear la tienda');
+                    } finally {
+                      setCreating(false);
+                    }
+                  }}
+                />
+              </>
+            )}
 
-                  {createError && <div className="text-red-300 text-sm mt-4">{createError}</div>}
-                </>
-              ) : (
-                <>
-                  <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto">
-                    <span className="text-white text-2xl">✓</span>
-                  </div>
-                  <h2 className="text-xl font-bold text-white">¡Tu tienda ha sido creada!</h2>
-                  <p className="text-slate-300">
-                    Ahora puedes administrar y personalizar tu tienda desde el panel de
-                    administración.
-                  </p>
-                  <a
-                    href="http://${storeId}.emprendyup/admin/store"
-                    className="inline-block px-8 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors font-semibold transform hover:scale-105"
-                  >
-                    Ir al panel de administración
-                  </a>
-                </>
-              )}
-            </div>
+            {/* Mostrar error si existe */}
+            {createError && (
+              <div className="mt-4 p-3 bg-red-900 border border-red-700 text-red-300 rounded">
+                {createError}
+              </div>
+            )}
+
+            {/* Mostrar estado de creación */}
+            {creating && (
+              <div className="mt-4 p-3 bg-blue-900 border border-blue-700 text-blue-300 rounded flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"></div>
+                Creando tienda...
+              </div>
+            )}
           </div>
         )}
       </div>

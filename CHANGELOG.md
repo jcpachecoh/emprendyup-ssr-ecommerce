@@ -1,3 +1,9 @@
+# [1.23.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.22.1...v1.23.0) (2025-09-23)
+
+### Features
+
+- implement OTP confirmation page and update signup redirection ([#17](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/issues/17)) ([2e20621](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/2e20621ba20697d89cad8e41ce66299ae3b49a7b))
+
 ## [1.22.1](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.22.0...v1.22.1) (2025-09-19)
 
 ### Bug Fixes

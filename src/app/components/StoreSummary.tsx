@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import FileUpload from './FileUpload';
+import Image from 'next/image';
 
 interface StoreSummaryProps {
   open: boolean;
@@ -12,6 +13,20 @@ interface StoreSummaryProps {
 export default function StoreSummary({ open, onClose, data, onConfirm }: StoreSummaryProps) {
   const [formData, setFormData] = useState<any>(data || {});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Resolve stored keys to full URLs and allow blob/data/http(s) to pass through
+  const resolveImageUrl = (value?: string) => {
+    if (!value) return '';
+    if (
+      value.startsWith('http') ||
+      value.startsWith('https') ||
+      value.startsWith('blob:') ||
+      value.startsWith('data:')
+    ) {
+      return value;
+    }
+    return `https://emprendyup-images.s3.us-east-1.amazonaws.com/${value}`;
+  };
 
   // Actualiza el formulario cuando cambian los datos iniciales
   useEffect(() => {
@@ -117,20 +132,33 @@ export default function StoreSummary({ open, onClose, data, onConfirm }: StoreSu
             </h3>
 
             <div className="space-y-4">
-              {/* FileUpload Component - igual que en el chat */}
-              <div>
-                <FileUpload onFile={handleLogoUpload} accept="image/*" />
-              </div>
+              {!formData.logoUrl && (
+                <div>
+                  <FileUpload
+                    onFile={handleLogoUpload}
+                    accept="image/*"
+                    storeId={formData.storeId}
+                  />
+                </div>
+              )}
 
-              {/* Preview de la imagen actual - igual que en el chat */}
               {formData.logoUrl && (
                 <div className="space-y-3">
                   <div className="relative inline-block">
-                    <img
-                      src={formData.logoUrl}
-                      alt="Logo preview"
-                      className="h-20 w-20 object-contain rounded-lg border border-gray-600"
-                    />
+                    {(() => {
+                      const resolved = resolveImageUrl(formData.logoUrl);
+                      const isBlob = resolved.startsWith('blob:') || resolved.startsWith('data:');
+                      return (
+                        <Image
+                          src={resolved}
+                          alt="Logo preview"
+                          width={80}
+                          height={80}
+                          className="h-20 w-20 object-contain rounded-lg border border-gray-600"
+                          unoptimized={isBlob}
+                        />
+                      );
+                    })()}
                     <button
                       type="button"
                       onClick={handleRemoveLogo}
@@ -139,32 +167,6 @@ export default function StoreSummary({ open, onClose, data, onConfirm }: StoreSu
                     >
                       ✕
                     </button>
-                  </div>
-
-                  {/* Opción para cambiar por URL */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
-                      O cambiar por URL
-                    </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="url"
-                        name="logoUrl"
-                        value={formData.logoUrl || ''}
-                        onChange={handleChange}
-                        placeholder="https://ejemplo.com/logo.png"
-                        className={`${inputClassName} flex-1`}
-                        disabled={isSubmitting}
-                      />
-                      <button
-                        type="button"
-                        onClick={handleRemoveLogo}
-                        className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm transition-colors"
-                        disabled={isSubmitting}
-                      >
-                        Limpiar
-                      </button>
-                    </div>
                   </div>
                 </div>
               )}

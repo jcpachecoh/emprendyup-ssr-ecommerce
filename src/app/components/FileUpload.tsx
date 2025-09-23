@@ -1,15 +1,15 @@
 'use client';
-
-import React, { useState } from 'react';
-import Image from 'next/image';
+import { useState } from 'react';
 import { Upload, X } from 'lucide-react';
+import Image from 'next/image';
 
-function FileUpload({
+export default function FileUpload({
   onFile,
   accept = 'image/*',
   storeId,
 }: {
-  onFile: (fileUrl: string) => void;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onFile: (_arg: string) => void;
   accept?: string;
   storeId?: string;
 }) {
@@ -20,35 +20,33 @@ function FileUpload({
     const file = e.target.files?.[0];
     if (file) {
       setIsUploading(true);
-
-      const localUrl = URL.createObjectURL(file);
-      setPreview(localUrl);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const fileUrl = URL.createObjectURL(file);
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
 
       const formData = new FormData();
-      formData.append('images', file, file.name);
-
+      formData.append('images', blob, file.name);
+      // Add the business name as folder parameter (directly in uploads folder)
       if (storeId) {
         formData.append('folderName', storeId.replace(/[^a-zA-Z0-9-_]/g, '_'));
       }
-
-      try {
-        const uploadResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/images`, {
+      const uploadResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/upload/images`,
+        {
           method: 'POST',
           body: formData,
-        });
-
-        if (!uploadResponse.ok) {
-          throw new Error('Error al subir la imagen');
         }
+      );
 
-        const data = await uploadResponse.json();
-        onFile(data.url); // ✅ enviar la URL al flujo
-      } catch (err) {
-        console.error('Error al subir imagen:', err);
-        setPreview(null);
-        onFile('');
+      if (!uploadResponse.ok) {
+        throw new Error(`Upload failed: ${uploadResponse.statusText}`);
       }
 
+      const uploadResult = await uploadResponse.json();
+      const awsImage = process.env.NEXT_PUBLIC_AWS_BUCKET_URL + uploadResult[0]?.key;
+      setPreview(awsImage);
+      onFile(awsImage);
       setIsUploading(false);
     }
   };
@@ -91,5 +89,3 @@ function FileUpload({
     </div>
   );
 }
-
-export default FileUpload;

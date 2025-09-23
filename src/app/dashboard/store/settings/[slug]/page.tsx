@@ -186,6 +186,18 @@ export default function StoreSettingsPage() {
     }
   };
 
+  const handleRemoveLogo = () => {
+    setFormData((prev: any) => ({ ...prev, logoUrl: '' }));
+  };
+
+  const handleRemoveFavicon = () => {
+    setFormData((prev: any) => ({ ...prev, faviconUrl: '' }));
+  };
+
+  const handleRemoveBanner = () => {
+    setFormData((prev: any) => ({ ...prev, bannerUrl: '' }));
+  };
+
   const tabs = [
     { id: 'detalles', label: 'Detalles', icon: Info },
     { id: 'general', label: 'General', icon: Settings },
@@ -418,21 +430,27 @@ export default function StoreSettingsPage() {
                           <div className=" border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center">
                             {formData.logoUrl ? (
                               <div className="space-y-2">
-                                <Image
-                                  src={
-                                    formData.logoUrl?.startsWith('http')
-                                      ? formData.logoUrl
-                                      : `https://emprendyup-images.s3.us-east-1.amazonaws.com/${formData.logoUrl}`
-                                  }
-                                  alt="Logo"
-                                  width={300}
-                                  height={100}
-                                  className="w-full h-16 mx-auto rounded object-cover"
-                                  unoptimized={Boolean(
-                                    formData.logoUrl?.startsWith('blob:') ||
-                                      formData.logoUrl?.startsWith('data:')
-                                  )}
-                                />
+                                <div className="relative inline-block">
+                                  <Image
+                                    src={resolveImageUrl(formData.logoUrl)}
+                                    alt="Logo"
+                                    width={300}
+                                    height={100}
+                                    className="w-full h-16 mx-auto rounded object-cover"
+                                    unoptimized={Boolean(
+                                      formData.logoUrl?.startsWith('blob:') ||
+                                        formData.logoUrl?.startsWith('data:')
+                                    )}
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={handleRemoveLogo}
+                                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 hover:bg-red-700 text-white rounded-full text-xs flex items-center justify-center transition-colors"
+                                    disabled={saveStatus === 'saving'}
+                                  >
+                                    ✕
+                                  </button>
+                                </div>
                               </div>
                             ) : (
                               <div>
@@ -441,6 +459,7 @@ export default function StoreSettingsPage() {
                                     onFile={(url) =>
                                       setFormData((prev: any) => ({ ...prev, logoUrl: url }))
                                     }
+                                    storeId={formData.storeId || urlStoreId}
                                   />
                                 </div>
                               </div>
@@ -458,21 +477,27 @@ export default function StoreSettingsPage() {
                           <div className=" border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center">
                             {formData.faviconUrl ? (
                               <div className="space-y-2">
-                                <Image
-                                  src={
-                                    formData.faviconUrl?.startsWith('http')
-                                      ? formData.faviconUrl
-                                      : `https://emprendyup-images.s3.us-east-1.amazonaws.com/${formData.logoUrl}`
-                                  }
-                                  alt="Favicon"
-                                  width={300}
-                                  height={100}
-                                  className="w-full h-16 mx-auto rounded object-cover"
-                                  unoptimized={Boolean(
-                                    formData.faviconUrl?.startsWith('blob:') ||
-                                      formData.faviconUrl?.startsWith('data:')
-                                  )}
-                                />
+                                <div className="relative inline-block">
+                                  <Image
+                                    src={resolveImageUrl(formData.faviconUrl)}
+                                    alt="Favicon"
+                                    width={300}
+                                    height={100}
+                                    className="w-full h-16 mx-auto rounded object-cover"
+                                    unoptimized={Boolean(
+                                      formData.faviconUrl?.startsWith('blob:') ||
+                                        formData.faviconUrl?.startsWith('data:')
+                                    )}
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={handleRemoveFavicon}
+                                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 hover:bg-red-700 text-white rounded-full text-xs flex items-center justify-center transition-colors"
+                                    disabled={saveStatus === 'saving'}
+                                  >
+                                    ✕
+                                  </button>
+                                </div>
                               </div>
                             ) : (
                               <div>
@@ -481,6 +506,7 @@ export default function StoreSettingsPage() {
                                     onFile={(url) =>
                                       setFormData((prev: any) => ({ ...prev, faviconUrl: url }))
                                     }
+                                    storeId={formData.storeId || urlStoreId}
                                   />
                                 </div>
                               </div>
@@ -498,21 +524,27 @@ export default function StoreSettingsPage() {
                           <div className=" border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center">
                             {formData.bannerUrl ? (
                               <div className="space-y-2">
-                                <Image
-                                  src={
-                                    formData.bannerUrl?.startsWith('http')
-                                      ? formData.bannerUrl
-                                      : `https://emprendyup-images.s3.us-east-1.amazonaws.com/${formData.logoUrl}`
-                                  }
-                                  alt="Banner"
-                                  width={400}
-                                  height={100}
-                                  className="w-full h-16 mx-auto rounded object-cover"
-                                  unoptimized={Boolean(
-                                    formData.bannerUrl?.startsWith('blob:') ||
-                                      formData.bannerUrl?.startsWith('data:')
-                                  )}
-                                />
+                                <div className="relative inline-block">
+                                  <Image
+                                    src={resolveImageUrl(formData.bannerUrl)}
+                                    alt="Banner"
+                                    width={400}
+                                    height={100}
+                                    className="w-full h-16 mx-auto rounded object-cover"
+                                    unoptimized={Boolean(
+                                      formData.bannerUrl?.startsWith('blob:') ||
+                                        formData.bannerUrl?.startsWith('data:')
+                                    )}
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={handleRemoveBanner}
+                                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 hover:bg-red-700 text-white rounded-full text-xs flex items-center justify-center transition-colors"
+                                    disabled={saveStatus === 'saving'}
+                                  >
+                                    ✕
+                                  </button>
+                                </div>
                               </div>
                             ) : (
                               <div>
@@ -521,6 +553,7 @@ export default function StoreSettingsPage() {
                                     onFile={(url) =>
                                       setFormData((prev: any) => ({ ...prev, bannerUrl: url }))
                                     }
+                                    storeId={formData.storeId || urlStoreId}
                                   />
                                 </div>
                               </div>

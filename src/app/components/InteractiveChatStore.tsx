@@ -13,11 +13,14 @@ import {
   Twitter,
   Youtube,
   MessageSquare,
+  Bot,
+  User,
 } from 'lucide-react';
 import FileUpload from './FileUpload';
 import { gql, useMutation } from '@apollo/client';
 import { useSessionStore } from '@/lib/store/dashboard';
 import StoreSummary from './StoreSummary';
+import Image from 'next/image';
 // router not used in this component
 
 interface Message {
@@ -169,30 +172,7 @@ const questions = [
       'Boyacá',
       'Caldas',
       'Caquetá',
-      'Casanare',
-      'Cauca',
-      'Cesar',
-      'Chocó',
-      'Córdoba',
       'Cundinamarca',
-      'Guaviare',
-      'Guainía',
-      'Huila',
-      'La Guajira',
-      'Magdalena',
-      'Meta',
-      'Nariño',
-      'Norte de Santander',
-      'Putumayo',
-      'Quindío',
-      'Risaralda',
-      'San Andrés y Providencia',
-      'Santander',
-      'Sucre',
-      'Tolima',
-      'Valle del Cauca',
-      'Vaupés',
-      'Vichada',
     ],
     validation: { type: 'text' as const, required: true, message: 'El departamento es requerido' },
   },
@@ -269,7 +249,7 @@ const questions = [
     validation: {
       type: 'url' as const,
       required: false,
-      message: 'Ejemplo: https://tiktok.com/@tuusuario',
+      message: 'Ejemplo: https://tiktok.com/tuusuario',
     },
     optional: true,
   },
@@ -438,6 +418,7 @@ export default function InteractiveChatStore() {
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
   const [createdStoreId, setCreatedStoreId] = useState<string | null>(null);
+  const [createdStore, setCreatedStore] = useState<any>(null);
   const chatRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [showSummary, setShowSummary] = useState(false);
@@ -471,10 +452,6 @@ export default function InteractiveChatStore() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // router not required here but kept for potential navigation flows
-  // const router = useRouter();
-
-  // Validation functions
   const validateInput = (
     value: string,
     validation: ValidationRule
@@ -638,12 +615,12 @@ export default function InteractiveChatStore() {
 
     setValidationError(null);
 
-    // 💬 Mensaje del usuario
     let displayValue = value;
     if ((!value || value.trim() === '') && currentQuestion.optional) {
       displayValue = '⏭️ Saltado';
     }
-    setMessages((prev) => [...prev, { from: 'user', text: displayValue, type: 'text' }]);
+    const messageType = currentQuestion.type || 'text';
+    setMessages((prev) => [...prev, { from: 'user', text: displayValue, type: messageType }]);
 
     // 📦 Guardar en storeData
     setStoreData((prev) => ({ ...prev, [field]: value }));
@@ -654,9 +631,8 @@ export default function InteractiveChatStore() {
       setCurrentStep((prev) => prev + 1);
       addBotMessage(currentStep + 1);
     } else {
-      // ✅ Última pregunta → abrir StoreSummary automáticamente
       setCurrentStep(questions.length);
-      setShowSummary(true);
+      // NOTE: do not auto-open modal; user will click "Revisar información" to open it
     }
 
     // 🧹 Reset input
@@ -684,8 +660,52 @@ export default function InteractiveChatStore() {
   };
 
   const renderMessageContent = (msg: Message) => {
-    if (msg.from === 'user') {
-      return <span>{msg.text}</span>;
+    const isImageUrl = (value: string) => {
+      if (!value) return false;
+      if (value.startsWith('blob:') || value.startsWith('data:')) return true;
+      // try URL parsing to inspect hostname and pathname
+      try {
+        const u = new URL(value);
+        const path = (u.pathname || '').toLowerCase();
+        if (path.match(/\.(png|jpe?g|gif|webp|avif|svg)$/)) return true;
+        if (
+          /s3[.-]amazonaws[.-]com/.test(u.hostname) ||
+          u.hostname.includes('emprendyup-images.s3.us-east-1.amazonaws.com')
+        )
+          return true;
+        return false;
+      } catch (e) {
+        return value.match(/\.(png|jpe?g|gif|webp|avif|svg)$/i) !== null;
+      }
+    };
+
+    const messageIsImage = isImageUrl(msg.text);
+
+    if (messageIsImage) {
+      return (
+        <Image
+          src={msg.text}
+          alt="Uploaded"
+          width={80}
+          height={80}
+          className="w-20 h-20 object-cover rounded-lg"
+          unoptimized={msg.text.startsWith('blob:') || msg.text.startsWith('data:')}
+        />
+      );
+    }
+
+    const isHttpUrl = msg.text.startsWith('http://') || msg.text.startsWith('https://');
+    if (isHttpUrl) {
+      return (
+        <a
+          href={msg.text}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-200 underline"
+        >
+          {msg.text}
+        </a>
+      );
     }
 
     switch (msg.type) {
@@ -695,37 +715,7 @@ export default function InteractiveChatStore() {
             <span>{msg.text}</span>
             {currentStep === questions.findIndex((q) => q.field === msg.field) && (
               <div>
-                <FileUpload
-                  onFile={(url) => {
-                    console.log('Image uploaded:', url);
-                    // Actualizar storeData inmediatamente para mostrar preview
-                    const field = msg.field as keyof StoreData;
-                    setStoreData((prev) => ({ ...prev, [field]: url }));
-                    // Avanzar después de un breve delay
-                    setTimeout(() => handleResponse(url), 800);
-                  }}
-                  accept="image/*"
-                />
-
-                {storeData[msg.field as keyof StoreData] && (
-                  <div className="mt-3">
-                    <img
-                      src={storeData[msg.field as keyof StoreData] as string}
-                      alt="Logo preview"
-                      className="h-20 w-20 object-contain rounded-lg border"
-                    />
-                    {/* Botón para continuar */}
-                    <button
-                      onClick={() =>
-                        handleResponse(storeData[msg.field as keyof StoreData] as string)
-                      }
-                      className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm flex items-center gap-2"
-                    >
-                      <span>✓</span>
-                      Continuar con esta imagen
-                    </button>
-                  </div>
-                )}
+                <FileUpload onFile={handleResponse} accept="image/*" storeId={storeData?.storeId} />
 
                 {msg.optional && (
                   <button
@@ -831,8 +821,18 @@ export default function InteractiveChatStore() {
           {messages.map((msg, idx) => (
             <div
               key={idx}
-              className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'}`}
+              className={`flex ${msg.from === 'user' ? 'justify-end items-end' : 'justify-start items-start'}`}
             >
+              {/* For bot messages: avatar on the left, then bubble. For user messages: bubble first, then avatar on the right */}
+
+              {msg.from === 'bot' && (
+                <div className="flex-shrink-0 mr-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
+                    <Bot className="w-4 h-4 text-white" />
+                  </div>
+                </div>
+              )}
+
               <div
                 className={`max-w-md p-4 rounded-2xl shadow-sm transform transition-all duration-300 hover:scale-[1.02] ${
                   msg.from === 'bot'
@@ -848,11 +848,26 @@ export default function InteractiveChatStore() {
                 )}
                 {renderMessageContent(msg)}
               </div>
+
+              {msg.from === 'user' && (
+                <div className="flex-shrink-0 ml-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
+                    <User className="w-4 h-4 text-white" />
+                  </div>
+                </div>
+              )}
             </div>
           ))}
 
           {isTyping && (
             <div className="flex justify-start">
+              {/* Bot Avatar for typing indicator */}
+              <div className="flex-shrink-0 mr-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
+                  <Bot className="w-4 h-4 text-white" />
+                </div>
+              </div>
+
               <div className="bg-slate-700 p-4 rounded-2xl shadow-sm animate-pulse">
                 <div className="flex space-x-1">
                   <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce" />
@@ -950,29 +965,33 @@ export default function InteractiveChatStore() {
                   Ahora puedes administrar y personalizar tu tienda desde el panel de
                   administración.
                 </p>
-                <a
-                  href={`http://${createdStoreId}.emprendyup/admin/store`}
-                  className="inline-block px-8 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors font-semibold transform hover:scale-105"
-                >
-                  Ir al panel de administración
-                </a>
+                <div className="flex items-center justify-center gap-4">
+                  <a
+                    href={`http://${createdStoreId}.emprendyup/admin/store`}
+                    className="px-6 py-3 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition-colors"
+                  >
+                    Ir al panel de administración
+                  </a>
+                </div>
               </div>
             ) : (
               // Botón para revisar datos antes de crear (cuando aún no se ha creado)
               <>
-                <button
-                  onClick={() => setShowSummary(true)}
-                  className="px-6 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition-colors"
-                  disabled={creating}
-                >
-                  {creating ? 'Creando tienda...' : 'Revisar datos antes de crear'}
-                </button>
+                <div className="text-center mb-4 text-slate-300">
+                  <button
+                    onClick={() => setShowSummary(true)}
+                    className="px-6 pl-6 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition-colors"
+                    disabled={creating}
+                  >
+                    {creating ? 'Creando tienda...' : 'Revisar información'}
+                  </button>
+                </div>
 
                 {/* Modal StoreSummary */}
                 <StoreSummary
                   open={showSummary}
                   onClose={() => setShowSummary(false)}
-                  data={storeData}
+                  data={createdStore || storeData}
                   onConfirm={async (updatedData) => {
                     setCreateError(null);
                     setCreating(true);
@@ -986,6 +1005,7 @@ export default function InteractiveChatStore() {
                       const created = data?.createStore;
                       if (created) {
                         setCreatedStoreId(created.storeId);
+                        setCreatedStore(created);
                         session.setCurrentStore?.(created as any);
                         session.addStore?.(created as any);
                       }

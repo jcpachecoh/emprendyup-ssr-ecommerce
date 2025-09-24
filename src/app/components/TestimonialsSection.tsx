@@ -123,7 +123,7 @@ const TestimonialsSection = () => {
           viewport={{ once: true }}
         >
           <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">
-            +50,000 Emprendedores Exitosos
+            Emprendedores exitosos que ya hacen parte de nuestra comunidad
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
             Historias reales de crecimiento, éxito y transformación digital de nuestra comunidad en

@@ -5,6 +5,7 @@ import {
   footerShopping1,
   footerShopping2,
   footerShopping3,
+  footerLegal,
   footerSocial,
   paymentCart,
 } from '../data/data';
@@ -47,10 +48,9 @@ export default function Footer() {
                 </div>
 
                 <div className="lg:col-span-6 md:col-span-12">
-                  <h5 className="tracking-[1px] text-gray-100 font-semibold">Shopping & Clothes</h5>
-
-                  <div className="grid md:grid-cols-12 grid-cols-1">
-                    <div className="md:col-span-4">
+                  <div className="grid md:grid-cols-12 grid-cols-1 gap-6">
+                    <div className="md:col-span-6">
+                      <h5 className="tracking-[1px] text-gray-100 font-semibold">Servicios</h5>
                       <ul className="list-none footer-list mt-6">
                         {footerShopping1.map((item, index) => {
                           return (
@@ -67,33 +67,19 @@ export default function Footer() {
                       </ul>
                     </div>
 
-                    <div className="md:col-span-4">
+                    <div className="md:col-span-6">
+                      <h5 className="tracking-[1px] text-gray-100 font-semibold">
+                        Legal y Soporte
+                      </h5>
                       <ul className="list-none footer-list mt-6">
-                        {footerShopping2.map((item, index) => {
+                        {footerLegal.map((item, index) => {
                           return (
                             <li className="ms-0 mt-[10px]" key={index}>
                               <Link
-                                href=""
-                                className="text-gray-300 hover:text-gray-400 duration-500 ease-in-out"
+                                href={item.href}
+                                className="text-gray-300 hover:text-fourth-base duration-500 ease-in-out"
                               >
-                                <i className="mdi mdi-chevron-right"></i> {item}{' '}
-                              </Link>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-
-                    <div className="md:col-span-4">
-                      <ul className="list-none footer-list mt-6">
-                        {footerShopping3.map((item, index) => {
-                          return (
-                            <li className="mt-[10px] ms-0" key={index}>
-                              <Link
-                                href=""
-                                className="text-gray-300 hover:text-gray-400 duration-500 ease-in-out"
-                              >
-                                <i className="mdi mdi-chevron-right"></i> {item}
+                                <i className="mdi mdi-chevron-right"></i> {item.name}
                               </Link>
                             </li>
                           );

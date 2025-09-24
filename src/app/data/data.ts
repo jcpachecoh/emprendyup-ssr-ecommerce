@@ -273,6 +273,15 @@ export const footerShopping3 = [
   'Returns',
 ];
 
+export const footerLegal = [
+  { name: 'Términos y Condiciones', href: '/terms' },
+  { name: 'Política de Privacidad', href: '/privacy' },
+  { name: 'Política de Borrado de Datos', href: '/politica-borrado-datos' },
+  { name: 'Contacto', href: '/contacto' },
+  { name: 'Ayuda', href: '/helpcenter' },
+  { name: 'Centro de Soporte', href: '/helpcenter-support' },
+];
+
 export const footerServices = [
   {
     icon: 'mdi mdi-truck-check-outline',

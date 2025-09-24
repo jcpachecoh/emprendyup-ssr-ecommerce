@@ -44,7 +44,7 @@ const ventajas = [
     title: 'Comunidad Activa de +50K',
     description:
       'La mayor red de emprendedores colaborando, comprando y vendiendo entre sí en Latinoamérica.',
-    stats: '+50,000 emprendedores activos',
+    stats: 'gran comunidad de emprendedores activos',
     color: 'text-purple-500',
     bgColor: 'bg-purple-50 dark:bg-purple-900/20',
     borderColor: 'border-purple-200 dark:border-purple-800',
@@ -402,7 +402,7 @@ export default function VentajasCompetitivas() {
                 ¿Listo para la ventaja competitiva?
               </motion.h3>
               <p className="text-slate-600 dark:text-slate-300 text-lg mb-8 max-w-2xl mx-auto">
-                Únete a los +50,000 emprendedores que ya disfrutan de estas ventajas exclusivas.
+                Únete a la comunidad de emprendedores que ya disfrutan de estas ventajas exclusivas.
                 Comienza gratis hoy mismo.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

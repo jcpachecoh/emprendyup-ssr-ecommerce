@@ -154,7 +154,7 @@ const LeadCaptureSectionNew = () => {
                   </span>
                 </motion.h2>
                 <p className="text-slate-600 text-lg mb-6">
-                  Únete a +50,000 emprendedores exitosos
+                  Únete a comunidad de emprendedores exitosos
                 </p>
 
                 {/* Special Offer Badge */}
@@ -308,6 +308,42 @@ const LeadCaptureSectionNew = () => {
                   )}
                 </div>
 
+                {/* Terms and Conditions Checkbox */}
+                <div className="pt-4">
+                  <div className="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      {...register('acceptTerms', { required: true })}
+                      className="mt-1 w-4 h-4 text-fourth-base bg-gray-100 border-gray-300 rounded focus:ring-fourth-base focus:ring-2"
+                      id="acceptTerms"
+                    />
+                    <label htmlFor="acceptTerms" className="text-sm text-slate-700 leading-relaxed">
+                      He leído y acepto los{' '}
+                      <a
+                        href="/terms"
+                        target="_blank"
+                        className="text-fourth-base hover:text-blue-600 underline font-medium"
+                      >
+                        Términos y Condiciones
+                      </a>{' '}
+                      y el{' '}
+                      <a
+                        href="/privacy"
+                        target="_blank"
+                        className="text-fourth-base hover:text-blue-600 underline font-medium"
+                      >
+                        Tratamiento de Datos Personales
+                      </a>
+                      . Autorizo el tratamiento de mis datos para fines comerciales y de contacto.
+                    </label>
+                  </div>
+                  {errors.acceptTerms && (
+                    <span className="text-red-500 text-xs mt-1 block">
+                      Debes aceptar los términos y condiciones para continuar
+                    </span>
+                  )}
+                </div>
+
                 {/* Submit Button */}
                 <motion.button
                   type="submit"
@@ -350,10 +386,10 @@ const LeadCaptureSectionNew = () => {
                 {/* Trust Indicators */}
                 <div className="text-center pt-4 border-t border-slate-200 text-black">
                   <p className="text-sm text-slate-500 mb-2">
-                    ✅ 100% Seguro • ✅ Sin Spam • ✅ Datos Protegidos
+                    🔒 100% Seguro • 🛡️ Sin Spam • 📋 Datos Protegidos
                   </p>
                   <p className="text-xs text-slate-400">
-                    Al registrarte aceptas nuestros términos y condiciones
+                    Tus datos están seguros y protegidos según nuestra política de privacidad
                   </p>
                 </div>
               </form>

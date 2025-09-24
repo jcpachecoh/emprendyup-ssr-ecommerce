@@ -28,6 +28,7 @@ export default function ConditionalLayout({ children }: ConditionalLayoutProps) 
       '/dashboard/admin',
       '/dashboard/store/list',
       '/dashboard/store/new',
+      '/dashboard/stores',
       '/dashboard/blog/new',
       '/dashboard/blog',
       '/dashboard/store/products',
@@ -35,7 +36,7 @@ export default function ConditionalLayout({ children }: ConditionalLayoutProps) 
     ];
 
     const dynamicAuthRoutes = [
-      /^\/dashboard\/store\/settings\/[^/]+$/,
+      /^\/dashboard\/stores\/settings\/[^/]+$/,
       /^\/dashboard\/blog\/edit\/[^/]+$/,
     ];
 

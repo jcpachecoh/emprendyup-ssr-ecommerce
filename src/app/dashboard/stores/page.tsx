@@ -181,7 +181,7 @@ export default function StoresPage() {
   };
 
   const handleEditStore = (storeId: string) => {
-    router.push(`/dashboard/store/settings/${storeId}`);
+    router.push(`/dashboard/stores/settings/${storeId}`);
   };
 
   const exportToCsv = () => {

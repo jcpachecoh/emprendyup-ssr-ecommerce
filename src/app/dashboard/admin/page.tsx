@@ -19,7 +19,7 @@ const mockUsers: UserProfile[] = [
     id: '1',
     name: 'Juan Carlos',
     email: 'juan@emprendyup.com',
-    role: 'admin',
+    role: 'ADMIN',
     avatar: '/api/placeholder/40/40',
     company: 'EmprendyUp',
   },
@@ -27,7 +27,7 @@ const mockUsers: UserProfile[] = [
     id: '2',
     name: 'Maria Rodriguez',
     email: 'maria@example.com',
-    role: 'user',
+    role: 'USER',
     avatar: '/api/placeholder/40/40',
     company: 'Fashion Store',
   },
@@ -35,7 +35,7 @@ const mockUsers: UserProfile[] = [
     id: '3',
     name: 'Carlos Mendez',
     email: 'carlos@example.com',
-    role: 'user',
+    role: 'USER',
     avatar: '/api/placeholder/40/40',
     company: 'Tech Gadgets',
   },
@@ -281,7 +281,7 @@ export default function AdminPage() {
                         <td className="px-6 py-4">
                           <span
                             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${
-                              user.role === 'admin'
+                              user.role === 'ADMIN'
                                 ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
                                 : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
                             }`}
@@ -335,7 +335,7 @@ export default function AdminPage() {
                                 />
                               </svg>
                             </button>
-                            {user.role !== 'admin' && (
+                            {user.role !== 'ADMIN' && (
                               <button
                                 onClick={() => deleteUser(user.id)}
                                 className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-200"
@@ -384,7 +384,7 @@ export default function AdminPage() {
                         <div className="flex items-center space-x-2 mt-1">
                           <span
                             className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium capitalize ${
-                              user.role === 'admin'
+                              user.role === 'ADMIN'
                                 ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
                                 : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
                             }`}
@@ -415,7 +415,7 @@ export default function AdminPage() {
                             />
                           </svg>
                         </button>
-                        {user.role !== 'admin' && (
+                        {user.role !== 'ADMIN' && (
                           <button
                             onClick={() => deleteUser(user.id)}
                             className="p-2 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-200"

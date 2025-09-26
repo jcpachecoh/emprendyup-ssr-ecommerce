@@ -28,7 +28,8 @@ import { toast } from 'sonner';
 const navigation = [
   { name: 'Estadísticas', href: '/dashboard/insights', icon: BarChart3 },
   { name: 'Pedidos', href: '/dashboard/orders', icon: ShoppingCart },
-  { name: 'Clientes', href: '/dashboard/customers', icon: Users },
+  // { name: 'Clientes', href: '/dashboard/customers', icon: Users },
+  { name: 'Clientes', href: '/dashboard/users', icon: Users },
   { name: 'Bonos', href: '/dashboard/bonuses', icon: Gift },
   { name: 'Tienda', href: '/dashboard/store', icon: Store },
   { name: 'Tiendas', href: '/dashboard/stores', icon: Store },

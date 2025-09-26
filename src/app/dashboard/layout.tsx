@@ -15,9 +15,11 @@ import {
   ChevronLeft,
   ChevronRight,
   LogOut,
-  User,
   FileText,
   Loader,
+  CreditCard,
+  Wrench,
+  Package,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useDashboardUIStore, useSessionStore } from '@/lib/store/dashboard';
@@ -32,6 +34,9 @@ const navigation = [
   { name: 'Usuarios', href: '/dashboard/users', icon: Users },
   { name: 'Usuarios por tienda', href: '/dashboard/usersbyStore', icon: Users },
   { name: 'Bonos', href: '/dashboard/bonuses', icon: Gift },
+  { name: 'Productos', href: '/dashboard/products', icon: Package },
+  { name: 'Pagos', href: '/dashboard/payments', icon: CreditCard },
+  { name: 'Pagos Configuracion', href: '/dashboard/config', icon: Wrench },
   { name: 'Tienda', href: '/dashboard/store', icon: Store },
   { name: 'Tiendas', href: '/dashboard/stores', icon: Store },
   { name: 'Blog', href: '/dashboard/blog', icon: FileText },

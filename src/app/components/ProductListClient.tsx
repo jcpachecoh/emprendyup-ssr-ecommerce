@@ -7,17 +7,39 @@ import { FiHeart, FiEye, FiBookmark, FiChevronLeft, FiChevronRight } from '../as
 import { Product } from '../utils/types';
 
 const PAGINATED_PRODUCTS_QUERY = gql`
-  query PaginatedProducts($page: Int!, $pageSize: Int!) {
-    paginatedProducts(page: $page, pageSize: $pageSize) {
+  query GetPaginatedProducts($page: Int, $pageSize: Int) {
+    paginatedProducts(pagination: { page: $page, pageSize: $pageSize }) {
       items {
         id
+        name
         title
         description
         price
         currency
-        imageUrl
+        storeId
         available
-        externalId
+        createdAt
+        updatedAt
+        images {
+          id
+          url
+          order
+        }
+        colors {
+          id
+          color
+          colorHex
+        }
+        sizes {
+          id
+          size
+        }
+        comments {
+          id
+          rating
+          comment
+          createdAt
+        }
       }
       total
       page
@@ -61,6 +83,15 @@ export default function ProductListClient({
     }
   };
 
+  // Function to get the image URL
+  const getImageUrl = (item: Product) => {
+    const imageKey = item?.images?.[0]?.url;
+    const imageUrl = imageKey
+      ? `https://emprendyup-images.s3.us-east-1.amazonaws.com/${imageKey}`
+      : '/assets/default-product.jpg';
+    return imageUrl;
+  };
+
   return (
     <>
       <div className={gridClass}>
@@ -73,7 +104,7 @@ export default function ProductListClient({
               >
                 <Image
                   className="w-full h-full object-cover rounded-md group-hover:scale-110 duration-500"
-                  src={item.imageUrl || '/images/placeholder.svg'}
+                  src={getImageUrl(item)}
                   width={320}
                   height={320}
                   alt={item.title || 'Placeholder Image'}

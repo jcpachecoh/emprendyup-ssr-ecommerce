@@ -22,6 +22,7 @@ export default function ConditionalLayout({ children }: ConditionalLayoutProps) 
       '/dashboard/insights',
       '/dashboard/bonuses',
       '/dashboard/customers',
+      '/dashboard/usersbyStore',
       '/dashboard/orders',
       '/dashboard/store',
       '/dashboard/settings',

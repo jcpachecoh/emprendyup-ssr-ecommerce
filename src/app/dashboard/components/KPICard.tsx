@@ -63,7 +63,7 @@ export default function KPICard({
                 {trend.isPositive ? '+' : ''}
                 {trend.value}%
               </span>
-              <span className="text-sm text-gray-500 dark:text-gray-400 ml-1">vs last month</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400 ml-1">vs Mes Pasado</span>
             </div>
           )}
 

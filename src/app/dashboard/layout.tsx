@@ -29,14 +29,15 @@ const navigation = [
   { name: 'Estadísticas', href: '/dashboard/insights', icon: BarChart3 },
   { name: 'Pedidos', href: '/dashboard/orders', icon: ShoppingCart },
   // { name: 'Clientes', href: '/dashboard/customers', icon: Users },
-  { name: 'Clientes', href: '/dashboard/users', icon: Users },
+  { name: 'Usuarios', href: '/dashboard/users', icon: Users },
+  { name: 'Usuarios por tienda', href: '/dashboard/usersbyStore', icon: Users },
   { name: 'Bonos', href: '/dashboard/bonuses', icon: Gift },
   { name: 'Tienda', href: '/dashboard/store', icon: Store },
   { name: 'Tiendas', href: '/dashboard/stores', icon: Store },
   { name: 'Blog', href: '/dashboard/blog', icon: FileText },
 ];
 
-const adminNavigation = [{ name: 'Admin', href: '/dashboard/admin', icon: User }];
+// const adminNavigation = [{ name: 'Admin', href: '/dashboard/admin', icon: User }];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -98,10 +99,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   let allNavigation = [] as typeof navigation;
 
   if (user.role === 'ADMIN') {
-    allNavigation = [...navigation, ...adminNavigation].filter((item) => item.name !== 'Tienda');
+    allNavigation = [...navigation].filter(
+      (item) => item.name !== 'Tienda' && item.name !== 'Usuarios por tienda'
+    );
   } else if (user.role === 'STORE_ADMIN') {
     allNavigation = navigation.filter(
-      (item) => item.name !== 'Blog' && item.name !== 'Configuración' && item.name !== 'Tiendas'
+      (item) =>
+        item.name !== 'Blog' &&
+        item.name !== 'Configuración' &&
+        item.name !== 'Tiendas' &&
+        item.name !== 'Usuarios'
     );
   }
 

@@ -2,14 +2,48 @@
 
 import React, { useEffect, useState } from 'react';
 import { gql, useQuery } from '@apollo/client';
-import { Users, ShoppingCart, DollarSign, TrendingUp } from 'lucide-react';
+import { Users, ShoppingCart, DollarSign, TrendingUp, Package } from 'lucide-react';
 import KPICard from '../components/KPICard';
 import LineChart from '../components/LineChart';
 import BarChart from '../components/BarChart';
 import { KPI, ChartData, Customer } from '@/lib/schemas/dashboard';
 import { useSessionStore } from '@/lib/store/dashboard';
 
-// Query GraphQL
+// Queries GraphQL
+const TOTAL_PRODUCTS_QUERY = gql`
+  query {
+    totalProducts
+  }
+`;
+
+const ACTIVE_USERS_QUERY = gql`
+  query {
+    activeUsers {
+      count
+      percentageChange
+    }
+  }
+`;
+
+const MONTHLY_SALES_QUERY = gql`
+  query {
+    monthlySales {
+      totalSales
+      percentageChange
+    }
+  }
+`;
+
+const CONVERSION_RATE_QUERY = gql`
+  query {
+    conversionRate {
+      conversionRate
+      percentageChange
+      periodLabel
+    }
+  }
+`;
+
 const CONTACT_LEADS_BY_STORE = gql`
   query ContactLeadsByStore($storeId: ID!) {
     contactLeadsByStore(storeId: $storeId) {
@@ -65,8 +99,15 @@ export default function InsightsPage() {
   const currentStore = useSessionStore((s: any) => s.currentStore);
   const storeId = currentStore?.storeId;
 
-  const { data, loading } = useQuery(CONTACT_LEADS_BY_STORE, {
-    variables: { storeId },
+  // Queries para las KPI cards
+  const { data: totalProductsData, loading: loadingProducts } = useQuery(TOTAL_PRODUCTS_QUERY);
+  const { data: activeUsersData, loading: loadingActiveUsers } = useQuery(ACTIVE_USERS_QUERY);
+  const { data: monthlySalesData, loading: loadingMonthlySales } = useQuery(MONTHLY_SALES_QUERY);
+  const { data: conversionRateData, loading: loadingConversionRate } =
+    useQuery(CONVERSION_RATE_QUERY);
+  const userData = JSON.parse(localStorage.getItem('user') || '{}');
+  const { data, loading: loadingLeads } = useQuery(CONTACT_LEADS_BY_STORE, {
+    variables: { storeId: userData?.storeId || '' },
     skip: !storeId,
   });
 
@@ -87,6 +128,14 @@ export default function InsightsPage() {
     setKpis(mockKPIs);
     setChartData(mockChartData);
   }, []);
+
+  // Determinar si hay carga en alguna de las queries
+  const isLoading =
+    loadingProducts ||
+    loadingActiveUsers ||
+    loadingMonthlySales ||
+    loadingConversionRate ||
+    loadingLeads;
 
   const getStatusBadge = (status: string) => {
     const styles = {
@@ -120,43 +169,70 @@ export default function InsightsPage() {
         </p>
       </div>
 
-      {/* Tarjetas KPI */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+      {/* Tarjetas KPI actualizadas con los nuevos queries */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Total de Productos */}
         <KPICard
-          title="Clientes Totales"
-          value={kpis?.totalCustomers || 0}
-          icon={Users}
-          trend={{ value: 12.5, isPositive: true }}
-          loading={loading}
+          title="Total de Productos"
+          value={totalProductsData?.totalProducts || 0}
+          icon={Package}
+          trend={{ value: 0, isPositive: true }} // Puedes ajustar este trend según necesites
+          loading={loadingProducts}
         />
+
+        {/* Usuarios Activos */}
         <KPICard
+          title="Usuarios Activos"
+          value={activeUsersData?.activeUsers?.count || 0}
+          icon={Users}
+          trend={{
+            value: activeUsersData?.activeUsers?.percentageChange || 0,
+            isPositive: (activeUsersData?.activeUsers?.percentageChange || 0) >= 0,
+          }}
+          loading={loadingActiveUsers}
+        />
+
+        {/* Ventas Mensuales */}
+        <KPICard
+          title="Ventas Mensuales"
+          value={
+            monthlySalesData?.monthlySales
+              ? `$${monthlySalesData.monthlySales.totalSales.toLocaleString()}`
+              : '$0'
+          }
+          icon={DollarSign}
+          trend={{
+            value: monthlySalesData?.monthlySales?.percentageChange || 0,
+            isPositive: (monthlySalesData?.monthlySales?.percentageChange || 0) >= 0,
+          }}
+          loading={loadingMonthlySales}
+        />
+
+        {/* Tasa de Conversión */}
+        <KPICard
+          title="Tasa de Conversión"
+          value={
+            conversionRateData?.conversionRate
+              ? `${conversionRateData.conversionRate.conversionRate}%`
+              : '0%'
+          }
+          icon={TrendingUp}
+          trend={{
+            value: conversionRateData?.conversionRate?.percentageChange || 0,
+            isPositive: (conversionRateData?.conversionRate?.percentageChange || 0) >= 0,
+          }}
+          description={conversionRateData?.conversionRate?.periodLabel || ''}
+          loading={loadingConversionRate}
+        />
+
+        {/* Órdenes Totales (mantenida como ejemplo adicional) */}
+        {/* <KPICard
           title="Órdenes Totales"
           value={kpis?.totalOrders || 0}
           icon={ShoppingCart}
           trend={{ value: 8.2, isPositive: true }}
-          loading={loading}
-        />
-        <KPICard
-          title="Ingresos Mensuales"
-          value={kpis ? `$${kpis.monthlyRevenue.toLocaleString()}` : '$0'}
-          icon={DollarSign}
-          trend={{ value: 15.3, isPositive: true }}
-          loading={loading}
-        />
-        <KPICard
-          title="Tasa de Conversión"
-          value={kpis ? `${kpis.conversionRate}%` : '0%'}
-          icon={TrendingUp}
-          trend={{ value: -2.1, isPositive: false }}
-          loading={loading}
-        />
-        <KPICard
-          title="Valor Promedio de Orden"
-          value={kpis ? `$${kpis.averageOrderValue}` : '$0'}
-          icon={DollarSign}
-          trend={{ value: 5.7, isPositive: true }}
-          loading={loading}
-        />
+          loading={isLoading}
+        /> */}
       </div>
 
       {/* Gráficas */}
@@ -196,7 +272,7 @@ export default function InsightsPage() {
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Leads Recientes</h3>
         </div>
         <div className="overflow-x-auto">
-          {loading ? (
+          {loadingLeads ? (
             <div className="p-6 text-center text-gray-500">Cargando leads...</div>
           ) : leads.length === 0 ? (
             <div className="p-6 text-center text-gray-500">No hay leads disponibles.</div>

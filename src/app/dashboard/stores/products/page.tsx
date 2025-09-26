@@ -1,26 +1,24 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { gql } from '@apollo/client';
 import Link from 'next/link';
 import {
   Package,
   Plus,
   Search,
-  Filter,
   Edit,
   Trash2,
   Eye,
   Copy,
-  MoreHorizontal,
   Star,
-  TrendingUp,
   AlertTriangle,
   CheckCircle,
   XCircle,
   Image as ImageIcon,
   DollarSign,
-  BarChart3,
 } from 'lucide-react';
+import Image from 'next/image';
 import KPICard from '../../components/KPICard';
 
 // Types
@@ -57,168 +55,6 @@ interface Product {
   };
 }
 
-// Mock data
-const mockProducts: Product[] = [
-  {
-    id: '1',
-    name: 'Premium Business Shirt',
-    description: 'High-quality cotton business shirt perfect for professional settings',
-    sku: 'PBS-001',
-    price: 89.99,
-    comparePrice: 119.99,
-    cost: 35.0,
-    category: 'Clothing',
-    subcategory: 'Shirts',
-    tags: ['business', 'premium', 'cotton'],
-    images: ['/images/shop/1.jpg'],
-    status: 'active',
-    inventory: {
-      tracked: true,
-      quantity: 45,
-      lowStockThreshold: 10,
-    },
-    seo: {
-      title: 'Premium Business Shirt - Professional Attire',
-      description: 'High-quality cotton business shirt for professionals',
-      handle: 'premium-business-shirt',
-    },
-    createdAt: '2024-01-15T10:00:00Z',
-    updatedAt: '2025-09-04T10:00:00Z',
-    sales: {
-      totalSold: 234,
-      revenue: 21066.66,
-      averageRating: 4.5,
-      reviewCount: 89,
-    },
-  },
-  {
-    id: '2',
-    name: 'Executive Leather Briefcase',
-    description: 'Handcrafted leather briefcase for the modern executive',
-    sku: 'ELB-002',
-    price: 299.99,
-    comparePrice: 399.99,
-    cost: 120.0,
-    category: 'Accessories',
-    subcategory: 'Bags',
-    tags: ['leather', 'executive', 'handcrafted'],
-    images: ['/images/shop/2.jpg'],
-    status: 'active',
-    inventory: {
-      tracked: true,
-      quantity: 8,
-      lowStockThreshold: 5,
-    },
-    seo: {
-      title: 'Executive Leather Briefcase - Handcrafted Quality',
-      description: 'Premium handcrafted leather briefcase for executives',
-      handle: 'executive-leather-briefcase',
-    },
-    createdAt: '2024-02-10T10:00:00Z',
-    updatedAt: '2025-09-03T10:00:00Z',
-    sales: {
-      totalSold: 67,
-      revenue: 20099.33,
-      averageRating: 4.8,
-      reviewCount: 34,
-    },
-  },
-  {
-    id: '3',
-    name: 'Smart Fitness Watch',
-    description: 'Advanced fitness tracking watch with heart rate monitor',
-    sku: 'SFW-003',
-    price: 199.99,
-    cost: 75.0,
-    category: 'Electronics',
-    subcategory: 'Wearables',
-    tags: ['fitness', 'smart', 'health'],
-    images: ['/images/shop/3.jpg'],
-    status: 'active',
-    inventory: {
-      tracked: true,
-      quantity: 123,
-      lowStockThreshold: 20,
-    },
-    seo: {
-      title: 'Smart Fitness Watch - Advanced Health Tracking',
-      description: 'Track your fitness goals with our advanced smart watch',
-      handle: 'smart-fitness-watch',
-    },
-    createdAt: '2024-03-05T10:00:00Z',
-    updatedAt: '2025-09-02T10:00:00Z',
-    sales: {
-      totalSold: 156,
-      revenue: 31198.44,
-      averageRating: 4.3,
-      reviewCount: 78,
-    },
-  },
-  {
-    id: '4',
-    name: 'Designer Sunglasses',
-    description: 'Stylish designer sunglasses with UV protection',
-    sku: 'DS-004',
-    price: 149.99,
-    comparePrice: 199.99,
-    cost: 45.0,
-    category: 'Accessories',
-    subcategory: 'Eyewear',
-    tags: ['designer', 'sunglasses', 'UV protection'],
-    images: ['/images/shop/4.jpg'],
-    status: 'draft',
-    inventory: {
-      tracked: true,
-      quantity: 89,
-      lowStockThreshold: 15,
-    },
-    seo: {
-      title: 'Designer Sunglasses - Premium UV Protection',
-      description: 'Stylish designer sunglasses with full UV protection',
-      handle: 'designer-sunglasses',
-    },
-    createdAt: '2024-04-20T10:00:00Z',
-    updatedAt: '2025-09-01T10:00:00Z',
-    sales: {
-      totalSold: 0,
-      revenue: 0,
-      averageRating: 0,
-      reviewCount: 0,
-    },
-  },
-  {
-    id: '5',
-    name: 'Vintage Leather Jacket',
-    description: 'Classic vintage-style leather jacket for timeless fashion',
-    sku: 'VLJ-005',
-    price: 249.99,
-    cost: 95.0,
-    category: 'Clothing',
-    subcategory: 'Jackets',
-    tags: ['vintage', 'leather', 'classic'],
-    images: ['/images/shop/5.jpg'],
-    status: 'archived',
-    inventory: {
-      tracked: true,
-      quantity: 3,
-      lowStockThreshold: 5,
-    },
-    seo: {
-      title: 'Vintage Leather Jacket - Classic Style',
-      description: 'Timeless vintage leather jacket for fashion enthusiasts',
-      handle: 'vintage-leather-jacket',
-    },
-    createdAt: '2023-12-01T10:00:00Z',
-    updatedAt: '2025-08-30T10:00:00Z',
-    sales: {
-      totalSold: 23,
-      revenue: 5749.77,
-      averageRating: 4.6,
-      reviewCount: 12,
-    },
-  },
-];
-
 const categories = [
   'All Categories',
   'Clothing',
@@ -229,8 +65,150 @@ const categories = [
   'Beauty',
 ];
 
+// GraphQL queries & mutations
+const GET_PRODUCTS_BY_STORE = gql`
+  query GetProductsByStore($storeId: String!, $page: Int, $pageSize: Int) {
+    productsByStore(storeId: $storeId, page: $page, pageSize: $pageSize) {
+      items {
+        id
+        name
+        title
+        description
+        price
+        currency
+        available
+        inStock
+        stock
+        images {
+          id
+          url
+          order
+        }
+        colors {
+          id
+          color
+          colorHex
+        }
+
+        categories {
+          category {
+            id
+            name
+            slug
+          }
+        }
+      }
+      total
+      page
+      pageSize
+    }
+  }
+`;
+
+const UPDATE_PRODUCT = gql`
+  mutation UpdateProduct($id: String!, $input: UpdateProductInput!) {
+    updateProduct(id: $id, input: $input) {
+      id
+      name
+      title
+      description
+      price
+      currency
+      available
+      inStock
+      stock
+      storeId
+      images {
+        id
+        url
+        order
+      }
+      colors {
+        id
+        name
+        hex
+      }
+      sizes {
+        id
+        name
+        value
+      }
+      categories {
+        id
+        name
+        slug
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+const CREATE_PRODUCT = gql`
+  mutation CreateProduct($input: CreateProductInput!) {
+    createProduct(input: $input) {
+      id
+      name
+      title
+      description
+      price
+      currency
+      available
+      inStock
+      stock
+      storeId
+      externalId
+      images {
+        id
+        url
+        order
+      }
+      colors {
+        id
+        color
+        colorHex
+      }
+      variants {
+        id
+        typeVariant
+        nameVariant
+        jsonData
+      }
+      stocks {
+        id
+        price
+      }
+      categories {
+        id
+        name
+        slug
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+const DELETE_PRODUCT = gql`
+  mutation DeleteProduct($id: String!) {
+    deleteProduct(id: $id) {
+      id
+      name
+    }
+  }
+`;
+
+const DELETE_PRODUCTS = gql`
+  mutation DeleteProducts($ids: [String!]!) {
+    deleteProducts(ids: $ids) {
+      count
+    }
+  }
+`;
+
 export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>(mockProducts);
+  // start with an empty list — replace with real data via GraphQL/useQuery when ready
+  const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('All Categories');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -474,10 +452,13 @@ export default function ProductsPage() {
                         <div className="flex items-center">
                           <div className="h-16 w-16 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
                             {product.images.length > 0 ? (
-                              <img
+                              <Image
                                 src={product.images[0]}
                                 alt={product.name}
+                                width={64}
+                                height={64}
                                 className="h-full w-full object-cover"
+                                unoptimized
                               />
                             ) : (
                               <ImageIcon className="h-6 w-6 text-gray-400" />
@@ -597,10 +578,13 @@ export default function ProductsPage() {
               >
                 <div className="aspect-square bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
                   {product.images.length > 0 ? (
-                    <img
+                    <Image
                       src={product.images[0]}
                       alt={product.name}
+                      width={600}
+                      height={600}
                       className="w-full h-full object-cover"
+                      unoptimized
                     />
                   ) : (
                     <ImageIcon className="h-16 w-16 text-gray-400" />

@@ -162,7 +162,11 @@ export default function BlogListPage() {
                   <div className="flex-shrink-0">
                     <div className="relative w-full lg:w-32 h-32 lg:h-24 rounded-lg overflow-hidden bg-gray-100">
                       <Image
-                        src={post.coverImageUrl || '/images/hero/bg4.jpg'}
+                        src={
+                          post.coverImageUrl?.startsWith('http')
+                            ? post.coverImageUrl
+                            : `https://emprendyup-images.s3.us-east-1.amazonaws.com/${post.coverImageUrl}`
+                        }
                         alt={post.title || ''}
                         fill
                         className="object-cover"

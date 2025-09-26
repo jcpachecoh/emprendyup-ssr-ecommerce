@@ -15,8 +15,11 @@ import {
   ChevronLeft,
   ChevronRight,
   LogOut,
-  User,
   FileText,
+  Loader,
+  CreditCard,
+  Wrench,
+  Package,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useDashboardUIStore, useSessionStore } from '@/lib/store/dashboard';
@@ -27,26 +30,29 @@ import { toast } from 'sonner';
 const navigation = [
   { name: 'Estadísticas', href: '/dashboard/insights', icon: BarChart3 },
   { name: 'Pedidos', href: '/dashboard/orders', icon: ShoppingCart },
-  { name: 'Clientes', href: '/dashboard/customers', icon: Users },
+  // { name: 'Clientes', href: '/dashboard/customers', icon: Users },
+  { name: 'Usuarios', href: '/dashboard/users', icon: Users },
+  { name: 'Usuarios por tienda', href: '/dashboard/usersbyStore', icon: Users },
   { name: 'Bonos', href: '/dashboard/bonuses', icon: Gift },
+  { name: 'Productos', href: '/dashboard/products', icon: Package },
+  { name: 'Pagos', href: '/dashboard/payments', icon: CreditCard },
+  { name: 'Pagos Configuracion', href: '/dashboard/config', icon: Wrench },
   { name: 'Tienda', href: '/dashboard/store', icon: Store },
+  { name: 'Tiendas', href: '/dashboard/stores', icon: Store },
   { name: 'Blog', href: '/dashboard/blog', icon: FileText },
-  { name: 'Configuración', href: '/dashboard/settings', icon: Settings },
 ];
 
-const adminNavigation = [{ name: 'Admin', href: '/dashboard/admin', icon: User }];
+// const adminNavigation = [{ name: 'Admin', href: '/dashboard/admin', icon: User }];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  // Auth protection - redirect to index if no valid session
   const { isAuthenticated, isLoading } = useAuth();
 
   const pathname = usePathname();
-  const { user, setUser, currentStore } = useSessionStore();
+  const { user, setUser } = useSessionStore();
   const [mounted, setMounted] = useState(false);
-  const [collapsed, setCollapsed] = useState(false); // Estado para colapsar la barra lateral en escritorio
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // Estado para el menú móvil
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Si la ruta es el flujo de nueva tienda, no mostrar la interfaz del dashboard
   const hideDashboardChrome = Boolean(pathname && pathname.includes('/dashboard/store/new'));
 
   useEffect(() => {
@@ -58,32 +64,35 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [setUser]);
 
   const handleLogout = () => {
-    // Show toast notification
     toast.success('Sesión cerrada exitosamente', {
       description: 'Has cerrado sesión correctamente. Redirigiendo...',
       duration: 2000,
     });
 
-    // Clear localStorage
     localStorage.removeItem('user');
     localStorage.removeItem('accessToken');
 
-    // Redirect after a short delay to allow toast to be seen
     setTimeout(() => {
       window.location.href = '/';
     }, 1500);
   };
+  if (!user) {
+    return <div>Cargando...</div>; // o spinner
+  }
 
-  // Show loading spinner while checking authentication
-  if (isLoading || !mounted) {
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      <div className="flex items-center justify-center h-screen">
+        <Loader className="h-8 w-8 animate-spin text-fourth-base" />
       </div>
     );
   }
 
-  // If not authenticated, don't render anything (redirect is happening)
+  // Si no es admin o store_admin no mostramos nada
+  if (!user || !['ADMIN', 'STORE_ADMIN'].includes(user.role)) {
+    return null;
+  }
+
   if (!isAuthenticated) {
     return null;
   }
@@ -92,7 +101,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return <div className="min-h-screen bg-slate-50 dark:bg-slate-900">{children}</div>;
   }
 
-  const allNavigation = [...navigation, ...(user?.role === 'admin' ? adminNavigation : [])];
+  let allNavigation = [] as typeof navigation;
+
+  if (user.role === 'ADMIN') {
+    allNavigation = [...navigation].filter(
+      (item) => item.name !== 'Tienda' && item.name !== 'Usuarios por tienda'
+    );
+  } else if (user.role === 'STORE_ADMIN') {
+    allNavigation = navigation.filter(
+      (item) =>
+        item.name !== 'Blog' &&
+        item.name !== 'Configuración' &&
+        item.name !== 'Tiendas' &&
+        item.name !== 'Usuarios'
+    );
+  }
 
   return (
     <div
@@ -272,34 +295,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <LogOut className="mr-3 h-5 w-5 text-red-500 group-hover:text-red-600" />
                 <span className="truncate">Cerrar Sesión</span>
               </button>
-            </div>
-
-            {/* Pie del menú móvil */}
-            <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-700">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3 min-w-0">
-                  <Image
-                    src={user?.avatar || '/images/client/16.jpg'}
-                    width={40}
-                    height={40}
-                    className="rounded-full object-cover"
-                    alt="Avatar"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">
-                      {user?.name || user?.email || 'Usuario'}
-                    </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">Mi cuenta</div>
-                  </div>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  className="p-1 rounded-md text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                  title="Cerrar Sesión"
-                >
-                  <LogOut className="w-4 h-4" />
-                </button>
-              </div>
             </div>
           </div>
         </div>

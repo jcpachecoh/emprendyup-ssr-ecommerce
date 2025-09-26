@@ -356,6 +356,15 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
                   Contacto
                 </Link>
               </li>
+              <li className={`${menu === '/contact' ? 'active' : ''}`}>
+                <Link
+                  href="/index-fashion-four"
+                  className="sub-menu-item"
+                  onClick={() => setToggle(false)}
+                >
+                  Marketplace
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

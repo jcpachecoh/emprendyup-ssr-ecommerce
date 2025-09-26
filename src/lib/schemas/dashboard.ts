@@ -137,11 +137,12 @@ export const UserProfileSchema = z.object({
   id: z.string(),
   name: z.string(),
   email: z.string().email(),
-  role: z.enum(['user', 'admin']),
+  role: z.enum(['MODERATOR', 'STORE_ADMIN', 'ADMIN', 'USER', 'CUSTOMER']),
   avatar: z.string().optional(),
   phone: z.string().optional(),
   company: z.string().optional(),
   timezone: z.string().optional(),
+  storeId: z.string().optional(),
 });
 
 export const UpdateProfileSchema = z.object({

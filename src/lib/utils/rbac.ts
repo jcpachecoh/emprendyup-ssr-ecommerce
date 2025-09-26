@@ -1,7 +1,7 @@
 import React from 'react';
 import { UserProfile } from '@/lib/schemas/dashboard';
 
-export type Role = 'user' | 'admin';
+export type Role = 'MODERATOR' | 'STORE_ADMIN' | 'ADMIN' | 'USER' | 'CUSTOMER';
 
 export interface RolePermissions {
   canViewDashboard: boolean;
@@ -15,7 +15,7 @@ export interface RolePermissions {
 }
 
 const rolePermissions: Record<Role, RolePermissions> = {
-  user: {
+  USER: {
     canViewDashboard: true,
     canCreateStore: true,
     canManageOrders: true,
@@ -25,7 +25,7 @@ const rolePermissions: Record<Role, RolePermissions> = {
     canManageUsers: false,
     canManageStores: false,
   },
-  admin: {
+  ADMIN: {
     canViewDashboard: true,
     canCreateStore: true,
     canManageOrders: true,
@@ -34,6 +34,36 @@ const rolePermissions: Record<Role, RolePermissions> = {
     canAccessAdmin: true,
     canManageUsers: true,
     canManageStores: true,
+  },
+  STORE_ADMIN: {
+    canViewDashboard: true,
+    canCreateStore: false,
+    canManageOrders: true,
+    canManageBonuses: true,
+    canViewInsights: true,
+    canAccessAdmin: false,
+    canManageUsers: false,
+    canManageStores: true,
+  },
+  MODERATOR: {
+    canViewDashboard: true,
+    canCreateStore: false,
+    canManageOrders: false,
+    canManageBonuses: false,
+    canViewInsights: true,
+    canAccessAdmin: false,
+    canManageUsers: true,
+    canManageStores: false,
+  },
+  CUSTOMER: {
+    canViewDashboard: false,
+    canCreateStore: false,
+    canManageOrders: false,
+    canManageBonuses: false,
+    canViewInsights: false,
+    canAccessAdmin: false,
+    canManageUsers: false,
+    canManageStores: false,
   },
 };
 

@@ -91,11 +91,13 @@ export default async function Blogs(props: any) {
               <div className="group relative overflow-hidden" key={item.id || index}>
                 <div className="relative overflow-hidden rounded-md shadow dark:shadow-gray-800">
                   <Image
-                    src={item.coverImageUrl || '/images/hero/bg4.jpg'}
-                    width={0}
-                    height={0}
-                    sizes="100vw"
-                    style={{ width: '100%', height: 'auto' }}
+                    src={
+                      item.coverImageUrl?.startsWith('http')
+                        ? item.coverImageUrl
+                        : `https://emprendyup-images.s3.us-east-1.amazonaws.com/${item.coverImageUrl}`
+                    }
+                    width={300}
+                    height={50}
                     className="group-hover:scale-110 duration-500"
                     alt={item.title}
                   />

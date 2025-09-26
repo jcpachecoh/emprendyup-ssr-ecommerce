@@ -123,11 +123,13 @@ export default async function BlogDetailPage({ params }: BlogDetailProps) {
           <div className="lg:col-span-8 md:col-span-7 order-2 md:order-2">
             <div className="relative overflow-hidden rounded-2xl">
               <Image
-                src={post.coverImageUrl || '/images/hero/bg4.jpg'}
-                width={0}
-                height={0}
-                sizes="100vw"
-                style={{ width: '100%', height: 'auto' }}
+                src={
+                  post.coverImageUrl?.startsWith('http')
+                    ? post.coverImageUrl
+                    : `https://emprendyup-images.s3.us-east-1.amazonaws.com/${post.coverImageUrl}`
+                }
+                width={650}
+                height={50}
                 alt={post.title || 'Cover image'}
                 className="rounded-t-2xl"
               />

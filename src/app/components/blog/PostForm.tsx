@@ -13,6 +13,7 @@ import useDebounce from '../../../lib/hooks/useDebounce';
 import { Upload, X, Eye, EyeOff, Save, Send, ArrowLeft, ImageIcon, Plus } from 'lucide-react';
 import { getUserFromLocalStorage } from '@/lib/utils/localAuth';
 import { SlUmbrella } from 'react-icons/sl';
+import FileUpload from '../FileUpload';
 
 interface PostFormProps {
   initialData?: Partial<BlogPost>;
@@ -134,110 +135,6 @@ export default function PostForm({ initialData }: PostFormProps) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Enhanced Cover Upload component
-  function CoverUpload({ value, onChange }: { value?: string; onChange: (url: string) => void }) {
-    const [preview, setPreview] = useState<string | null>(value || null);
-    const [isUploading, setIsUploading] = useState(false);
-    const [isDragOver, setIsDragOver] = useState(false);
-
-    const handleFileChange = async (file: File) => {
-      setIsUploading(true);
-      // Simulate upload delay
-      await new Promise((r) => setTimeout(r, 1200));
-      const fileUrl = URL.createObjectURL(file);
-      setPreview(fileUrl);
-      onChange(fileUrl);
-      setIsUploading(false);
-      setMessage('Imagen subida correctamente');
-      setMessageType('success');
-    };
-
-    const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) await handleFileChange(file);
-    };
-
-    const handleDrop = async (e: React.DragEvent) => {
-      e.preventDefault();
-      setIsDragOver(false);
-      const file = e.dataTransfer.files?.[0];
-      if (file && file.type.startsWith('image/')) {
-        await handleFileChange(file);
-      }
-    };
-
-    return (
-      <div className="space-y-3">
-        {!preview ? (
-          <div
-            className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 ${
-              isDragOver
-                ? 'border-blue-400 bg-blue-500/10'
-                : 'border-gray-600 hover:border-gray-500 hover:bg-gray-800/50'
-            }`}
-            onDragOver={(e) => {
-              e.preventDefault();
-              setIsDragOver(true);
-            }}
-            onDragLeave={() => setIsDragOver(false)}
-            onDrop={handleDrop}
-          >
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleInputChange}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-            />
-
-            <div className="flex flex-col items-center space-y-4">
-              {isUploading ? (
-                <div className="w-12 h-12 border-3 border-blue-500 border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <div className="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center">
-                  <ImageIcon className="w-8 h-8 text-gray-400" />
-                </div>
-              )}
-
-              <div>
-                <p className="text-lg font-medium text-gray-300 mb-1">
-                  {isUploading ? 'Subiendo imagen...' : 'Sube tu imagen de portada'}
-                </p>
-                <p className="text-sm text-gray-500">
-                  Arrastra y suelta o haz clic para seleccionar
-                </p>
-                <p className="text-xs text-gray-600 mt-2">PNG, JPG o WEBP hasta 5MB</p>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="relative group">
-            <div className="relative overflow-hidden rounded-xl bg-gray-800">
-              <Image
-                src={preview}
-                alt="Cover preview"
-                width={800}
-                height={400}
-                className="w-full h-48 object-cover"
-                unoptimized
-              />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-200" />
-              <button
-                onClick={() => {
-                  setPreview(null);
-                  onChange('');
-                }}
-                className="absolute top-3 right-3 w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-            <p className="text-sm text-gray-400 mt-2 text-center">Imagen de portada seleccionada</p>
-          </div>
-        )}
-      </div>
-    );
-  }
-
   // Enhanced Rich Text Editor wrapper
   const rteRef = useRef<RichTextEditorRef | null>(null);
 
@@ -306,68 +203,6 @@ export default function PostForm({ initialData }: PostFormProps) {
       setIsSaving(false);
     }
   };
-  // FileUpload component for inserting images in content
-  function FileUpload({
-    onFile,
-    accept = 'image/*',
-  }: {
-    onFile: (url: string) => void;
-    accept?: string;
-  }) {
-    const [preview, setPreview] = useState<string | null>(null);
-    const [isUploading, setIsUploading] = useState(false);
-
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        setIsUploading(true);
-        // Simulate upload latency
-        await new Promise((r) => setTimeout(r, 800));
-        const fileUrl = URL.createObjectURL(file);
-        setPreview(fileUrl);
-        onFile(fileUrl);
-        setIsUploading(false);
-      }
-    };
-
-    return (
-      <div className="mt-2">
-        {!preview ? (
-          <label className="block border-2 border-dashed border-gray-600 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 transition-colors">
-            <input type="file" accept={accept} onChange={handleFileChange} className="hidden" />
-            {isUploading ? (
-              <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-            ) : (
-              <ImageIcon className="w-6 h-6 text-gray-400 mx-auto mb-2" />
-            )}
-            <p className="text-sm text-gray-400">
-              {isUploading ? 'Subiendo...' : 'Haz clic para subir archivo'}
-            </p>
-          </label>
-        ) : (
-          <div className="relative inline-block">
-            <Image
-              src={preview || ''}
-              alt="Preview"
-              width={80}
-              height={80}
-              className="w-20 h-20 object-cover rounded-lg"
-              unoptimized
-            />
-            <button
-              onClick={() => {
-                setPreview(null);
-                onFile('');
-              }}
-              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-            >
-              <X className="w-3 h-3" />
-            </button>
-          </div>
-        )}
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-200">
@@ -572,14 +407,14 @@ export default function PostForm({ initialData }: PostFormProps) {
               </div>
             </div>
           </div>
-
-          {/* Cover Image */}
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-300">Imagen de portada</label>
-            <CoverUpload
-              value={formData.coverImageUrl}
-              onChange={(url) => setFormData((prev) => ({ ...prev, coverImageUrl: url }))}
-            />
+          <div className="flex items-center gap-4">
+            {/* Cover Image */}
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-300">Imagen de portada</label>
+              <FileUpload
+                onFile={(url) => setFormData((prev) => ({ ...prev, coverImageUrl: url }))}
+              />
+            </div>
           </div>
 
           {/* Action Buttons */}

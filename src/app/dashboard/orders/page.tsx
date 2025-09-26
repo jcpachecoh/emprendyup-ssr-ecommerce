@@ -1,80 +1,107 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, Download, Eye, ShoppingCart } from 'lucide-react';
+import { Search, Filter, Download, Eye, ChevronLeft, ChevronRight, Package } from 'lucide-react';
 import { Order } from '@/lib/schemas/dashboard';
 import { useDashboardUIStore } from '@/lib/store/dashboard';
+import { gql, useQuery } from '@apollo/client';
+import { useSessionStore } from '@/lib/store/dashboard';
+import { useParams } from 'next/navigation';
 
-// Datos de pedidos de prueba
-const mockOrders: Order[] = [
-  {
-    id: '1',
-    storeId: 'store-1',
-    customerId: 'customer-1',
-    customerName: 'María González',
-    customerEmail: 'maria@example.com',
-    items: [
-      { id: '1', name: 'Producto A', quantity: 2, price: 25.0 },
-      { id: '2', name: 'Producto B', quantity: 1, price: 30.0 },
-    ],
-    total: 80.0,
-    status: 'delivered',
-    createdAt: '2024-09-01T10:00:00Z',
-    updatedAt: '2024-09-03T15:30:00Z',
-  },
-  {
-    id: '2',
-    storeId: 'store-1',
-    customerId: 'customer-2',
-    customerName: 'Carlos López',
-    customerEmail: 'carlos@example.com',
-    items: [{ id: '3', name: 'Producto C', quantity: 1, price: 45.0 }],
-    total: 45.0,
-    status: 'processing',
-    createdAt: '2024-09-02T14:20:00Z',
-    updatedAt: '2024-09-02T14:20:00Z',
-  },
-  {
-    id: '3',
-    storeId: 'store-1',
-    customerId: 'customer-3',
-    customerName: 'Ana Rodríguez',
-    customerEmail: 'ana@example.com',
-    items: [
-      { id: '4', name: 'Producto D', quantity: 3, price: 15.0 },
-      { id: '5', name: 'Producto E', quantity: 2, price: 22.5 },
-    ],
-    total: 90.0,
-    status: 'shipped',
-    createdAt: '2024-09-03T09:15:00Z',
-    updatedAt: '2024-09-04T11:45:00Z',
-  },
-];
+const GET_ORDERS_BY_STORE = gql`
+  query OrdersByStore($storeId: String!) {
+    ordersByStore(storeId: $storeId) {
+      id
+      status
+      total
+      subtotal
+      tax
+      shipping
+      createdAt
+      userName
+      items {
+        id
+        productName
+        quantity
+        price
+        product {
+          name
+          images {
+            url
+          }
+        }
+      }
+      address {
+        name
+        street
+      }
+      store {
+        id
+        name
+        logoUrl
+      }
+    }
+  }
+`;
 
-export default function PaginaPedidos() {
+export default function OrderPage() {
   const [pedidos, setPedidos] = useState<Order[]>([]);
   const [pedidosFiltrados, setPedidosFiltrados] = useState<Order[]>([]);
   const [busqueda, setBusqueda] = useState('');
   const [filtroEstado, setFiltroEstado] = useState('all');
-  const [cargando, setCargando] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [expandedOrders, setExpandedOrders] = useState<Set<string>>(new Set());
+  const pageSize = 10;
+  const params = useParams();
 
   const { setSelectedOrderId, setOrderDrawerOpen } = useDashboardUIStore();
+  const { currentStore } = useSessionStore();
+
+  // Obtener el storeId correctamente
+  const urlStoreId = params?.slug as string;
+  const storeId = urlStoreId || currentStore?.id;
+  const userData = JSON.parse(localStorage.getItem('user') || '{}');
+
+  const { data, loading, error } = useQuery(GET_ORDERS_BY_STORE, {
+    variables: { storeId: userData?.storeId || '' },
+    skip: !storeId,
+    fetchPolicy: 'network-only',
+  });
 
   useEffect(() => {
-    // Simula llamada a API
-    const fetchOrders = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setPedidos(mockOrders);
-      setPedidosFiltrados(mockOrders);
-      setCargando(false);
-    };
-    fetchOrders();
-  }, []);
+    if (data?.ordersByStore) {
+      const mapped: Order[] = data.ordersByStore.map((o: any) => ({
+        id: o.id,
+        storeId: o.store?.id || storeId,
+        customerId: '',
+        customerName: o.userName || (o.address?.name ?? 'Cliente'),
+        customerEmail: '',
+        items: (o.items || []).map((it: any) => ({
+          id: it.id,
+          name: it.productName || it.product?.name || '',
+          quantity: it.quantity,
+          price: it.price,
+          product: it.product
+            ? {
+                name: it.product.name,
+                images: it.product.images || [],
+              }
+            : null,
+        })),
+        total: o.total || 0,
+        status: o.status || 'pending',
+        createdAt: o.createdAt,
+        updatedAt: o.updatedAt || o.createdAt,
+      }));
+
+      setPedidos(mapped);
+      setPedidosFiltrados(mapped);
+    }
+  }, [data, storeId]);
 
   useEffect(() => {
     let filtrados = pedidos;
 
-    // Filtrar por búsqueda
     if (busqueda) {
       filtrados = filtrados.filter(
         (order) =>
@@ -84,32 +111,69 @@ export default function PaginaPedidos() {
       );
     }
 
-    // Filtrar por estado
     if (filtroEstado !== 'all') {
       filtrados = filtrados.filter((order) => order.status === filtroEstado);
     }
 
     setPedidosFiltrados(filtrados);
+    setCurrentPage(1);
   }, [pedidos, busqueda, filtroEstado]);
+
+  const totalPages = Math.ceil(pedidosFiltrados.length / pageSize);
+  const paginatedOrders = pedidosFiltrados.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const toggleOrderExpansion = (orderId: string) => {
+    const newExpanded = new Set(expandedOrders);
+    if (newExpanded.has(orderId)) {
+      newExpanded.delete(orderId);
+    } else {
+      newExpanded.add(orderId);
+    }
+    setExpandedOrders(newExpanded);
+  };
 
   const obtenerBadgeEstado = (estado: string) => {
     const estilos = {
-      pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-      processing: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
-      shipped: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
-      delivered: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
-      cancelled: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
+      pending: 'bg-yellow-900/30 text-yellow-300 border-yellow-700',
+      processing: 'bg-blue-900/30 text-blue-300 border-blue-700',
+      shipped: 'bg-purple-900/30 text-purple-300 border-purple-700',
+      delivered: 'bg-green-900/30 text-green-300 border-green-700',
+      cancelled: 'bg-red-900/30 text-red-300 border-red-700',
     };
 
     return (
       <span
-        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-          estilos[estado as keyof typeof estilos]
+        className={`px-3 py-1 text-xs font-semibold rounded-full border ${
+          estilos[estado as keyof typeof estilos] || estilos.pending
         }`}
       >
         {estado.charAt(0).toUpperCase() + estado.slice(1)}
       </span>
     );
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return 'Pendiente';
+      case 'processing':
+        return 'Procesando';
+      case 'shipped':
+        return 'Enviado';
+      case 'delivered':
+        return 'Entregado';
+      case 'cancelled':
+        return 'Cancelada';
+      default:
+        return status;
+    }
   };
 
   const verPedido = (idPedido: string) => {
@@ -141,199 +205,397 @@ export default function PaginaPedidos() {
     window.URL.revokeObjectURL(url);
   };
 
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-white">Pedidos</h1>
+            <p className="text-gray-400">Cargando pedidos...</p>
+          </div>
+        </div>
+        <div className="animate-pulse space-y-4 p-6">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="flex space-x-4">
+              <div className="h-4 bg-gray-700 rounded w-1/6"></div>
+              <div className="h-4 bg-gray-700 rounded w-1/4"></div>
+              <div className="h-4 bg-gray-700 rounded w-1/6"></div>
+              <div className="h-4 bg-gray-700 rounded w-1/6"></div>
+              <div className="h-4 bg-gray-700 rounded w-1/6"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-red-900/20 border border-red-700 rounded-lg p-4">
+          <h2 className="text-lg font-semibold text-red-300">Error</h2>
+          <p className="text-red-400">Error al cargar los pedidos: {error.message}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!storeId) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-yellow-900/20 border border-yellow-700 rounded-lg p-4">
+          <h2 className="text-lg font-semibold text-yellow-300">Store no seleccionado</h2>
+          <p className="text-yellow-400">No se ha seleccionado una tienda.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      {/* Encabezado */}
+      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Pedidos</h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Administra y rastrea los pedidos de tu tienda
-          </p>
+          <h1 className="text-2xl font-bold text-white">Pedidos</h1>
+          <p className="text-gray-400">Administra y rastrea los pedidos de tu tienda</p>
+          <p className="text-sm text-gray-500">Mostrando {pedidosFiltrados.length} pedidos</p>
         </div>
 
         <button
           onClick={exportarCSV}
-          className="inline-flex items-center px-4 py-2 bg-fourth-base text-black rounded-lg hover:bg-fourth-base/90 transition-colors"
+          disabled={pedidosFiltrados.length === 0}
+          className="inline-flex items-center px-4 py-2 bg-fourth-base text-black rounded-lg hover:bg-fourth-base/90 transition-colors disabled:opacity-50"
         >
           <Download className="h-4 w-4 mr-2" />
           Exportar CSV
         </button>
       </div>
 
-      {/* Filtros */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-        <div className="flex flex-col sm:flex-row gap-4">
-          {/* Búsqueda */}
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Buscar pedidos por nombre, correo o ID..."
-              value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-fourth-base focus:border-transparent"
-            />
-          </div>
+      {/* Search and Filters */}
+      <div className="flex flex-col lg:flex-row gap-4">
+        <div className="flex-1 relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <input
+            type="text"
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            placeholder="Buscar por cliente, email o ID de orden..."
+            className="w-full pl-10 pr-3 py-3 border border-gray-600 rounded-lg bg-gray-800 text-white focus:ring-2 focus:ring-fourth-base focus:border-fourth-base transition-all placeholder-gray-400"
+          />
+        </div>
 
-          {/* Filtro por estado */}
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-gray-400" />
-            <select
-              value={filtroEstado}
-              onChange={(e) => setFiltroEstado(e.target.value)}
-              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-fourth-base focus:border-transparent"
-            >
-              <option value="all">Todos</option>
-              <option value="pending">Pendiente</option>
-              <option value="processing">Procesando</option>
-              <option value="shipped">Enviado</option>
-              <option value="delivered">Entregado</option>
-              <option value="cancelled">Cancelado</option>
-            </select>
-          </div>
+        <div className="flex items-center gap-2">
+          <Filter className="w-4 h-4 text-gray-400" />
+          <select
+            value={filtroEstado}
+            onChange={(e) => setFiltroEstado(e.target.value)}
+            className="px-3 py-3 border border-gray-600 rounded-lg bg-gray-800 text-white focus:ring-2 focus:ring-fourth-base focus:border-fourth-base"
+          >
+            <option value="all">Todos los estados</option>
+            <option value="pending">Pendiente</option>
+            <option value="processing">Procesando</option>
+            <option value="shipped">Enviado</option>
+            <option value="delivered">Entregado</option>
+            <option value="cancelled">Cancelado</option>
+          </select>
         </div>
       </div>
 
-      {/* Tabla de Pedidos */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        {cargando ? (
-          <div className="p-6">
-            <div className="animate-pulse space-y-4">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="flex space-x-4">
-                  <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-1/6"></div>
-                  <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-1/4"></div>
-                  <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-1/6"></div>
-                  <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-1/6"></div>
-                  <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-1/6"></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <>
-            {/* Tabla escritorio */}
-            <div className="hidden md:block overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead className="bg-gray-50 dark:bg-gray-900">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      ID Pedido
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Cliente
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Total
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Estado
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Fecha
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Acciones
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  {pedidosFiltrados.map((order) => (
-                    <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                        #{order.id}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div>
-                          <div className="text-sm font-medium text-gray-900 dark:text-white">
-                            {order.customerName}
+      {/* Desktop Table */}
+      <div className="hidden lg:block bg-gray-900 border border-gray-700 rounded-xl overflow-hidden shadow-sm">
+        <table className="min-w-full divide-y divide-gray-700">
+          <thead className="bg-gray-800">
+            <tr>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase">
+                Productos
+              </th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase">
+                Cliente
+              </th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase">
+                Total
+              </th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase">
+                Estado
+              </th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase">
+                Fecha
+              </th>
+              <th className="px-6 py-4 text-right text-xs font-semibold text-gray-300 uppercase">
+                Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-gray-900 divide-y divide-gray-800">
+            {paginatedOrders.map((order) => (
+              <>
+                <tr key={order.id} className="hover:bg-gray-800 transition-colors">
+                  <td className="px-6 py-4">
+                    <div className="flex items-center space-x-3">
+                      {order.items.slice(0, 2).map((item: any, index) => {
+                        const imageKey = item?.product?.images?.[0]?.url;
+                        const imageUrl = imageKey
+                          ? `https://emprendyup-images.s3.us-east-1.amazonaws.com/${imageKey}`
+                          : '/assets/default-product.jpg';
+
+                        return (
+                          <div key={item.id} className="relative">
+                            <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-700 border border-gray-600">
+                              <img
+                                src={imageUrl}
+                                alt={item.name}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  e.currentTarget.src = '/assets/default-product.jpg';
+                                }}
+                              />
+                            </div>
+                            {index === 0 && order.items.length > 2 && (
+                              <div className="absolute -top-1 -right-1 bg-fourth-base text-black text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                                +{order.items.length - 1}
+                              </div>
+                            )}
                           </div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">
-                            {order.customerEmail}
+                        );
+                      })}
+                      {order.items.length === 0 && (
+                        <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-700 border border-gray-600 flex items-center justify-center">
+                          <Package className="w-6 h-6 text-gray-400" />
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm font-medium text-white">{order.customerName}</div>
+                    <div className="text-sm text-gray-400">{order.customerEmail}</div>
+                  </td>
+                  <td className="px-6 py-4 text-sm font-semibold text-white">
+                    ${order.total.toLocaleString('es-CO')}
+                  </td>
+                  <td className="px-6 py-4">{obtenerBadgeEstado(order.status)}</td>
+                  <td className="px-6 py-4 text-sm text-gray-400">
+                    {new Date(order.createdAt).toLocaleDateString('es-CO', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex justify-end space-x-2">
+                      <button
+                        onClick={() => toggleOrderExpansion(order.id)}
+                        className="p-2 text-gray-400 hover:bg-gray-800 hover:text-white rounded-lg transition-colors"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                {expandedOrders.has(order.id) && (
+                  <tr key={order.id + '-expanded'}>
+                    <td colSpan={6} className="px-6 py-4 bg-gray-800">
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className="text-sm font-semibold text-white mb-3">
+                            Productos ({order.items.length})
+                          </h4>
+                          <div className="grid gap-3 md:grid-cols-2">
+                            {order.items.map((item: any) => {
+                              const imageKey = item?.product?.images?.[0]?.url;
+                              const imageUrl = imageKey
+                                ? `https://emprendyup-images.s3.us-east-1.amazonaws.com/${imageKey}`
+                                : '/assets/default-product.jpg';
+
+                              return (
+                                <div
+                                  key={item.id}
+                                  className="flex items-center space-x-3 p-3 bg-gray-700 rounded-lg border border-gray-600"
+                                >
+                                  <div className="flex-shrink-0">
+                                    <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-600 border border-gray-500">
+                                      <img
+                                        src={imageUrl}
+                                        alt={item.name}
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                          e.currentTarget.src = '/assets/default-product.jpg';
+                                        }}
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="flex-grow min-w-0">
+                                    <p className="text-sm font-medium text-white truncate">
+                                      {item.name}
+                                    </p>
+                                    <div className="flex items-center justify-between mt-1">
+                                      <span className="text-xs text-gray-400">
+                                        Cantidad:{' '}
+                                        <span className="font-semibold text-white">
+                                          {item.quantity}
+                                        </span>
+                                      </span>
+                                      <div className="text-right">
+                                        <div className="text-sm font-semibold text-white">
+                                          ${(item.price * item.quantity).toLocaleString('es-CO')}
+                                        </div>
+                                        <div className="text-xs text-gray-400">
+                                          ${item.price.toLocaleString('es-CO')} c/u
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                        ${order.total.toFixed(2)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {obtenerBadgeEstado(order.status)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {new Date(order.createdAt).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button
-                          onClick={() => verPedido(order.id)}
-                          className="text-fourth-base hover:text-fourth-base/80 flex items-center gap-1"
-                        >
-                          <Eye className="h-4 w-4" />
-                          Ver
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Tarjetas móvil */}
-            <div className="md:hidden space-y-4 p-4">
-              {pedidosFiltrados.map((order) => (
-                <div
-                  key={order.id}
-                  className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 space-y-3"
-                >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="font-medium text-gray-900 dark:text-white">#{order.id}</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {order.customerName}
-                      </p>
-                    </div>
-                    {obtenerBadgeEstado(order.status)}
-                  </div>
-
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                        ${order.total.toFixed(2)}
-                      </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {new Date(order.createdAt).toLocaleDateString()}
-                      </p>
-                    </div>
-
-                    <button
-                      onClick={() => verPedido(order.id)}
-                      className="px-3 py-2 bg-fourth-base text-black rounded-lg text-sm hover:bg-fourth-base/90 transition-colors"
-                    >
-                      Ver Detalles
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-
-        {!cargando && pedidosFiltrados.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-gray-400 mb-4">
-              <ShoppingCart className="h-12 w-12 mx-auto" />
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-              No se encontraron pedidos
-            </h3>
-            <p className="text-gray-500 dark:text-gray-400">
-              {busqueda || filtroEstado !== 'all'
-                ? 'Prueba ajustando tus filtros para ver más resultados.'
-                : 'Tus pedidos aparecerán aquí cuando los clientes comiencen a realizar compras.'}
-            </p>
-          </div>
-        )}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </>
+            ))}
+          </tbody>
+        </table>
       </div>
+
+      {/* Mobile Cards */}
+      <div className="lg:hidden space-y-4">
+        {paginatedOrders.map((order) => (
+          <div
+            key={order.id}
+            className="p-4 bg-gray-800 rounded-lg border border-gray-700 shadow-sm"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <h3 className="text-sm font-medium text-white">#{order.id}</h3>
+                <p className="text-sm text-gray-400">{order.customerName}</p>
+              </div>
+              {obtenerBadgeEstado(order.status)}
+            </div>
+
+            <div className="flex items-center justify-between mb-3">
+              <div className="text-sm text-gray-400">
+                <p>
+                  <strong className="text-white">Total:</strong> $
+                  {order.total.toLocaleString('es-CO')}
+                </p>
+                <p>
+                  <strong className="text-white">Fecha:</strong>{' '}
+                  {new Date(order.createdAt).toLocaleDateString('es-CO')}
+                </p>
+              </div>
+            </div>
+
+            {/* Items con imágenes */}
+            <div className="mt-3 space-y-3">
+              {order.items.map((item: any) => {
+                const imageKey = item?.product?.images?.[0]?.url;
+                const imageUrl = imageKey
+                  ? `https://emprendyup-images.s3.us-east-1.amazonaws.com/${imageKey}`
+                  : '/assets/default-product.jpg';
+
+                return (
+                  <div
+                    key={item.id}
+                    className="flex items-center space-x-3 p-3 bg-gray-700 rounded-lg border border-gray-600"
+                  >
+                    <div className="flex-shrink-0">
+                      <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-600 border border-gray-500">
+                        <img
+                          src={imageUrl}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = '/assets/default-product.jpg';
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex-grow min-w-0">
+                      <p className="text-sm font-medium text-white truncate">{item.name}</p>
+                      <div className="flex items-center justify-between mt-1">
+                        <span className="text-xs text-gray-400">
+                          Cantidad:{' '}
+                          <span className="font-semibold text-white">{item.quantity}</span>
+                        </span>
+                        <div className="text-right">
+                          <div className="text-sm font-semibold text-white">
+                            ${(item.price * item.quantity).toLocaleString('es-CO')}
+                          </div>
+                          <div className="text-xs text-gray-400">
+                            ${item.price.toLocaleString('es-CO')} c/u
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="mt-3 flex justify-end">
+              <button
+                onClick={() => verPedido(order.id)}
+                className="px-3 py-2 bg-fourth-base text-black rounded-lg text-sm hover:bg-fourth-base/90 transition-colors"
+              >
+                Ver Detalles
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Empty State */}
+      {pedidosFiltrados.length === 0 && !loading && (
+        <div className="text-center py-12">
+          <div className="w-16 h-16 mx-auto mb-4 bg-gray-800 rounded-full flex items-center justify-center">
+            <Package className="w-6 h-6 text-gray-400" />
+          </div>
+          <h3 className="text-lg font-medium text-white mb-2">
+            {busqueda || filtroEstado !== 'all'
+              ? 'No se encontraron pedidos'
+              : 'No hay pedidos aún'}
+          </h3>
+          <p className="text-gray-400">
+            {busqueda || filtroEstado !== 'all'
+              ? 'Prueba ajustando tus filtros para ver más resultados.'
+              : 'Los pedidos realizados por los clientes aparecerán aquí.'}
+          </p>
+        </div>
+      )}
+
+      {/* Pagination */}
+      {pedidosFiltrados.length > pageSize && (
+        <div className="flex items-center justify-between border-t border-gray-700 pt-4">
+          <div className="text-sm text-gray-400">
+            Mostrando {Math.min((currentPage - 1) * pageSize + 1, pedidosFiltrados.length)} a{' '}
+            {Math.min(currentPage * pageSize, pedidosFiltrados.length)} de {pedidosFiltrados.length}{' '}
+            pedidos
+          </div>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="flex items-center px-3 py-2 rounded-lg border border-gray-600 bg-gray-800 text-white text-sm disabled:opacity-50 hover:bg-gray-700 transition-colors"
+            >
+              <ChevronLeft className="w-4 h-4 mr-1" />
+              Anterior
+            </button>
+            <span className="px-3 py-2 text-sm text-gray-400">
+              Página {currentPage} de {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="flex items-center px-3 py-2 rounded-lg border border-gray-600 bg-gray-800 text-white text-sm disabled:opacity-50 hover:bg-gray-700 transition-colors"
+            >
+              Siguiente
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

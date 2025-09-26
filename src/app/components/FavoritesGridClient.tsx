@@ -58,7 +58,7 @@ export default function FavoritesGridClient() {
             >
               <Image
                 className="w-full h-full object-cover rounded-md group-hover:scale-110 duration-500"
-                src={item.imageUrl!}
+                src={item.images[0].url!}
                 width={320}
                 height={320}
                 alt={item.title}

@@ -5,8 +5,9 @@ import Image from 'next/image';
 
 import { FiSearch, FiUser } from '../../assets/icons/vander';
 import { FaUser, FaChevronDown } from 'react-icons/fa6';
-import { LogOut, User } from 'lucide-react';
+import { Heart, LogOut, ShoppingCart, User } from 'lucide-react';
 import { toast } from 'sonner';
+import { cartService } from '@/lib/Cart';
 
 type NavbarSimpleProps = {
   navClass?: string;
@@ -21,6 +22,7 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState<boolean>(false);
   const [user, setUser] = useState<any>(null);
+  const [cartItemCount, setCartItemCount] = useState(0);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -67,6 +69,16 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
       };
     }
   }, []);
+  useEffect(() => {
+    setCartItemCount(cartService.getItemCount());
+
+    const handleStorageChange = () => {
+      setCartItemCount(cartService.getItemCount());
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const toggleMenu = () => {
     setToggle(!isToggle);
@@ -98,7 +110,10 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
   };
 
   return (
-    <nav id="topnav" className={`${navClass} nav-sticky relative z-50`}>
+    <nav
+      id="topnav"
+      className={`${navClass} fixed top-0 left-0 w-full z-50 bg-white dark:bg-slate-900 shadow-md`}
+    >
       <div className="hidden md:flex container font-roboto items-center justify-between gap-4">
         <Link className="logo flex items-center" href="/">
           <Image
@@ -358,7 +373,7 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
               </li>
               <li className={`${menu === '/contact' ? 'active' : ''}`}>
                 <Link
-                  href="/index-fashion-four"
+                  href="/marketplace"
                   className="sub-menu-item"
                   onClick={() => setToggle(false)}
                 >
@@ -367,6 +382,22 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
               </li>
             </ul>
           </div>
+        </div>
+        <div className="flex items-center space-x-6">
+          {/* Carrito */}
+          <Link href="/carro-compras" className="relative">
+            <ShoppingCart className="w-6 h-6" />
+            {cartItemCount > 0 && (
+              <span className="absolute -top-2 -right-2 text-black bg-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {cartItemCount}
+              </span>
+            )}
+          </Link>
+
+          {/* Favoritos */}
+          <Link href="/favorites" className="relative">
+            <Heart className="w-6 h-6" />
+          </Link>
         </div>
         <div className="flex gap-2">
           {/* User Dropdown */}

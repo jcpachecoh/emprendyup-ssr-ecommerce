@@ -395,7 +395,7 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
           </Link>
 
           {/* Favoritos */}
-          <Link href="/favorites" className="relative">
+          <Link href="/favoritos" className="relative">
             <Heart className="w-6 h-6" />
           </Link>
         </div>

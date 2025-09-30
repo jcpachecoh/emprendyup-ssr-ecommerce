@@ -12,7 +12,6 @@ export default function ProductDetailSlugPage() {
   return (
     <>
       <Tagline />
-      <Navbar navClass="defaultscroll is-sticky tagline-height" navlight={false} />
       <section className="relative table w-full py-20 lg:py-24 md:pt-28 bg-gray-50 dark:bg-slate-800">
         <div className="container relative">
           <div className="grid grid-cols-1 mt-14">
@@ -48,7 +47,6 @@ export default function ProductDetailSlugPage() {
           <ProductInformation />
         </div>
       </section>
-      <Footer />
       <Switcher />
       <ScrollToTop />
     </>

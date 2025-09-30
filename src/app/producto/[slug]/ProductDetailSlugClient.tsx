@@ -1,7 +1,12 @@
 'use client';
+import { Product } from '@/app/marketplace/page';
+import { cartService } from '@/lib/Cart';
+import { favoritesService } from '@/lib/favorites';
 import { gql, useQuery } from '@apollo/client';
+import { ShoppingCart } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 const GET_PRODUCT_QUERY = gql`
   query GetProduct($id: String!) {
@@ -38,6 +43,7 @@ export default function ProductDetailSlugClient() {
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
 
+  const [isLoading, setIsLoading] = useState(false);
   const increment = () => setQuantity((prev) => prev + 1);
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
@@ -47,16 +53,49 @@ export default function ProductDetailSlugClient() {
 
   const product = data.product;
 
-  const handleAddToCart = () => {
-    alert(
-      `Producto agregado al carrito: ${product.title}, Cantidad: ${quantity}, Color: ${selectedColor}, Talla: ${selectedSize}`
-    );
+  const handleAddToCart = async (e: React.MouseEvent, item: any) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      cartService.addItem({
+        id: `${item.id}-${Date.now()}`,
+        productId: item.id,
+        name: item.name,
+        price: item.price,
+        image: item.images?.[0]?.url
+          ? `https://emprendyup-images.s3.us-east-1.amazonaws.com/${item.images[0].url}`
+          : '/assets/default-product.jpg',
+      });
+      window.dispatchEvent(new Event('storage'));
+      toast.success(`${item.name} ha sido agregado al carrito.`);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      toast.error('Hubo un problema al agregar el producto al carrito.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleBuyNow = () => {
-    alert(
-      `Compra realizada: ${product.title}, Cantidad: ${quantity}, Color: ${selectedColor}, Talla: ${selectedSize}`
-    );
+  const handleToggleFavorite = (e: React.MouseEvent, item: any) => {
+    e.preventDefault();
+    try {
+      const newFavoriteState = favoritesService.toggleFavorite(item.id);
+
+      if (newFavoriteState) {
+        toast.success(`${item.name} agregado a favoritos`, { icon: '❤️' });
+      } else {
+        toast.success(`${item.name} eliminado de favoritos`, { icon: '💔' });
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      toast.error('Hubo un problema al gestionar favoritos.');
+    }
+  };
+  const getImageUrl = (item: Product) => {
+    const imageKey = item?.images?.[0]?.url;
+    return imageKey
+      ? `https://emprendyup-images.s3.us-east-1.amazonaws.com/${imageKey}`
+      : '/assets/default-product.jpg';
   };
 
   return (
@@ -64,7 +103,7 @@ export default function ProductDetailSlugClient() {
       {/* Imagen principal */}
       <div>
         <img
-          src={product.imageUrl || product.images?.[0]?.url || ''}
+          src={getImageUrl(product)}
           alt={product.title}
           className="w-full h-auto rounded-lg object-cover"
         />
@@ -74,7 +113,7 @@ export default function ProductDetailSlugClient() {
             {product.images.slice(1).map((img: any, idx: any) => (
               <img
                 key={idx}
-                src={img.url}
+                src={getImageUrl({ ...product, images: [img] } as Product)}
                 alt={product.title}
                 className="w-20 h-20 rounded-lg object-cover border border-slate-700"
               />
@@ -168,13 +207,20 @@ export default function ProductDetailSlugClient() {
         {/* Acciones */}
         <div className="flex flex-wrap gap-4 mt-6">
           <button
-            onClick={handleAddToCart}
-            className="flex-1 min-w-[120px] px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            onClick={(e) => handleAddToCart(e, product)}
+            className="w-full text-white py-2 px-4 rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-300 flex items-center justify-center"
           >
-            Agregar al carrito
+            {isLoading ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <>
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                {'Agregar al Carrito'}
+              </>
+            )}
           </button>
           <button
-            onClick={handleBuyNow}
+            onClick={(e) => handleToggleFavorite(e, product)}
             className="flex-1 min-w-[120px] px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
           >
             Comprar ahora

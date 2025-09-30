@@ -9,7 +9,6 @@ import ScrollToTop from '../components/scroll-to-top';
 export default function FavoritosPage() {
   return (
     <>
-      <Navbar navClass="defaultscroll is-sticky" navlight={false} />
       <section className="relative table w-full py-20 lg:py-24 md:pt-28 bg-gray-50 dark:bg-slate-800">
         <div className="container relative">
           <div className="grid grid-cols-1 mt-14">
@@ -37,7 +36,6 @@ export default function FavoritosPage() {
       <div className="container mx-auto py-16">
         <FavoritesGridClient />
       </div>
-      <Footer />
       <Switcher />
       <ScrollToTop />
     </>

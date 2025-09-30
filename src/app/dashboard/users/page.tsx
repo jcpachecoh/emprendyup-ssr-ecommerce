@@ -23,6 +23,7 @@ const GET_USERS = gql`
     users {
       id
       name
+      role
       email
       store {
         id
@@ -40,6 +41,7 @@ interface Store {
 
 interface User {
   id: string;
+  role: string;
   name: string;
   email: string;
   store: Store | null;
@@ -358,9 +360,9 @@ const UsersPage = () => {
                       <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                         Usuario
                       </th>
-                      {/* <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        ID
-                      </th> */}
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        Rol
+                      </th>
                       <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                         Email
                       </th>
@@ -392,11 +394,11 @@ const UsersPage = () => {
                             </div>
                           </div>
                         </td>
-                        {/* <td className="px-6 py-4">
+                        <td className="px-6 py-4">
                           <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-sm font-mono text-gray-800 dark:text-gray-200">
-                            {user.id}
+                            {user.role}
                           </code>
-                        </td> */}
+                        </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-2">
                             <Mail className="h-4 w-4 text-gray-400" />

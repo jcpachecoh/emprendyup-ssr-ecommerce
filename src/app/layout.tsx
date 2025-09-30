@@ -348,10 +348,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <SessionWrapper>
             <ApolloWrapper>
-              <ConditionalLayout>
-                {children}
-                <Toaster richColors position="top-right" />
-              </ConditionalLayout>
+              {/* <ConditionalLayout> */}
+              {children}
+              <Toaster richColors position="top-right" />
+              {/* </ConditionalLayout> */}
             </ApolloWrapper>
             <CookieWrapper />
           </SessionWrapper>

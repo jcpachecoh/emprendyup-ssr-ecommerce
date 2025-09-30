@@ -1,3 +1,9 @@
+# [1.24.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.23.3...v1.24.0) (2025-09-30)
+
+### Features
+
+- add cart, orderPage ([#19](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/issues/19)) ([fb1d6ff](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/fb1d6fff707cff8579a285cab1042f87888ba351))
+
 ## [1.23.3](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.23.2...v1.23.3) (2025-09-26)
 
 ### Bug Fixes

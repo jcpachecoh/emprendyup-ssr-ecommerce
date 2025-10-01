@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import Navbar from './components/NavBar/navbar';
 import Tagline from './components/tagline';
 import Switcher from './components/switcher';
@@ -10,8 +10,9 @@ import LeadCaptureSectionNew from './components/LeadCaptureSectionNew';
 import TestimonialsSection from './components/TestimonialsSection';
 import SEOHomepage from './components/SEOHomepage';
 import SharingEconomyNetwork from './components/SharingEconomy';
+import { LoaderIcon } from 'lucide-react';
 
-export default function Home() {
+function HomeComponent() {
   return (
     <>
       <SEOHomepage />
@@ -49,5 +50,13 @@ export default function Home() {
       <Switcher />
       <ScrollToTop />
     </>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<LoaderIcon />}>
+      <HomeComponent />
+    </Suspense>
   );
 }

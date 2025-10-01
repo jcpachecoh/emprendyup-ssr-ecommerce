@@ -19,6 +19,7 @@ export default function ConditionalLayout({ children }: ConditionalLayoutProps) 
       '/olvido-contraseña',
       '/reset-password',
       '/registrarse',
+      '/captura-leads',
       '/dashboard/insights',
       '/dashboard/bonuses',
       '/dashboard/customers',

@@ -2,7 +2,8 @@
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { gql, useMutation } from '@apollo/client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 
 const REGISTER_MUTATION = gql`
@@ -42,32 +43,246 @@ const mappedReferralSources = [
   { name: 'Otro', value: 'OTHER' },
 ];
 
-const LeadCaptureSectionNew = () => {
+// Mapeo de UTM source a referral source
+const mapUTMToReferralSource = (utmSource: string, utmMedium?: string): string => {
+  if (!utmSource) return '';
+
+  const source = utmSource.toLowerCase();
+  const medium = utmMedium?.toLowerCase() || '';
+
+  // Google Ads, Google Organic
+  if (source.includes('google')) {
+    return 'GOOGLE';
+  }
+
+  // Social Media platforms
+  if (
+    source.includes('facebook') ||
+    source.includes('instagram') ||
+    source.includes('linkedin') ||
+    source.includes('twitter') ||
+    source.includes('tiktok') ||
+    medium === 'social'
+  ) {
+    return 'SOCIAL_MEDIA';
+  }
+
+  // Email campaigns
+  if (source.includes('email') || source.includes('newsletter') || medium === 'email') {
+    return 'OTHER'; // Puedes crear una nueva opción EMAIL si es necesario
+  }
+
+  // Paid advertising
+  if (
+    medium === 'cpc' ||
+    medium === 'display' ||
+    medium === 'banner' ||
+    source.includes('ads') ||
+    source.includes('advertisement')
+  ) {
+    return 'ADVERTISEMENT';
+  }
+
+  // Events
+  if (source.includes('event') || source.includes('conference') || source.includes('meetup')) {
+    return 'EVENT';
+  }
+
+  // Referrals
+  if (source.includes('referral') || source.includes('friend') || medium === 'referral') {
+    return 'FRIEND';
+  }
+
+  // Default to OTHER for unknown sources
+  return 'OTHER';
+};
+
+interface UTMData {
+  utm_source: string;
+  utm_medium: string;
+  utm_campaign: string;
+  utm_term: string;
+  utm_content: string;
+}
+
+interface FormData {
+  companyName: string;
+  name: string;
+  email: string;
+  phone: string;
+  website?: string;
+  category: string;
+  country: string;
+  city: string;
+  description: string;
+  referralSource: string;
+  acceptTerms: boolean;
+}
+
+interface LeadCaptureSectionNewProps {
+  utmData?: UTMData;
+}
+
+const LeadCaptureSectionNew = ({ utmData }: LeadCaptureSectionNewProps) => {
+  const searchParams = useSearchParams();
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm();
+    setValue,
+  } = useForm<FormData>({
+    mode: 'onChange',
+    defaultValues: {
+      companyName: '',
+      name: '',
+      email: '',
+      phone: '',
+      website: '',
+      category: '',
+      country: '',
+      city: '',
+      description: '',
+      referralSource: '',
+      acceptTerms: false,
+    },
+  });
   const [registerBusiness, { data, loading, error }] = useMutation(REGISTER_MUTATION);
   const [success, setSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [extractedUtmData, setExtractedUtmData] = useState<UTMData | null>(null);
 
-  const onSubmit = async (formData: any) => {
+  // Extract UTM parameters from URL if not provided as props
+  useEffect(() => {
+    // Check if we're on the client side to avoid hydration issues
+    if (typeof window === 'undefined') return;
+
+    const currentUtmData = utmData || {
+      utm_source: searchParams?.get('utm_source') || '',
+      utm_medium: searchParams?.get('utm_medium') || '',
+      utm_campaign: searchParams?.get('utm_campaign') || '',
+      utm_term: searchParams?.get('utm_term') || '',
+      utm_content: searchParams?.get('utm_content') || '',
+    };
+
+    setExtractedUtmData(currentUtmData);
+
+    // Auto-fill referral source based on UTM data
+    if (currentUtmData.utm_source) {
+      const mappedReferralSource = mapUTMToReferralSource(
+        currentUtmData.utm_source,
+        currentUtmData.utm_medium
+      );
+      if (mappedReferralSource) {
+        setValue('referralSource', mappedReferralSource);
+      }
+    }
+
+    // Save to localStorage for tracking
+    if (currentUtmData.utm_source) {
+      try {
+        localStorage.setItem('utm_tracking', JSON.stringify(currentUtmData));
+      } catch (storageError) {
+        console.warn('Failed to save UTM data to localStorage:', storageError);
+      }
+    }
+  }, [utmData, searchParams, setValue]);
+
+  const onSubmit = async (formData: FormData) => {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
     try {
-      await registerBusiness({
+      // Format referral source with UTM context if available
+      let referralSourceWithContext = formData.referralSource;
+      if (extractedUtmData?.utm_source && extractedUtmData?.utm_campaign) {
+        // Add UTM context to referral source for better tracking
+        const utmContext = `${extractedUtmData.utm_source}/${extractedUtmData.utm_campaign}`;
+        referralSourceWithContext = `${formData.referralSource}_UTM:${utmContext}`;
+      }
+
+      // Use existing payload structure - no extra UTM fields (exclude acceptTerms)
+      const { acceptTerms, ...formDataWithoutTerms } = formData;
+
+      const completeData = {
+        ...formDataWithoutTerms,
+        category: formData.category,
+        referralSource: referralSourceWithContext, // Enhanced with UTM context
+      };
+
+      // Registrar en la base de datos
+      const result = await registerBusiness({
         variables: {
-          data: {
-            ...formData,
-            category: formData.category,
-            referralSource: formData.referralSource,
-          },
+          data: completeData,
         },
       });
+
+      console.log('Registration result:', result);
+
+      // Enviar notificación a Slack a través de API route
+      if (result.data?.createEntrepreneur) {
+        try {
+          const slackResponse = await fetch('/api/send-slack-notification', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              name: formData.name,
+              email: formData.email,
+              companyName: formData.companyName,
+              phone: formData.phone,
+              category: formData.category,
+              city: formData.city,
+              country: formData.country,
+              description: formData.description,
+              referralSource: referralSourceWithContext, // Use enhanced referral source
+              website: formData.website,
+              // Include UTM data for Slack notification tracking
+              ...(extractedUtmData?.utm_source && {
+                utm_source: extractedUtmData.utm_source,
+                utm_medium: extractedUtmData.utm_medium,
+                utm_campaign: extractedUtmData.utm_campaign,
+              }),
+            }),
+          });
+
+          if (!slackResponse.ok) {
+            console.warn('Slack notification failed:', await slackResponse.text());
+          } else {
+            console.log('✅ Slack notification sent successfully');
+          }
+        } catch (slackError) {
+          console.warn('Failed to send Slack notification:', slackError);
+          // No hacer que falle el registro por esto
+        }
+      }
+
+      // Analytics tracking
+      if (typeof window !== 'undefined' && extractedUtmData?.utm_source) {
+        try {
+          if (window.gtag) {
+            window.gtag('event', 'lead_conversion', {
+              event_category: 'Lead Generation',
+              event_label: formData.category,
+              utm_source: extractedUtmData.utm_source,
+              utm_medium: extractedUtmData.utm_medium,
+              utm_campaign: extractedUtmData.utm_campaign,
+              referral_source: formData.referralSource,
+            });
+          }
+        } catch (analyticsError) {
+          console.warn('Analytics tracking failed:', analyticsError);
+        }
+      }
+
       setSuccess(true);
       reset();
     } catch (e) {
       console.error('Error registering business:', e);
       setSuccess(false);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -177,7 +392,7 @@ const LeadCaptureSectionNew = () => {
                     </label>
                     <input
                       {...register('companyName', { required: true })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-white focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
                       placeholder="Mi emprendimiento"
                     />
                     {errors.companyName && (
@@ -188,7 +403,7 @@ const LeadCaptureSectionNew = () => {
                     <label className="block font-semibold mb-2 text-slate-700">Tu Nombre *</label>
                     <input
                       {...register('name', { required: true })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-white focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
                       placeholder="Tu nombre completo"
                     />
                     {errors.name && (
@@ -204,7 +419,7 @@ const LeadCaptureSectionNew = () => {
                     <input
                       type="email"
                       {...register('email', { required: true })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-white focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
                       placeholder="correo@ejemplo.com"
                     />
                     {errors.email && (
@@ -215,7 +430,7 @@ const LeadCaptureSectionNew = () => {
                     <label className="block font-semibold mb-2 text-slate-700">WhatsApp *</label>
                     <input
                       {...register('phone', { required: true })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-white focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
                       placeholder="+573001234567"
                     />
                     {errors.phone && (
@@ -229,7 +444,7 @@ const LeadCaptureSectionNew = () => {
                   <label className="block font-semibold mb-2 text-slate-700">Sitio Web</label>
                   <input
                     {...register('website')}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-white focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
                     placeholder="https://miemprendimiento.com (opcional)"
                   />
                 </div>
@@ -240,7 +455,7 @@ const LeadCaptureSectionNew = () => {
                     <label className="block font-semibold mb-2 text-slate-700">Categoría *</label>
                     <select
                       {...register('category', { required: true })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-white focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
                     >
                       <option value="">Selecciona categoría</option>
                       {mappedValues.map((cat) => (
@@ -258,12 +473,12 @@ const LeadCaptureSectionNew = () => {
                     <div className="grid grid-cols-2 gap-2">
                       <input
                         {...register('country', { required: true })}
-                        className="w-full px-3 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all text-sm"
+                        className="w-full px-3 py-3 rounded-xl border border-slate-200 text-black bg-white focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all text-sm"
                         placeholder="Colombia"
                       />
                       <input
                         {...register('city', { required: true })}
-                        className="w-full px-3 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all text-sm"
+                        className="w-full px-3 py-3 rounded-xl border border-slate-200 text-black bg-white focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all text-sm"
                         placeholder="Bogotá"
                       />
                     </div>
@@ -279,7 +494,7 @@ const LeadCaptureSectionNew = () => {
                   <textarea
                     {...register('description', { required: true })}
                     rows={3}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all resize-none"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-white focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all resize-none"
                     placeholder="Describe brevemente tu emprendimiento..."
                   />
                   {errors.description && (
@@ -294,7 +509,7 @@ const LeadCaptureSectionNew = () => {
                   </label>
                   <select
                     {...register('referralSource', { required: true })}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-slate-50 focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-black bg-white focus:outline-none focus:ring-2 focus:ring-fourth-base focus:border-transparent transition-all"
                   >
                     <option value="">Selecciona una opción</option>
                     {mappedReferralSources.map((referral) => (
@@ -347,15 +562,15 @@ const LeadCaptureSectionNew = () => {
                 {/* Submit Button */}
                 <motion.button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || isSubmitting}
                   className="w-full py-4 px-6 bg-gradient-to-r from-fourth-base to-blue-600 text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                  whileHover={{ scale: loading ? 1 : 1.02 }}
-                  whileTap={{ scale: loading ? 1 : 0.98 }}
+                  whileHover={{ scale: loading || isSubmitting ? 1 : 1.02 }}
+                  whileTap={{ scale: loading || isSubmitting ? 1 : 0.98 }}
                 >
-                  {loading ? (
+                  {loading || isSubmitting ? (
                     <div className="flex items-center justify-center">
                       <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mr-2"></div>
-                      Registrando...
+                      {isSubmitting ? 'Procesando...' : 'Registrando...'}
                     </div>
                   ) : (
                     <>🚀 Registrar mi Emprendimiento GRATIS</>
@@ -385,7 +600,7 @@ const LeadCaptureSectionNew = () => {
 
                 {/* Trust Indicators */}
                 <div className="text-center pt-4 border-t border-slate-200 text-black">
-                  <p className="text-sm text-slate-500 mb-2">
+                  <p className="text-sm text-gray-500 mb-2">
                     🔒 100% Seguro • 🛡️ Sin Spam • 📋 Datos Protegidos
                   </p>
                   <p className="text-xs text-slate-400">

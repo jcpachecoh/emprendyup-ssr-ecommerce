@@ -1,3 +1,9 @@
+# [1.25.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.24.0...v1.25.0) (2025-10-01)
+
+### Features
+
+- capture leads ([98edd46](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/98edd46bb3bda8de010ad07d6161fa563a236b72))
+
 # [1.24.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.23.3...v1.24.0) (2025-09-30)
 
 ### Features

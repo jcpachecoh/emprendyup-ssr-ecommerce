@@ -1,3 +1,9 @@
+## [1.25.1](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.25.0...v1.25.1) (2025-10-02)
+
+### Bug Fixes
+
+- mobile landing ([a42dae1](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/a42dae1f2868a5b9b431e0e8a9d1ad4283fc8abd))
+
 # [1.25.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.24.0...v1.25.0) (2025-10-01)
 
 ### Features

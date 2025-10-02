@@ -24,7 +24,7 @@ const LandingHeader = () => {
               className="h-12 w-12"
               priority
             />
-            <span className="text-2xl font-bold text-white">
+            <span className="hidden md:block text-2xl font-bold text-white">
               Emprendy<span className="text-fourth-base">Up</span>
             </span>
           </Link>
@@ -43,12 +43,6 @@ const LandingHeader = () => {
             >
               Registro
             </a>
-            <Link
-              href="/"
-              className="text-white/90 hover:text-fourth-base transition-colors font-medium"
-            >
-              Sitio Principal
-            </Link>
           </nav>
 
           {/* CTA Button */}

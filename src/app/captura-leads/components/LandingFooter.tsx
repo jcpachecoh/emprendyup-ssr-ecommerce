@@ -35,11 +35,11 @@ const LandingFooter = () => {
             </p>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <span className="text-fourth-base font-bold text-2xl">100+</span>
+                <span className="text-fourth-base font-bold text-2xl">🤖</span>
                 <span className="text-white/70 text-sm">Emprendedores</span>
               </div>
               <div className="flex items-center space-x-2">
-                <span className="text-fourth-base font-bold text-2xl">95%</span>
+                <span className="text-fourth-base font-bold text-2xl">⭐</span>
                 <span className="text-white/70 text-sm">Tasa de Éxito</span>
               </div>
             </div>

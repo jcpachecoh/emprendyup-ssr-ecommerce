@@ -65,30 +65,30 @@ const CapturaLeads = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <h1 className="text-5xl lg:text-7xl font-extrabold text-white mb-6 leading-tight">
-              Transforma tu idea en
+              La plataforma que
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-fourth-base to-blue-400">
-                Éxito Empresarial
+                Transformará tu Emprendimiento
               </span>
             </h1>
             <p className="text-xl lg:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Únete a más de <strong>1,000+ emprendedores</strong> que ya están creciendo con
-              EmprendyUp. Accede a herramientas de IA, mentorías personalizadas y una comunidad que
-              impulsa tu éxito.
+              Estamos construyendo la <strong>plataforma más innovadora</strong> para emprendedores.
+              Regístrate para ser de los primeros en acceder a herramientas de IA, mentorías
+              exclusivas y una comunidad que impulsará tu éxito.
             </p>
 
             {/* Trust indicators */}
             <div className="flex flex-wrap justify-center items-center gap-8 mb-12 text-white/80">
               <div className="flex items-center gap-2">
-                <span className="text-2xl">⭐</span>
-                <span className="font-semibold">4.9/5 Valoración</span>
+                <span className="text-2xl">🔨</span>
+                <span className="font-semibold">En Desarrollo</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-2xl">🚀</span>
-                <span className="font-semibold">95% Tasa de Éxito</span>
+                <span className="font-semibold">Lanzamiento 2025</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-2xl">👥</span>
-                <span className="font-semibold">1,000+ Emprendedores</span>
+                <span className="text-2xl">⭐</span>
+                <span className="font-semibold">Acceso Temprano</span>
               </div>
             </div>
 
@@ -99,7 +99,7 @@ const CapturaLeads = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              🎯 Empezar Ahora - 100% GRATIS
+              📝 Regristrarme
             </motion.a>
           </motion.div>
         </div>
@@ -116,10 +116,10 @@ const CapturaLeads = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-              ¿Por qué elegir <span className="text-fourth-base">EmprendyUp</span>?
+              ¿Qué tendrá <span className="text-fourth-base">EmprendyUp</span>?
             </h2>
             <p className="text-xl text-white/80 max-w-2xl mx-auto">
-              La plataforma más completa para hacer crecer tu emprendimiento
+              Las herramientas que transformarán tu manera de emprender
             </p>
           </div>
 
@@ -129,37 +129,37 @@ const CapturaLeads = () => {
                 icon: '🤖',
                 title: 'IA Integrada',
                 description:
-                  'Asistente inteligente que te ayuda a tomar decisiones estratégicas basadas en datos',
+                  'Tendrás un asistente inteligente que te ayudará a tomar decisiones estratégicas basadas en datos',
               },
               {
                 icon: '📈',
                 title: 'Crecimiento Acelerado',
                 description:
-                  'Metodologías probadas que han ayudado a 1,000+ emprendedores a escalar su negocio',
+                  'Accederás a metodologías probadas y estrategias que acelerarán el crecimiento de tu negocio',
               },
               {
                 icon: '🌐',
                 title: 'Marketplace Global',
                 description:
-                  'Accede a un mercado internacional y conecta con clientes de todo el mundo',
+                  'Podrás acceder a un mercado internacional y conectar con clientes de todo el mundo',
               },
               {
                 icon: '💬',
                 title: 'Soporte 24/7',
                 description:
-                  'Chatbot inteligente y equipo de soporte siempre disponible para ayudarte',
+                  'Contarás con un chatbot inteligente y equipo de soporte siempre disponible',
               },
               {
                 icon: '🎓',
                 title: 'Mentorías Exclusivas',
                 description:
-                  'Sesiones personalizadas con expertos en emprendimiento y business mentors',
+                  'Tendrás sesiones personalizadas con expertos en emprendimiento y business mentors',
               },
               {
                 icon: '🔧',
                 title: 'Herramientas Completas',
                 description:
-                  'Todo lo que necesitas: CRM, Analytics, Marketing, Ventas en una sola plataforma',
+                  'Dispondrás de todo lo necesario: CRM, Analytics, Marketing, Ventas en una sola plataforma',
               },
             ].map((benefit, index) => (
               <motion.div

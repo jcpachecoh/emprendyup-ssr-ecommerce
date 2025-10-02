@@ -316,7 +316,7 @@ const LeadCaptureSectionNew = ({ utmData }: LeadCaptureSectionNewProps) => {
                 transition={{ duration: 0.7, delay: 0.3 }}
                 viewport={{ once: true }}
               >
-                ¡Impulsa tu emprendimiento!
+                ¡El futuro del emprendimiento!
               </motion.h2>
               <motion.p
                 className="text-xl lg:text-2xl text-white/90 mb-8 text-center max-w-md"
@@ -325,21 +325,21 @@ const LeadCaptureSectionNew = ({ utmData }: LeadCaptureSectionNewProps) => {
                 transition={{ duration: 0.7, delay: 0.5 }}
                 viewport={{ once: true }}
               >
-                Únete a la comunidad EmprendyUp y accede a beneficios exclusivos, soporte IA y
-                crecimiento acelerado.
+                Sé parte de la revolución. Regístrate para acceso temprano a la plataforma que
+                transformará tu emprendimiento.
               </motion.p>
               <div className="grid grid-cols-2 gap-4 mt-4">
                 <div className="bg-white/20 rounded-xl px-6 py-4 text-white font-semibold text-lg shadow-md text-center">
-                  🚀 Crecimiento acelerado
+                  ⏰ Acceso Temprano
                 </div>
                 <div className="bg-white/20 rounded-xl px-6 py-4 text-white font-semibold text-lg shadow-md text-center">
-                  🤖 IA incluida gratis
+                  🤖 IA del Futuro
                 </div>
                 <div className="bg-white/20 rounded-xl px-6 py-4 text-white font-semibold text-lg shadow-md text-center">
-                  🌎 Marketplace global
+                  � Beneficios Exclusivos
                 </div>
                 <div className="bg-white/20 rounded-xl px-6 py-4 text-white font-semibold text-lg shadow-md text-center">
-                  💬 Chatbot WhatsApp
+                  � Notificaciones VIP
                 </div>
               </div>
             </div>
@@ -363,22 +363,22 @@ const LeadCaptureSectionNew = ({ utmData }: LeadCaptureSectionNewProps) => {
                   transition={{ duration: 0.6, delay: 0.6 }}
                   viewport={{ once: true }}
                 >
-                  Registra tu{' '}
+                  Muestra tu{' '}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-fourth-base to-blue-600">
-                    Emprendimiento
+                    Interés
                   </span>
                 </motion.h2>
                 <p className="text-slate-600 text-lg mb-6">
-                  Únete a comunidad de emprendedores exitosos
+                  Sé de los primeros en conocer EmprendyUp
                 </p>
 
                 {/* Special Offer Badge */}
                 <motion.div
-                  className="inline-flex items-center bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-full font-bold text-sm shadow-lg"
+                  className="inline-flex items-center bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-3 rounded-full font-bold text-sm shadow-lg"
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  🎁 Registro GRATIS por tiempo limitado
+                  ⭐ Acceso Temprano - Lista de Espera
                 </motion.div>
               </div>
 
@@ -570,10 +570,10 @@ const LeadCaptureSectionNew = ({ utmData }: LeadCaptureSectionNewProps) => {
                   {loading || isSubmitting ? (
                     <div className="flex items-center justify-center">
                       <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mr-2"></div>
-                      {isSubmitting ? 'Procesando...' : 'Registrando...'}
+                      {isSubmitting ? 'Enviando...' : 'Procesando...'}
                     </div>
                   ) : (
-                    <>🚀 Registrar mi Emprendimiento GRATIS</>
+                    <>Registrarme</>
                   )}
                 </motion.button>
 
@@ -584,7 +584,7 @@ const LeadCaptureSectionNew = ({ utmData }: LeadCaptureSectionNewProps) => {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                   >
-                    🎉 ¡Registro exitoso! Te contactaremos pronto.
+                    🎉 ¡Gracias por tu interés! Te notificaremos cuando esté listo.
                   </motion.div>
                 )}
 

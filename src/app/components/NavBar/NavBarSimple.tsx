@@ -439,7 +439,7 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
             </div>
           ) : (
             <Link
-              href="/login"
+              href="https://app.emprendyup.com/"
               target="_blank"
               className="py-2 px-4 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-sm font-medium text-center rounded-full bg-gray-800 hover:bg-gray-700 text-white"
             >

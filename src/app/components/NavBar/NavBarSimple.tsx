@@ -534,6 +534,32 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
                   Contacto
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/marketplace"
+                  onClick={() => setToggle(false)}
+                  className="block text-lg font-medium text-gray-800 dark:text-white py-2"
+                >
+                  Marketplace
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/carro-compras"
+                  onClick={() => setToggle(false)}
+                  className="relative flex items-center gap-2 text-lg font-medium text-gray-800 dark:text-white py-2"
+                >
+                  <div className="relative">
+                    <ShoppingCart className="w-5 h-5" />
+                    {cartItemCount > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-fourth-base text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-lg">
+                        {cartItemCount}
+                      </span>
+                    )}
+                  </div>
+                  <span>Carrito</span>
+                </Link>
+              </li>
 
               {/* User Menu Items */}
               {user ? (

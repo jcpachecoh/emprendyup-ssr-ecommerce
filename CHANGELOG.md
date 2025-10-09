@@ -1,3 +1,15 @@
+# [1.26.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.25.2...v1.26.0) (2025-10-09)
+
+### Bug Fixes
+
+- pagePrice ([38a7bed](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/38a7bed7925cee92b19a8f82321cb2523ca9c7a7))
+- prices and navbarfix ([b34dbce](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/b34dbce08e60f071c66a3e473abe25851a25eca9))
+- redirect crear-tienda ([9f00d09](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/9f00d0912287afec7648d8c0a4ad415abcc870f1))
+
+### Features
+
+- prices and navbarfix ([ded0c46](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/ded0c467d46169085b89bfd5a2c28b5be28e177f))
+
 ## [1.25.2](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.25.1...v1.25.2) (2025-10-02)
 
 ### Bug Fixes

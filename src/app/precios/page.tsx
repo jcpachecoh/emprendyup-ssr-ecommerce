@@ -1,10 +1,11 @@
 'use client';
 import { motion, AnimatePresence } from 'framer-motion';
+import { LoaderIcon } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { FiCheck, FiStar, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 
-export default function PricingPage() {
+function PricingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -442,5 +443,13 @@ export default function PricingPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function Precios() {
+  return (
+    <Suspense fallback={<LoaderIcon />}>
+      <PricingPage />
+    </Suspense>
   );
 }

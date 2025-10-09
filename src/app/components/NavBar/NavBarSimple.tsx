@@ -593,12 +593,11 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
               ) : (
                 <li>
                   <Link
-                    href="/login"
+                    href="https://app.emprendyup.com/"
                     target="_blank"
-                    onClick={() => setToggle(false)}
-                    className="block flex items-center gap-4 text-lg font-medium text-gray-800 dark:text-white py-2"
+                    className="py-2 px-4 inline-flex items-center gap-2 justify-center tracking-wide align-middle duration-500 text-sm font-medium text-center rounded-full bg-transparent hover:bg-white/10 text-white border border-white/20 hover:border-white/40 transition-all"
                   >
-                    <FaUser /> Login
+                    <FaUser /> <span>Login</span>
                   </Link>
                 </li>
               )}

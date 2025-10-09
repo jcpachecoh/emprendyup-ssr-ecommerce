@@ -51,6 +51,7 @@ export default function PricingPage() {
       features: [
         'Todo lo incluido en Basic',
         'Chatbot integrado WhatsApp',
+        'Automatizaciones de WhatsApp a la medida',
         'Agente IA conversacional de ventas',
         'Asesoría para mejora de plantilla y dominio propio',
         'Integración con comunidad colaborativa',
@@ -74,6 +75,7 @@ export default function PricingPage() {
         'Todo lo incluido en Pro',
         'Acceso directo y prioritario a ferias anticipadas',
         'Prioridad en asesorías personalizadas',
+        'Automatizaciones de WhatsApp a la medida',
         'Automatización a la medida de procesos',
         'Capacitación continua personalizada',
         'Networking en ferias y capacitaciones físicas exclusivas',

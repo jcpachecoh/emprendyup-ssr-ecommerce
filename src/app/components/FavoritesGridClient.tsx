@@ -44,7 +44,7 @@ export default function FavoritesGridClient() {
         <p className="text-xl text-slate-500 mb-2">No tienes productos favoritos guardados</p>
         <p className="text-slate-400 mb-6">Explora nuestros productos y añade tus favoritos</p>
         <Link
-          href="/productos"
+          href="/marketplace"
           className="py-3 px-6 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-slate-900 dark:bg-slate-800 text-white rounded-md shadow dark:shadow-gray-700 hover:bg-fourth-base"
         >
           Ver Productos
@@ -87,14 +87,6 @@ export default function FavoritesGridClient() {
                     <FiEye className="size-4" />
                   </Link>
                 </li>
-                <li className="mt-1 ms-0">
-                  <Link
-                    href="#"
-                    className="size-10 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-center rounded-full bg-white text-slate-900 hover:bg-slate-900 hover:text-white shadow"
-                  >
-                    <FiBookmark className="size-4" />
-                  </Link>
-                </li>
               </ul>
 
               {/* Badge de favorito */}
@@ -119,7 +111,8 @@ export default function FavoritesGridClient() {
               >
                 {item.title}
               </Link>
-              <p className="text-slate-400 mt-2">{item.description}</p>
+              <p className="text-slate-400 line-clamp-1 mt-2">{item.description}</p>
+
               <p className="mt-2 font-semibold">
                 {item.price} {item.currency}
               </p>

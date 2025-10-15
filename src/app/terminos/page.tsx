@@ -153,21 +153,6 @@ export default function Terms() {
 
                 <h5 className="text-xl font-semibold mt-10">Preguntas Frecuentes</h5>
                 <FaqTwo />
-
-                <div className="mt-6">
-                  <Link
-                    href="#"
-                    className="py-2 px-5 inline-block font-semibold tracking-wide border align-middle duration-500 text-base text-center bg-fourth-base hover:bg-fourth-100 border-fourth-base hover:border-fourth-100 text-white rounded-md"
-                  >
-                    Acepto
-                  </Link>
-                  <Link
-                    href="#"
-                    className="py-2 px-5 inline-block font-semibold tracking-wide border align-middle duration-500 text-base text-center bg-transparent hover:bg-fourth-base border-fourth-base text-fourth-base hover:text-white rounded-md ms-2"
-                  >
-                    Rechazo
-                  </Link>
-                </div>
               </div>
             </div>
           </div>

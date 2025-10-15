@@ -63,7 +63,7 @@ export default function Cart() {
         <h3 className="text-lg font-medium text-white mb-2">Tu carrito está vacío</h3>
         <p className="text-gray-400 mb-4">Agrega algunos productos para comenzar a comprar</p>
         <Link
-          href="/products"
+          href="/marketplace"
           className="inline-flex items-center px-4 py-2 border border-transparent bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors text-sm"
         >
           Continuar Comprando

@@ -297,7 +297,7 @@ export default function PorQueEmprendy() {
                   Crear Mi Tienda Gratis
                 </Link>
                 <Link
-                  href="/contact"
+                  href="/contacto"
                   className="py-4 px-8 inline-flex items-center justify-center font-semibold tracking-wide align-middle duration-500 text-lg text-center rounded-full border-2 border-fourth-base text-fourth-base hover:bg-fourth-base hover:text-white transition-all"
                 >
                   Hablar con un Experto

@@ -1,3 +1,9 @@
+## [1.26.1](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.26.0...v1.26.1) (2025-10-17)
+
+### Bug Fixes
+
+- chat responsive ([#24](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/issues/24)) ([3dd7e24](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/3dd7e243ab9fc72db4432bbf87fa3c773d6c7adc))
+
 # [1.26.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.25.2...v1.26.0) (2025-10-09)
 
 ### Bug Fixes

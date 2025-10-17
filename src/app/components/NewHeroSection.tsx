@@ -184,7 +184,7 @@ const NewHeroSection = () => {
                 ✕
               </button>
             </div>
-            <ChatWidget />
+            <ChatWidget onClose={() => setChatOpen(false)} />
           </div>
         </div>
       )}

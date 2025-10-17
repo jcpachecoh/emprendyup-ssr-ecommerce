@@ -37,12 +37,24 @@ const EnhancedFooter = () => {
               de crecimiento.
             </p>
             <div className="flex space-x-4">
-              <Link href="#" className="text-slate-400 hover:text-fourth-base transition-colors">
+              <Link
+                href="https://www.instagram.com/emprendyup/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-slate-400 hover:text-fourth-base transition-colors"
+              >
                 <FaInstagram />
               </Link>
-              <Link href="#" className="text-slate-400 hover:text-fourth-base transition-colors">
+
+              <Link
+                href="https://www.facebook.com/profile.php?id=61581356851416#"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-slate-400 hover:text-fourth-base transition-colors"
+              >
                 <FaFacebook />
               </Link>
+
               <Link href="#" className="text-slate-400 hover:text-fourth-base transition-colors">
                 <FaTiktok />
               </Link>
@@ -55,7 +67,7 @@ const EnhancedFooter = () => {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="/registro"
+                  href="/crear-tienda"
                   className="text-slate-400 hover:text-fourth-base transition-colors"
                 >
                   Crear tienda
@@ -67,14 +79,6 @@ const EnhancedFooter = () => {
                   className="text-slate-400 hover:text-fourth-base transition-colors"
                 >
                   Marketplace
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/comunidad"
-                  className="text-slate-400 hover:text-fourth-base transition-colors"
-                >
-                  Comunidad
                 </Link>
               </li>
               <li>

@@ -751,12 +751,12 @@ export default function Order() {
             <p className="text-gray-400 mb-6">
               Necesitas iniciar sesión para guardar tu dirección y completar la orden.
             </p>
-            <Link
-              href="/auth/signin"
-              className="inline-block px-6 py-3 text-white rounded-md hover:opacity-90 transition-colors bg-blue-600 hover:bg-blue-700"
+            <button
+              onClick={() => router.push('https://app.emprendyup.com/')}
+              className="px-6 py-3 rounded-lg font-semibold bg-fourth-base text-center hover:opacity-90 transition-all"
             >
               Iniciar Sesión
-            </Link>
+            </button>
           </div>
         </div>
       </div>

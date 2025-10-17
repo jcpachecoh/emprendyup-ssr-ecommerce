@@ -18,7 +18,7 @@ type SendChatResponse = {
   quick_replies?: QuickReply[];
 };
 
-export default function ChatWidget(): React.ReactElement {
+export default function ChatWidget({ onClose }: { onClose?: () => void }) {
   const [history, setHistory] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState<string>('');
   const [quickReplies, setQuickReplies] = useState<QuickReply[]>([]);
@@ -104,57 +104,58 @@ export default function ChatWidget(): React.ReactElement {
 
   async function handleLocalPayload(payload: string): Promise<boolean> {
     switch (payload) {
-      case 'start_new':
-      case 'have_business':
+      case 'Acabo de empezar':
+      case 'Tengo un negocio físico/online':
         sendLocalAssistant('¡Excelente! ¿Qué es lo que más te cuesta hoy en día?', [
-          { title: 'Vender más', payload: 'sell_more' },
-          { title: 'Llegar a más clientes', payload: 'reach_more' },
-          { title: 'Organizar mi catálogo', payload: 'organize_catalog' },
-          { title: 'Mejorar la imagen de mis productos', payload: 'improve_images' },
+          { title: 'Vender más', payload: 'Vender más' },
+          { title: 'Llegar a más clientes', payload: 'Llegar a más clientes' },
+          { title: 'Organizar mi catálogo', payload: 'Organizar mi catálogo' },
+          {
+            title: 'Mejorar la imagen de mis productos',
+            payload: 'Mejorar la imagen de mis productos',
+          },
         ]);
         return true;
 
-      case 'exploring':
+      case 'Explorar ideas':
         sendLocalAssistant(
           'Perfecto — explora y cuando quieras te ayudo con ideas o una tienda. ¿Te interesa ver plantillas o inspiración?',
           [
-            { title: 'Plantillas', payload: 'templates' },
-            { title: 'Inspírame', payload: 'inspire_me' },
-            { title: 'No, gracias', payload: 'no_thanks' },
+            { title: 'Plantillas', payload: 'Plantillas' },
+            { title: 'Inspírame', payload: 'Inspírame' },
+            { title: 'No, gracias', payload: 'No, gracias' },
           ]
         );
         return true;
 
-      case 'reach_more':
+      case 'Llegar a más clientes':
         sendLocalAssistant(
           '¡Lo entiendo! Nuestro sistema de marketing con IA crea publicaciones y campañas. ¿Generamos una publicación de ejemplo para tu negocio?',
           [
-            { title: '¡Sí, por favor!', payload: 'generate_post_yes' },
-            { title: 'Cuéntame más', payload: 'learn_more' },
-            { title: 'No, gracias', payload: 'no_thanks' },
+            { title: '¡Sí, por favor!', payload: '¡Sí, por favor!' },
+            { title: 'Cuéntame más', payload: 'Cuéntame más' },
+            { title: 'No, gracias', payload: 'No, gracias' },
           ]
         );
         return true;
-
-      case 'generate_post_yes':
+      case '¡Sí, por favor!':
         sendLocalAssistant(
-          '¡Genial! Para generar la publicación necesito el tipo de producto/servicio y tu email.',
+          '¡Genial! Para generar la publicación, llena este [formulario →](https://emprendyup.com/captura-leads).',
           []
         );
-        setContactMode(true);
         return true;
 
-      case 'learn_more':
+      case 'Cuéntame más':
         sendLocalAssistant(
           'Nuestra IA analiza tu categoría y genera un copy y estructura visual sugerida. ¿Quieres que hagamos una prueba?',
           [
-            { title: 'Hacer prueba', payload: 'generate_post_yes' },
-            { title: 'Volver', payload: 'start_new' },
+            { title: 'Hacer prueba', payload: '¡Sí, por favor!' },
+            { title: 'Volver', payload: 'Acabo de empezar' },
           ]
         );
         return true;
 
-      case 'no_thanks':
+      case 'No, gracias':
         sendLocalAssistant(
           'Perfecto, dime si tienes otra pregunta o quieres navegar recursos.',
           []
@@ -205,17 +206,19 @@ export default function ChatWidget(): React.ReactElement {
       sendLocalAssistant(
         '¡Hola! Soy tu asistente de Emprendyup. ¿Listo para potenciar tu negocio? Cuéntame, ¿en qué etapa te encuentras?',
         [
-          { title: 'Acabo de empezar', payload: 'start_new' },
-          { title: 'Ya tengo un negocio físico/online', payload: 'have_business' },
-          { title: 'Solo estoy explorando ideas', payload: 'exploring' },
+          { title: 'Acabo de empezar', payload: 'Acabo de empezar' },
+          {
+            title: 'Ya tengo un negocio físico/online',
+            payload: 'Ya tengo un negocio físico/online',
+          },
+          { title: 'Solo estoy explorando ideas', payload: 'Explorar ideas' },
         ]
       );
     }
   }, []);
-
   function toggleCollapsed() {
-    setIsCollapsed((v) => !v);
-    // abort typing when collapsing
+    if (onClose) onClose();
+    else setIsCollapsed((v) => !v);
     typingAbortRef.current += 1;
   }
 
@@ -305,33 +308,33 @@ export default function ChatWidget(): React.ReactElement {
   );
 
   // If on mobile and collapsed, show small floating button only
-  if (isMobile && isCollapsed) {
-    return (
-      <div className="fixed bottom-4 right-4 z-50">
-        <button
-          onClick={() => setIsCollapsed(false)}
-          aria-label="Abrir chat"
-          className="w-12 h-12 rounded-full bg-indigo-600 text-white shadow-lg flex items-center justify-center"
-        >
-          <svg
-            className="w-6 h-6"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden
-          >
-            <path
-              d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-      </div>
-    );
-  }
+  // if (isMobile && isCollapsed) {
+  //   return (
+  //     <div className="fixed bottom-4 right-4 z-50">
+  //       <button
+  //         onClick={() => setIsCollapsed(false)}
+  //         aria-label="Abrir chat"
+  //         className="w-12 h-12 rounded-full bg-indigo-600 text-white shadow-lg flex items-center justify-center"
+  //       >
+  //         <svg
+  //           className="w-6 h-6"
+  //           viewBox="0 0 24 24"
+  //           fill="none"
+  //           xmlns="http://www.w3.org/2000/svg"
+  //           aria-hidden
+  //         >
+  //           <path
+  //             d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+  //             stroke="currentColor"
+  //             strokeWidth="1.5"
+  //             strokeLinecap="round"
+  //             strokeLinejoin="round"
+  //           />
+  //         </svg>
+  //       </button>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div
@@ -339,41 +342,13 @@ export default function ChatWidget(): React.ReactElement {
         isMobile
           ? 'fixed bottom-4 right-4 z-50 w-[90vw] max-w-[350px] max-h-[70vh]'
           : 'w-full max-w-sm max-h-[500px]'
-      } bg-black rounded-lg shadow-lg p-2 text-sm overflow-hidden`}
+      } bg-black rounded-2xl shadow-lg p-2 text-sm overflow-hidden`}
     >
-      {isMobile && (
-        <div className="flex items-center justify-between mb-2 px-1">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-rose-400 via-orange-300 to-yellow-300 flex items-center justify-center text-white text-xs font-bold">
-              A
-            </div>
-            <div className="text-xs font-semibold text-white truncate">Asistente Emprendyup</div>
-          </div>
-          <div>
-            <button onClick={toggleCollapsed} aria-label="Minimizar chat" className="p-1">
-              <svg
-                className="w-5 h-5 text-slate-600"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M6 12h12"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      )}
-      <div className="w-full max-w-full max-h-full mx-auto bg-gradient-to-br from-slate-50 via-white to-slate-50 rounded-2xl shadow-xl border border-white/20 overflow-hidden flex flex-col">
+      <div className="w-full max-w-full max-h-full mx-auto bg-gradient-to-br from-slate-50 via-white rounded-2xl to-slate-50 shadow-xl border border-white/20 overflow-hidden flex flex-col">
         {/* Header - Compact for mobile */}
-        <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 p-2 sm:p-3 text-white relative overflow-hidden flex-shrink-0">
+        <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-t-2xl p-2 sm:p-3 text-white relative overflow-hidden flex-shrink-0">
           <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/20 via-purple-600/20 to-pink-600/20 animate-pulse"></div>
-          <div className="relative flex items-center gap-2">
+          <div className="relative flex items-center rounded-2xl gap-2">
             <div className="w-7 h-7 sm:w-8 sm:h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30">
               <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
             </div>
@@ -383,7 +358,70 @@ export default function ChatWidget(): React.ReactElement {
                 Tu asistente inteligente de negocios
               </p>
             </div>
+            <div>
+              <button onClick={toggleCollapsed} aria-label="Minimizar chat" className="p-1">
+                <svg
+                  className="w-5 h-5 text-slate-600"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6 12h12"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
+          {/* Contact Form - Fixed position */}
+          {contactMode && (
+            <div className="flex-shrink-0 mx-4 mb-4 p-4 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl border border-indigo-100 animate-fade-in">
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 mb-3">
+                  <Sparkles className="w-4 h-4 text-indigo-600" />
+                  <h4 className="font-semibold text-slate-800">Información de contacto</h4>
+                </div>
+
+                <div className="space-y-3">
+                  <input
+                    value={contactProduct}
+                    onChange={(e) => setContactProduct(e.target.value)}
+                    placeholder="Tipo de producto/servicio"
+                    className="w-full p-3 bg-white/80 text-black backdrop-blur-sm border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-300 transition-all duration-200"
+                  />
+                  <input
+                    value={contactEmail}
+                    onChange={(e) => setContactEmail(e.target.value)}
+                    placeholder="Tu correo electrónico"
+                    type="email"
+                    className="w-full p-3 bg-white/80 text-black backdrop-blur-sm border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-300 transition-all duration-200"
+                  />
+                </div>
+
+                <div className="flex gap-2 pt-2">
+                  <button
+                    onClick={() =>
+                      contactProduct.trim() && contactEmail.trim() && handleContactSubmit()
+                    }
+                    disabled={!contactProduct.trim() || !contactEmail.trim()}
+                    className="flex-1 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-slate-300 disabled:to-slate-400 text-white rounded-xl text-sm font-medium transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 shadow-lg hover:shadow-xl disabled:shadow-sm"
+                  >
+                    Enviar y generar
+                  </button>
+                  <button
+                    onClick={() => setContactMode(false)}
+                    className="px-4 py-2.5 bg-white/80 backdrop-blur-sm hover:bg-slate-50 border border-slate-200 hover:border-slate-300 text-slate-700 rounded-xl text-sm font-medium transition-all duration-200"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Messages Container - Scrollable */}
@@ -428,7 +466,10 @@ export default function ChatWidget(): React.ReactElement {
                       : 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-br-md shadow-lg'
                   }`}
                 >
-                  <div className="text-sm leading-relaxed font-medium">{messageText}</div>
+                  <div className="text-sm leading-relaxed font-medium">
+                    {' '}
+                    {renderMessageWithLinks(messageText)}
+                  </div>
                 </div>
 
                 {!isAssistant && (
@@ -469,88 +510,42 @@ export default function ChatWidget(): React.ReactElement {
             </div>
           </div>
         )}
-      </div>
-
-      {/* Contact Form - Fixed position */}
-      {contactMode && (
-        <div className="flex-shrink-0 mx-4 mb-4 p-4 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl border border-indigo-100 animate-fade-in">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 mb-3">
-              <Sparkles className="w-4 h-4 text-indigo-600" />
-              <h4 className="font-semibold text-slate-800">Información de contacto</h4>
-            </div>
-
-            <div className="space-y-3">
-              <input
-                value={contactProduct}
-                onChange={(e) => setContactProduct(e.target.value)}
-                placeholder="Tipo de producto/servicio"
-                className="w-full p-3 bg-white/80 text-black backdrop-blur-sm border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-300 transition-all duration-200"
+        {/* Input Area - Fixed at bottom */}
+        <div className="flex-shrink-0 p-4 bg-gradient-to-r from-slate-50 to-white border-t border-slate-100">
+          <div className="flex gap-3 items-end">
+            <div className="flex-1 relative">
+              <textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Escribe tu mensaje aquí..."
+                className="w-full min-h-[48px] max-h-32 p-3 pr-12 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-2xl resize-none text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-300 transition-all duration-200 placeholder-slate-400 !text-black"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSend(input);
+                  }
+                }}
               />
-              <input
-                value={contactEmail}
-                onChange={(e) => setContactEmail(e.target.value)}
-                placeholder="Tu correo electrónico"
-                type="email"
-                className="w-full p-3 bg-white/80 text-black backdrop-blur-sm border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-300 transition-all duration-200"
-              />
+              <div className="absolute bottom-2 right-2 text-xs text-slate-400">
+                {input.length > 0 && <span>Enter para enviar</span>}
+              </div>
             </div>
 
-            <div className="flex gap-2 pt-2">
-              <button
-                onClick={() =>
-                  contactProduct.trim() && contactEmail.trim() && handleContactSubmit()
-                }
-                disabled={!contactProduct.trim() || !contactEmail.trim()}
-                className="flex-1 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-slate-300 disabled:to-slate-400 text-white rounded-xl text-sm font-medium transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 shadow-lg hover:shadow-xl disabled:shadow-sm"
-              >
-                Enviar y generar
-              </button>
-              <button
-                onClick={() => setContactMode(false)}
-                className="px-4 py-2.5 bg-white/80 backdrop-blur-sm hover:bg-slate-50 border border-slate-200 hover:border-slate-300 text-slate-700 rounded-xl text-sm font-medium transition-all duration-200"
-              >
-                Cancelar
-              </button>
-            </div>
+            <button
+              onClick={() => handleSend(input)}
+              disabled={!input.trim() || loading}
+              className="w-12 h-12 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-slate-300 disabled:to-slate-400 text-white rounded-2xl disabled:opacity-50 transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 shadow-lg hover:shadow-xl disabled:shadow-sm flex items-center justify-center"
+            >
+              {loading ? (
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              ) : (
+                <Send className="w-5 h-5" />
+              )}
+            </button>
           </div>
         </div>
-      )}
-
-      {/* Input Area - Fixed at bottom */}
-      <div className="flex-shrink-0 p-4 bg-gradient-to-r from-slate-50 to-white border-t border-slate-100">
-        <div className="flex gap-3 items-end">
-          <div className="flex-1 relative">
-            <textarea
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Escribe tu mensaje aquí..."
-              className="w-full min-h-[48px] max-h-32 p-3 pr-12 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-2xl resize-none text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-300 transition-all duration-200 placeholder-slate-400 !text-black"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSend(input);
-                }
-              }}
-            />
-            <div className="absolute bottom-2 right-2 text-xs text-slate-400">
-              {input.length > 0 && <span>Enter para enviar</span>}
-            </div>
-          </div>
-
-          <button
-            onClick={() => handleSend(input)}
-            disabled={!input.trim() || loading}
-            className="w-12 h-12 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-slate-300 disabled:to-slate-400 text-white rounded-2xl disabled:opacity-50 transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 shadow-lg hover:shadow-xl disabled:shadow-sm flex items-center justify-center"
-          >
-            {loading ? (
-              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-            ) : (
-              <Send className="w-5 h-5" />
-            )}
-          </button>
-        </div>
       </div>
+
       <style jsx global>{`
         @keyframes fadeInUp {
           from {

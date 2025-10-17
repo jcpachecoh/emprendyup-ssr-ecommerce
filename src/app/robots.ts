@@ -5,7 +5,18 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        allow: '/',
+        allow: [
+          '/',
+          '/crear-tienda-online',
+          '/automatizacion-whatsapp',
+          '/ferias-emprendedores',
+          '/herramientas',
+          '/precios',
+          '/marketplace',
+          '/captura-leads',
+          '/blog',
+          '/blog-detalle/',
+        ],
         disallow: [
           '/api/',
           '/admin/',
@@ -15,12 +26,22 @@ export default function robots(): MetadataRoute.Robots {
           '/user-payment/',
           '/user-setting/',
           '/private/',
-          '/*?*', // Disallow pages with query parameters to avoid duplicate content
         ],
       },
       {
         userAgent: 'Googlebot',
-        allow: '/',
+        allow: [
+          '/',
+          '/crear-tienda-online',
+          '/automatizacion-whatsapp',
+          '/ferias-emprendedores',
+          '/herramientas',
+          '/precios',
+          '/marketplace',
+          '/captura-leads',
+          '/blog',
+          '/blog-detalle/',
+        ],
         disallow: [
           '/api/',
           '/admin/',

@@ -1,5 +1,5 @@
 'use client';
-import { Product } from '@/app/marketplace/page';
+import { Product } from '@/app/marketplace';
 import { cartService } from '@/lib/Cart';
 import { favoritesService } from '@/lib/favorites';
 import { gql, useQuery } from '@apollo/client';

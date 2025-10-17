@@ -3,10 +3,10 @@ import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
-import NavbarSimple from '../components/NavBar/NavBarSimple';
-import Footer from '../components/footer';
-import Switcher from '../components/switcher';
-import ScrollToTop from '../components/scroll-to-top';
+import NavbarSimple from '../../components/NavBar/NavBarSimple';
+import Footer from '../../components/footer';
+import Switcher from '../../components/switcher';
+import ScrollToTop from '../../components/scroll-to-top';
 
 import {
   FiCamera,
@@ -16,8 +16,8 @@ import {
   FiEye,
   FiCheckCircle,
   FiPlay,
-} from '../assets/icons/vander';
-import ChatTienda from '../components/chatTienda';
+} from '../../assets/icons/vander';
+import ChatTienda from '../../components/chatTienda';
 
 const steps = [
   {
@@ -130,9 +130,11 @@ const stepVariants = {
   },
 };
 
-export default function CrearTienda() {
+export default function CrearTiendaClient() {
   return (
     <>
+      <NavbarSimple navlight={false} />
+
       {/* Hero Section */}
       <section className="relative table w-full py-36 bg-gradient-to-br from-fourth-base/10 via-blue-50 to-blue-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800">
         <div className="absolute inset-0 bg-[url(/images/hero/bg3.png)] bg-center bg-no-repeat bg-cover opacity-40"></div>
@@ -148,36 +150,43 @@ export default function CrearTienda() {
               className="mb-6 text-5xl md:text-6xl leading-tight font-bold text-slate-900 dark:text-white"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
             >
-              Crea tu{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-fourth-base to-green-600">
-                Tienda Online
+              Crear Tienda Online{' '}
+              <span className="bg-gradient-to-br from-fourth-base to-green-600 bg-clip-text text-transparent">
+                Gratis
               </span>
             </motion.h1>
 
             <motion.p
-              className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed"
+              className="text-slate-600 dark:text-slate-400 text-lg max-w-3xl mx-auto leading-relaxed"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Sigue estos 5 pasos simples para tener todo listo antes de crear tu tienda. Te guiamos
-              en cada etapa para asegurar el éxito de tu emprendimiento digital.
+              Te guiamos paso a paso para crear tu tienda online profesional. Sin comisiones, con
+              dominio personalizado y todas las herramientas que necesitas para vender en línea
+              exitosamente.
             </motion.p>
 
             <motion.div
-              className="mt-8"
+              className="mt-8 flex flex-col sm:flex-row gap-4 justify-center"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
             >
               <Link
                 href="#pasos"
-                className="py-4 px-8 inline-flex items-center justify-center font-semibold tracking-wide align-middle duration-500 text-lg text-center rounded-full bg-gradient-to-r from-fourth-base to-green-600 hover:from-fourth-base/90 hover:to-green-600/90 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+                className="py-4 px-8 inline-flex items-center justify-center font-semibold tracking-wide align-middle duration-500 text-lg text-center bg-fourth-base text-white rounded-full hover:bg-green-600 transition-all shadow-lg hover:shadow-xl"
               >
-                Ver los Pasos
-                <FiPlay className="ml-2 h-5 w-5" />
+                <FiPlay className="me-2 text-lg" />
+                Ver Guía Completa
+              </Link>
+              <Link
+                href="/captura-leads"
+                className="py-4 px-8 inline-flex items-center justify-center font-semibold tracking-wide align-middle duration-500 text-lg text-center rounded-full border-2 border-fourth-base text-fourth-base hover:bg-fourth-base hover:text-white transition-all"
+              >
+                Comenzar Ahora
               </Link>
             </motion.div>
           </motion.div>
@@ -185,74 +194,64 @@ export default function CrearTienda() {
       </section>
 
       {/* Steps Section */}
-      <section id="pasos" className="relative md:py-24 py-16 bg-white dark:bg-slate-900">
-        <div className="container">
-          <motion.div
-            className="grid grid-cols-1 pb-8 text-center"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <h2 className="mb-6 md:text-4xl text-3xl font-bold text-slate-900 dark:text-white">
-              5 Pasos para Crear tu Tienda
+      <section id="pasos" className="relative md:py-24 py-16 bg-gray-50 dark:bg-slate-800">
+        <div className="container relative">
+          <div className="grid grid-cols-1 pb-8 text-center">
+            <h2 className="mb-4 md:text-4xl text-3xl font-bold text-slate-900 dark:text-white">
+              5 Pasos para Crear tu Tienda Online
             </h2>
-            <p className="text-slate-600 dark:text-slate-300 max-w-2xl mx-auto text-lg">
-              Prepara estos elementos antes de comenzar y tendrás una tienda profesional en minutos
+            <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-lg">
+              Sigue esta guía paso a paso y tendrás todo listo para lanzar tu tienda online
+              profesional
             </p>
-          </motion.div>
+          </div>
 
           <motion.div
-            className="grid lg:grid-cols-1 grid-cols-1 mt-12 gap-8"
+            className="grid lg:grid-cols-1 grid-cols-1 mt-8 gap-8"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: '-100px' }}
           >
             {steps.map((step, index) => (
               <motion.div
                 key={index}
-                className={`group relative p-8 rounded-2xl ${step.bgColor} border-2 ${step.borderColor} hover:shadow-xl transition-all duration-500 hover:scale-[1.02]`}
+                className={`group relative overflow-hidden rounded-2xl border ${step.borderColor} ${step.bgColor} p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]`}
                 variants={stepVariants}
-                whileHover={{ y: -5 }}
               >
-                <div className="flex flex-col lg:flex-row lg:items-center gap-6">
-                  {/* Icon and Step Number */}
+                <div className="flex flex-col lg:flex-row items-start gap-6">
                   <div className="flex-shrink-0">
                     <div
-                      className={`relative w-20 h-20 rounded-2xl ${step.bgColor} border-2 ${step.borderColor} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
+                      className={`inline-flex items-center justify-center w-16 h-16 rounded-xl ${step.color} bg-white dark:bg-slate-900 shadow-md`}
                     >
-                      <step.icon className={`h-10 w-10 ${step.color}`} />
-                      <div
-                        className={`absolute -top-3 -right-3 w-8 h-8 rounded-full bg-gradient-to-r from-fourth-base to-green-600 text-white text-sm font-bold flex items-center justify-center`}
-                      >
-                        {index + 1}
-                      </div>
+                      <step.icon className="w-8 h-8" />
                     </div>
                   </div>
 
-                  {/* Content */}
-                  <div className="flex-1">
-                    <div className="mb-4">
+                  <div className="flex-grow">
+                    <div className="flex flex-col lg:flex-row lg:items-center gap-4 mb-4">
                       <span
-                        className={`text-sm font-semibold ${step.color} uppercase tracking-wider`}
+                        className={`inline-block px-3 py-1 text-sm font-medium rounded-full ${step.color} bg-white dark:bg-slate-900`}
                       >
                         {step.step}
                       </span>
-                      <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+                      <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
                         {step.title}
                       </h3>
                     </div>
-                    <p className="text-slate-600 dark:text-slate-300 text-lg leading-relaxed mb-6">
+
+                    <p className="text-slate-600 dark:text-slate-400 text-lg mb-6 leading-relaxed">
                       {step.description}
                     </p>
 
-                    {/* Requirements */}
-                    <div className="grid sm:grid-cols-2 grid-cols-1 gap-3">
-                      {step.requirements.map((requirement, reqIndex) => (
-                        <div key={reqIndex} className="flex items-center gap-3">
-                          <FiCheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                          <span className="text-slate-600 dark:text-slate-300">{requirement}</span>
+                    <div className="grid md:grid-cols-2 gap-3">
+                      {step.requirements.map((req, reqIndex) => (
+                        <div
+                          key={reqIndex}
+                          className="flex items-center gap-3 text-slate-700 dark:text-slate-300"
+                        >
+                          <FiCheckCircle className={`w-5 h-5 ${step.color} flex-shrink-0`} />
+                          <span className="text-sm">{req}</span>
                         </div>
                       ))}
                     </div>
@@ -265,42 +264,44 @@ export default function CrearTienda() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-20 bg-gradient-to-br from-fourth-base/5 via-green-50 to-blue-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800">
-        <div className="container">
+      <section className="relative md:py-24 py-16 bg-gradient-to-br from-fourth-base to-green-600">
+        <div className="container relative">
           <motion.div
-            className="text-center"
+            className="grid grid-cols-1 text-center"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
             transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
           >
-            <div className="bg-gradient-to-r from-fourth-base/10 to-green-600/10 rounded-3xl p-12 border border-fourth-base/20">
-              <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">
-                ¿Ya tienes todo listo?
-              </h3>
-              <p className="text-slate-600 dark:text-slate-300 text-lg mb-8 max-w-2xl mx-auto">
-                Perfecto. Ahora puedes crear tu tienda online en pocos minutos. Nuestro asistente te
-                guiará paso a paso para configurar todo.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  href="https://app.emprendyup.com/"
-                  className="py-4 px-8 inline-flex items-center justify-center font-semibold tracking-wide align-middle duration-500 text-lg text-center rounded-full bg-gradient-to-r from-fourth-base to-green-600 hover:from-fourth-base/90 hover:to-green-600/90 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
-                >
-                  Empezar a Crear Mi Tienda
-                </Link>
-                <Link
-                  href="/por-que-emprendy"
-                  className="py-4 px-8 inline-flex items-center justify-center font-semibold tracking-wide align-middle duration-500 text-lg text-center rounded-full border-2 border-fourth-base text-fourth-base hover:bg-fourth-base hover:text-white transition-all"
-                >
-                  Ver Más Beneficios
-                </Link>
-              </div>
+            <h2 className="mb-6 md:text-4xl text-3xl font-bold text-white">
+              ¿Listo para Crear tu Tienda Online?
+            </h2>
+            <p className="text-white/90 max-w-2xl mx-auto text-lg mb-8 leading-relaxed">
+              Únete a cientos de emprendedores que ya están construyendo su futuro digital. Sin
+              comisiones, sin límites, solo éxito.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/captura-leads"
+                className="py-4 px-8 inline-flex items-center justify-center font-semibold tracking-wide align-middle duration-500 text-lg text-center bg-white text-fourth-base rounded-full hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
+              >
+                <FiCheckCircle className="me-2 text-lg" />
+                Empezar a Crear Mi Tienda
+              </Link>
+              <Link
+                href="/por-que-emprendy"
+                className="py-4 px-8 inline-flex items-center justify-center font-semibold tracking-wide align-middle duration-500 text-lg text-center rounded-full border-2 border-white text-white hover:bg-white hover:text-fourth-base transition-all"
+              >
+                Ver Más Beneficios
+              </Link>
             </div>
           </motion.div>
         </div>
       </section>
 
+      <Footer />
+      <ChatTienda />
       <Switcher />
       <ScrollToTop />
     </>

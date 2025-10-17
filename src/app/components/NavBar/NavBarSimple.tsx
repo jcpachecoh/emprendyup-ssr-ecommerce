@@ -324,7 +324,7 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
                                 </Link>
 
                                 <Link
-                                  href="/crear-tienda"
+                                  href="/crear-tienda-online"
                                   onClick={() => setToggle(false)}
                                   className="block bg-white rounded-xl overflow-hidden shadow-md"
                                 >
@@ -366,12 +366,16 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
                 </Link>
               </li>
 
-              <li className={`${menu === '/contact' ? 'active' : ''}`}>
-                <Link href="/contacto" className="sub-menu-item" onClick={() => setToggle(false)}>
-                  Contacto
+              <li className={`${menu === '/ferias-emprendedores' ? 'active' : ''}`}>
+                <Link
+                  href="/ferias-emprendedores"
+                  className="sub-menu-item"
+                  onClick={() => setToggle(false)}
+                >
+                  Ferias
                 </Link>
               </li>
-              <li className={`${menu === '/contact' ? 'active' : ''}`}>
+              <li className={`${menu === '/marketplace' ? 'active' : ''}`}>
                 <Link
                   href="/marketplace"
                   className="sub-menu-item"
@@ -448,7 +452,7 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
           )}
 
           <Link
-            href="/crear-tienda"
+            href="/crear-tienda-online"
             className="py-2 px-4 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-sm font-medium text-center rounded-md bg-fourth-base hover:bg-fourth-base/90 text-white"
           >
             Crear Mi Tienda
@@ -469,7 +473,7 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
         </Link>
         <div className="flex flex-row gap-4 items-center px-4">
           <Link
-            href="/crear-tienda"
+            href="/crear-tienda-online"
             className="py-2 px-4 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-sm font-medium text-center rounded-md bg-fourth-base hover:bg-fourth-base/90 text-white"
           >
             Crear Mi Tienda
@@ -527,11 +531,11 @@ export default function NavbarSimple({ navClass, navlight }: NavbarSimpleProps) 
               </li>
               <li>
                 <Link
-                  href="/contacto"
+                  href="/ferias-emprendedores"
                   onClick={() => setToggle(false)}
                   className="block text-lg font-medium text-gray-800 dark:text-white py-2"
                 >
-                  Contacto
+                  Ferias
                 </Link>
               </li>
               <li>

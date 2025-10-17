@@ -1,6 +1,14 @@
 import { DM_Sans } from 'next/font/google';
 import './assets/scss/tailwind.scss';
 import './assets/css/materialdesignicons.css';
+import { ReactNode } from 'react';
+import ApolloWrapper from './components/ApolloWrapper';
+import ConditionalLayout from './components/ConditionalLayout';
+import Script from 'next/script';
+import { Toaster } from 'sonner';
+import CookieWrapper from './components/CookieWrapper';
+import { ThemeProvider } from 'next-themes';
+import SessionWrapper from './components/SessionWrapper';
 
 const dm_sans = DM_Sans({
   subsets: ['latin'],
@@ -8,25 +16,21 @@ const dm_sans = DM_Sans({
 });
 
 export const metadata = {
-  title:
-    'Herramientas digitales para emprendedores que quieren escalar su negocio con IA, tecnología y una comunidad que impulsa su crecimiento - EmprendyUp',
+  title: 'Crea tu tienda online gratis | Automatiza WhatsApp | EmprendyUp',
   description:
-    'Crea tu tienda online profesional con EmprendyUp. Marketplace colaborativo, CRM integrado, IA para contenido, chatbot WhatsApp, métricas de ventas y comunidad de emprendedores. ¡Haz crecer tu negocio hoy!',
+    'Crea tu tienda online gratis en minutos. Automatiza ventas por WhatsApp, participa en ferias de emprendedores y vende en un marketplace colaborativo. Herramientas para emprendedores en Colombia y LATAM.',
   keywords: [
-    'emprendyup',
-    'herramientas emprendimiento',
-    'tienda online',
+    'crear tienda online gratis',
+    'automatización de WhatsApp',
+    'chatbot WhatsApp para ventas',
+    'ferias de emprendedores',
+    'herramientas para emprendedores',
     'marketplace colaborativo',
-    'CRM para emprendedores',
-    'IA generar contenido',
-    'chatbot WhatsApp',
-    'métricas ventas',
-    'comunidad emprendedores',
     'plataforma ecommerce',
-    'crear tienda online',
-    'acompañamiento emprendimiento',
-    'capacitaciones empresariales',
-    'eventos emprendedores',
+    'emprendedores Colombia',
+    'tienda virtual',
+    'CRM para emprendedores',
+    'IA para contenidos',
   ].join(', '),
   authors: [{ name: 'EmprendyUp Team' }],
   creator: 'EmprendyUp',
@@ -44,19 +48,18 @@ export const metadata = {
   },
   openGraph: {
     type: 'website',
-    locale: 'es_ES',
+    locale: 'es_CO',
     url: 'https://www.emprendyup.com/',
     siteName: 'EmprendyUp',
-    title:
-      'Herramientas digitales para emprendedores que quieren escalar su negocio con IA, tecnología y una comunidad que impulsa su crecimiento - EmprendyUp',
+    title: 'Crea tu tienda online gratis | Automatiza WhatsApp | EmprendyUp',
     description:
-      'Plataforma todo-en-uno para emprendedores: tienda online, marketplace colaborativo, CRM, IA para contenido, chatbot WhatsApp y comunidad con capacitaciones.',
+      'Plataforma todo-en-uno para emprendedores: tienda online, automatización de WhatsApp, marketplace colaborativo, CRM e IA.',
     images: [
       {
         url: '/images/emprendyup-og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Herramientas digitales para emprendedores que quieren escalar su negocio con IA, tecnología y una comunidad que impulsa su crecimiento - EmprendyUp',
+        alt: 'EmprendyUp: tienda online gratis, automatización de WhatsApp y herramientas para emprendedores',
       },
     ],
   },
@@ -64,10 +67,9 @@ export const metadata = {
     card: 'summary_large_image',
     site: '@emprendyup',
     creator: '@emprendyup',
-    title:
-      'Herramientas digitales para emprendedores que quieren escalar su negocio con IA, tecnología y una comunidad que impulsa su crecimiento - EmprendyUp',
+    title: 'Crea tu tienda online gratis | Automatiza WhatsApp | EmprendyUp',
     description:
-      'Tienda online + Marketplace + IA + CRM + Comunidad de emprendedores. Todo lo que necesitas para hacer crecer tu negocio.',
+      'Tienda online + Automatización WhatsApp + IA + CRM + Comunidad. Todo lo que necesitas para crecer.',
     images: ['/images/emprendyup-twitter-card.jpg'],
   },
   verification: {
@@ -78,9 +80,9 @@ export const metadata = {
   alternates: {
     canonical: 'https://www.emprendyup.com/',
     languages: {
-      'es-ES': 'https://www.emprendyup.com/',
-      'es-MX': 'https://www.emprendyup.com/mx/',
       'es-CO': 'https://www.emprendyup.com/co/',
+      'es-MX': 'https://www.emprendyup.com/mx/',
+      'es-ES': 'https://www.emprendyup.com/',
     },
   },
   other: {
@@ -91,81 +93,22 @@ export const metadata = {
   },
 };
 
-import { ReactNode } from 'react';
-import ApolloWrapper from './components/ApolloWrapper';
-import ConditionalLayout from './components/ConditionalLayout';
-import Script from 'next/script';
-import { Toaster } from 'sonner';
-import CookieWrapper from './components/CookieWrapper';
-import { ThemeProvider } from 'next-themes';
-import SessionWrapper from './components/SessionWrapper';
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="es" suppressHydrationWarning>
       <head>
+        {/* Favicon & Manifest */}
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
 
-        {/* Essential SEO meta tags */}
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>{metadata.title}</title>
-        <meta name="description" content={metadata.description} />
-        <meta name="keywords" content={metadata.keywords} />
-        <meta
-          name="author"
-          content={(metadata.authors && metadata.authors[0]?.name) || metadata.publisher}
-        />
-        <meta name="theme-color" content={metadata.other?.['theme-color'] || '#ffffff'} />
+        {/* Performance */}
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
 
-        {/* Open Graph / Twitter */}
-        <meta property="og:type" content={metadata.openGraph?.type || 'website'} />
-        <meta property="og:locale" content={metadata.openGraph?.locale || 'es_ES'} />
-        <meta property="og:site_name" content={metadata.openGraph?.siteName || 'EmprendyUp'} />
-        <meta property="og:title" content={metadata.openGraph?.title || metadata.title} />
-        <meta
-          property="og:description"
-          content={metadata.openGraph?.description || metadata.description}
-        />
-        <meta
-          property="og:url"
-          content={
-            metadata.openGraph?.url ||
-            metadata.alternates?.canonical ||
-            'https://www.emprendyup.com/'
-          }
-        />
-        {metadata.openGraph?.images?.[0] && (
-          <meta property="og:image" content={metadata.openGraph.images[0].url} />
-        )}
-        {metadata.openGraph?.images?.[0] && metadata.openGraph.images[0].alt && (
-          <meta property="og:image:alt" content={metadata.openGraph.images[0].alt} />
-        )}
-
-        <meta name="twitter:card" content={metadata.twitter?.card || 'summary_large_image'} />
-        <meta name="twitter:site" content={metadata.twitter?.site || '@emprendyup'} />
-        <meta name="twitter:creator" content={metadata.twitter?.creator || '@emprendyup'} />
-        <meta name="twitter:title" content={metadata.twitter?.title || metadata.title} />
-        <meta
-          name="twitter:description"
-          content={metadata.twitter?.description || metadata.description}
-        />
-        {metadata.twitter?.images?.[0] && (
-          <meta name="twitter:image" content={metadata.twitter.images[0]} />
-        )}
-
-        {/* Hreflang / alternates for SEO */}
-        {metadata.alternates?.canonical && (
-          <link rel="canonical" href={metadata.alternates.canonical} />
-        )}
-        {metadata.alternates?.languages &&
-          Object.entries(metadata.alternates.languages).map(([lang, url]) => (
-            <link key={lang} rel="alternate" hrefLang={lang} href={url} />
-          ))}
-
-        {/* WebSite structured data (JSON-LD) and Breadcrumb */}
+        {/* JSON-LD Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -173,34 +116,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               '@context': 'https://schema.org',
               '@type': 'WebSite',
               name: 'EmprendyUp',
-              url: metadata.openGraph?.url || 'https://www.emprendyup.com/',
+              url: 'https://www.emprendyup.com/',
+              inLanguage: 'es',
               potentialAction: {
                 '@type': 'SearchAction',
-                target: `${metadata.openGraph?.url || 'https://www.emprendyup.com/'}?q={search_term_string}`,
+                target: 'https://www.emprendyup.com/search?q={search_term_string}',
                 'query-input': 'required name=search_term_string',
               },
             }),
           }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'BreadcrumbList',
-              itemListElement: [
-                {
-                  '@type': 'ListItem',
-                  position: 1,
-                  name: 'Inicio',
-                  item: metadata.alternates?.canonical || 'https://www.emprendyup.com/',
-                },
-              ],
-            }),
-          }}
-        />
 
-        {/* Structured Data JSON-LD */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -208,8 +134,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               '@context': 'https://schema.org',
               '@type': 'Organization',
               name: 'EmprendyUp',
-              description:
-                'Herramientas digitales para emprendedores que quieren escalar su negocio con IA, tecnología y una comunidad que impulsa su crecimiento',
               url: 'https://www.emprendyup.com',
               logo: 'https://www.emprendyup.com/images/logo-light.png',
               sameAs: [
@@ -218,73 +142,72 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 'https://www.linkedin.com/company/emprendyup',
                 'https://twitter.com/emprendyup',
               ],
-              contactPoint: {
-                '@type': 'ContactPoint',
-                telephone: '+57-xxx-xxx-xxxx',
-                contactType: 'customer service',
-                availableLanguage: 'Spanish',
-              },
-              offers: {
-                '@type': 'Offer',
-                itemOffered: {
-                  '@type': 'Service',
-                  name: 'Plataforma EmprendyUp',
-                  description:
-                    'Herramientas integrales para emprendedores: tienda online, marketplace, CRM, IA, chatbot WhatsApp y comunidad',
+              contactPoint: [
+                {
+                  '@type': 'ContactPoint',
+                  telephone: '+57-xxx-xxx-xxxx',
+                  contactType: 'customer service',
+                  areaServed: 'CO',
+                  availableLanguage: ['es'],
                 },
+              ],
+            }),
+          }}
+        />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebPage',
+              name: 'Crea tu tienda online gratis | Automatiza WhatsApp | EmprendyUp',
+              url: 'https://www.emprendyup.com/',
+              description:
+                'Crea tu tienda online gratis en minutos. Automatiza ventas por WhatsApp, participa en ferias de emprendedores y vende en un marketplace colaborativo.',
+              isPartOf: {
+                '@type': 'WebSite',
+                url: 'https://www.emprendyup.com/',
               },
-              hasOfferCatalog: {
-                '@type': 'OfferCatalog',
-                name: 'Servicios EmprendyUp',
+              about: [
+                { '@type': 'Thing', name: 'crear tienda online gratis' },
+                { '@type': 'Thing', name: 'automatización de WhatsApp' },
+                { '@type': 'Thing', name: 'ferias de emprendedores' },
+                { '@type': 'Thing', name: 'herramientas para emprendedores' },
+                { '@type': 'Thing', name: 'marketplace colaborativo' },
+              ],
+              breadcrumb: {
+                '@type': 'BreadcrumbList',
                 itemListElement: [
                   {
-                    '@type': 'Offer',
-                    itemOffered: {
-                      '@type': 'Service',
-                      name: 'Tienda Online + Marketplace Colaborativo',
-                    },
+                    '@type': 'ListItem',
+                    position: 1,
+                    name: 'Inicio',
+                    item: 'https://www.emprendyup.com/',
                   },
                   {
-                    '@type': 'Offer',
-                    itemOffered: {
-                      '@type': 'Service',
-                      name: 'Acompañamiento en Creación de Tienda',
-                    },
+                    '@type': 'ListItem',
+                    position: 2,
+                    name: 'Crear tienda online',
+                    item: 'https://www.emprendyup.com/crear-tienda-online',
                   },
                   {
-                    '@type': 'Offer',
-                    itemOffered: {
-                      '@type': 'Service',
-                      name: 'Métricas de Ventas y Visitas',
-                    },
+                    '@type': 'ListItem',
+                    position: 3,
+                    name: 'Automatización WhatsApp',
+                    item: 'https://www.emprendyup.com/automatizacion-whatsapp',
                   },
                   {
-                    '@type': 'Offer',
-                    itemOffered: {
-                      '@type': 'Service',
-                      name: 'CRM Integrado',
-                    },
+                    '@type': 'ListItem',
+                    position: 4,
+                    name: 'Ferias emprendedores',
+                    item: 'https://www.emprendyup.com/ferias-emprendedores',
                   },
                   {
-                    '@type': 'Offer',
-                    itemOffered: {
-                      '@type': 'Service',
-                      name: 'IA para Generar Contenido',
-                    },
-                  },
-                  {
-                    '@type': 'Offer',
-                    itemOffered: {
-                      '@type': 'Service',
-                      name: 'Chatbot WhatsApp',
-                    },
-                  },
-                  {
-                    '@type': 'Offer',
-                    itemOffered: {
-                      '@type': 'Service',
-                      name: 'Comunidad con Capacitaciones y Eventos',
-                    },
+                    '@type': 'ListItem',
+                    position: 5,
+                    name: 'Herramientas',
+                    item: 'https://www.emprendyup.com/herramientas',
                   },
                 ],
               },
@@ -292,7 +215,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           }}
         />
 
-        {/* FAQ Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -302,32 +224,41 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               mainEntity: [
                 {
                   '@type': 'Question',
-                  name: '¿Qué incluye la plataforma EmprendyUp?',
+                  name: '¿Cómo crear una tienda online gratis con EmprendyUp?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'EmprendyUp incluye tienda online personalizada, marketplace colaborativo, CRM integrado, herramientas de IA para contenido, chatbot WhatsApp, métricas avanzadas y acceso a una comunidad con capacitaciones y eventos.',
+                    text: 'Regístrate, elige una plantilla y carga tus productos. En minutos tendrás tu tienda online conectada al marketplace colaborativo.',
                   },
                 },
                 {
                   '@type': 'Question',
-                  name: '¿Cómo funciona el marketplace colaborativo?',
+                  name: '¿Qué es la automatización de WhatsApp para ventas?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'El marketplace colaborativo conecta tu tienda con miles de compradores potenciales, permitiendo mayor visibilidad y ventas cruzadas con otros emprendedores de la comunidad.',
+                    text: 'Automatiza respuestas, catálogos y seguimiento de pedidos con un chatbot integrado para acelerar tus ventas.',
                   },
                 },
                 {
                   '@type': 'Question',
-                  name: '¿Qué tipo de acompañamiento ofrecen?',
+                  name: '¿EmprendyUp organiza ferias para emprendedores?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'Ofrecemos acompañamiento personalizado para crear tu tienda, configurar tus productos, optimizar tus ventas y aprovechar todas las herramientas de la plataforma.',
+                    text: 'Sí, conectamos a marcas con compradores en ferias y eventos para impulsar visibilidad y ventas.',
+                  },
+                },
+                {
+                  '@type': 'Question',
+                  name: '¿Qué herramientas para emprendedores incluye la plataforma?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'Tienda online, CRM, IA para contenidos, métricas, automatización de WhatsApp y acceso a marketplace y comunidad.',
                   },
                 },
               ],
             }),
           }}
         />
+
         {/* Google Analytics */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
@@ -344,6 +275,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           `}
         </Script>
       </head>
+
       <body className={`${dm_sans.variable} dark:bg-slate-900`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <SessionWrapper>

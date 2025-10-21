@@ -67,7 +67,7 @@ const EnhancedFooter = () => {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="/crear-tienda"
+                  href="/crear-tienda-online"
                   className="text-slate-400 hover:text-fourth-base transition-colors"
                 >
                   Crear tienda

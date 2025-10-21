@@ -173,8 +173,8 @@ export default function PorQueEmprendy() {
               transition={{ duration: 0.8, delay: 0.6 }}
             >
               <Link
-                href="/crear-tienda"
-                className="py-4 px-8 inline-flex items-center justify-center font-semibold tracking-wide align-middle duration-500 text-lg text-center rounded-full bg-gradient-to-r from-fourth-base to-blue-600 hover:from-fourth-base/90 hover:to-blue-600/90 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+                href="/crear-tienda-online"
+                className="py-4 px-8 inline-flex items-cente`r justify-center font-semibold tracking-wide align-middle duration-500 text-lg text-center rounded-full bg-gradient-to-r from-fourth-base to-blue-600 hover:from-fourth-base/90 hover:to-blue-600/90 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
               >
                 Comenzar Ahora
                 <FiZap className="ml-2 h-5 w-5" />
@@ -291,7 +291,7 @@ export default function PorQueEmprendy() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
-                  href="/crear-tienda"
+                  href="/crear-tienda-online"
                   className="py-4 px-8 inline-flex items-center justify-center font-semibold tracking-wide align-middle duration-500 text-lg text-center rounded-full bg-gradient-to-r from-fourth-base to-blue-600 hover:from-fourth-base/90 hover:to-blue-600/90 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
                 >
                   Crear Mi Tienda Gratis

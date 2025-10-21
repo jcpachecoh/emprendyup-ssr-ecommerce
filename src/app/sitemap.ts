@@ -46,6 +46,48 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: 'https://www.emprendyup.com/captura-leads',
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    },
+    {
+      url: 'https://www.emprendyup.com/crear-tienda-online',
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.9,
+    },
+    {
+      url: 'https://www.emprendyup.com/automatizacion-whatsapp',
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.9,
+    },
+    {
+      url: 'https://www.emprendyup.com/ferias-emprendedores',
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    {
+      url: 'https://www.emprendyup.com/herramientas',
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    {
+      url: 'https://www.emprendyup.com/precios',
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    },
+    {
+      url: 'https://www.emprendyup.com/marketplace',
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
+    },
+    {
       url: 'https://www.emprendyup.com/contacto',
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,

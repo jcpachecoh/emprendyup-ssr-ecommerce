@@ -2,9 +2,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-
-import NavbarSimple from '../components/NavBar/NavBarSimple';
-import Footer from '../components/footer';
 import Switcher from '../components/switcher';
 import ScrollToTop from '../components/scroll-to-top';
 
@@ -408,7 +405,7 @@ export default function VentajasCompetitivas() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link
-                    href="/crear-tienda"
+                    href="/crear-tienda-online"
                     className="py-4 px-8 inline-flex items-center justify-center font-semibold tracking-wide align-middle duration-500 text-lg text-center rounded-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all"
                   >
                     Obtener Ventajas Ahora

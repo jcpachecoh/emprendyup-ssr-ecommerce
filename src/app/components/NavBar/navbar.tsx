@@ -872,9 +872,9 @@ export default function Navbar({ navClass, navlight }: NavbarProps) {
                 </Link>
               </li>
 
-              <li className={`${menu === '/contact' ? 'active' : ''}`}>
-                <Link href="/contact" className="sub-menu-item">
-                  Contact
+              <li className={`${menu === '/ferias-emprendedores' ? 'active' : ''}`}>
+                <Link href="/ferias-emprendedores" className="sub-menu-item">
+                  Ferias
                 </Link>
               </li>
             </ul>

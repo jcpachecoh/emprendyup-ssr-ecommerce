@@ -302,3 +302,26 @@ export const ORDERS_BY_USER = gql`
     }
   }
 `;
+
+// Blog Posts Query for Sitemap
+export const LIST_POSTS_PAGINATED = gql`
+  query ListPostsPaginated($limit: Int, $offset: Int, $status: String) {
+    listPostsPaginated(limit: $limit, offset: $offset, status: $status) {
+      data {
+        id
+        slug
+        title
+        publishedAt
+        updatedAt
+        status
+      }
+      pagination {
+        total
+        limit
+        offset
+        hasNext
+        hasPrev
+      }
+    }
+  }
+`;

@@ -1,11 +1,9 @@
 import React, { Suspense } from 'react';
-import { BlogPost } from '@/app/utils/types/BlogPost';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-// import { blogPosts } from '@/app/data/blogData';
+import { getBlogPostBySlug } from '@/lib/blogService';
 import { social } from '@/app/data/data';
-import { FiCalendar, FiClock } from 'react-icons/fi';
 import Switcher from '@/app/components/switcher';
 import ScrollToTop from '@/app/components/scroll-to-top';
 
@@ -17,55 +15,13 @@ interface BlogDetailProps {
 export default async function BlogDetailPage({ params }: BlogDetailProps) {
   // Await the params to get the actual values
   const { slug } = await params;
-  // Fetch post from GraphQL by id or slug
-  const query = `query GetPost($idOrSlug: String!) { 
-    getPost(idOrSlug: $idOrSlug) { 
-      id 
-      title
-      slug
-      excerpt 
-      content 
-      status 
-      createdAt
-      updatedAt
-      publishedAt
-      creator { 
-        id 
-        name 
-        email 
-        } 
-      blogCategory { 
-        id 
-        name 
-        slug 
-        } 
-      tags { 
-        tag { 
-          id 
-          name 
-          slug 
-        } 
-      } 
-      relatedPosts { 
-        id 
-        title 
-        slug 
-      } 
-      coverImageUrl 
-    } 
-  }`;
 
-  const endpoint = process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || 'http://localhost:4000/graphql';
-  const resp = await fetch(endpoint, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query, variables: { idOrSlug: slug } }),
-    // revalidate can be tuned if you use Next caching
-    next: { revalidate: 60 },
-  });
-  const json = await resp.json();
-  const post = json?.data?.getPost as any | undefined;
-  if (!post) return notFound();
+  // Fetch post using the new blog service (supports Strapi + GraphQL fallback)
+  const post = await getBlogPostBySlug(slug);
+
+  if (!post) {
+    notFound();
+  }
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -81,19 +37,11 @@ export default async function BlogDetailPage({ params }: BlogDetailProps) {
             <ul className="flex flex-wrap justify-center gap-8 text-white/70 text-sm">
               <li className="flex flex-col items-center gap-1">
                 <span className="text-white block font-medium">Autor:</span>
-                <span>EmprendyUp</span>
+                <span>{post.author}</span>
               </li>
               <li className="flex flex-col items-center gap-1">
                 <span className="text-white block font-medium">Fecha:</span>
-                <span>
-                  {post.createdAt
-                    ? new Date(post.createdAt).toLocaleDateString('es-ES', {
-                        day: '2-digit',
-                        month: 'long',
-                        year: 'numeric',
-                      })
-                    : ''}
-                </span>
+                <span>{post.date}</span>
               </li>
               <li className="flex flex-col items-center gap-1">
                 <span className="text-white block font-medium">Tiempo de lectura:</span>
@@ -123,15 +71,11 @@ export default async function BlogDetailPage({ params }: BlogDetailProps) {
           <div className="lg:col-span-8 md:col-span-7 order-2 md:order-2">
             <div className="relative overflow-hidden rounded-2xl">
               <Image
-                src={
-                  post.coverImageUrl?.startsWith('http')
-                    ? post.coverImageUrl
-                    : `https://emprendyup-images.s3.us-east-1.amazonaws.com/${post.coverImageUrl}`
-                }
+                src={post.image || '/images/blog/default.jpg'}
                 width={650}
-                height={50}
-                alt={post.title || 'Cover image'}
-                className="rounded-t-2xl"
+                height={400}
+                alt={post.imageAlt || post.title}
+                className="rounded-lg shadow-lg"
               />
               <div
                 className="p-8 md:p-10 lg:p-12 prose prose-lg dark:prose-invert max-w-none leading-relaxed
@@ -176,10 +120,10 @@ export default async function BlogDetailPage({ params }: BlogDetailProps) {
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                       <div>
                         <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
-                          {post.creator?.name || 'EmprendyUp'}
+                          {post.author || 'EmprendyUp'}
                         </h3>
                         <p className="text-fourth-base font-medium text-sm mb-3">
-                          {post.creator?.email || 'Redactor'}
+                          {post.author || 'Redactor'}
                         </p>
                       </div>
 
@@ -226,42 +170,10 @@ export default async function BlogDetailPage({ params }: BlogDetailProps) {
               <div className="bg-gray-50 dark:bg-slate-800 rounded-xl p-6">
                 <h5 className="text-lg font-semibold mb-6 text-center">Blogs Relacionados</h5>
                 <div className="space-y-6">
-                  {(post.relatedPosts || []).slice(0, 3).map((item: any, index: number) => (
-                    <div
-                      className="group relative bg-white dark:bg-slate-900 rounded-lg overflow-hidden transition-transform hover:-translate-y-1"
-                      key={index}
-                    >
-                      <div className="relative overflow-hidden">
-                        <Image
-                          src={item.coverImageUrl || '/images/hero/bg4.jpg'}
-                          width={0}
-                          height={0}
-                          sizes="100vw"
-                          style={{ width: '100%', height: 'auto' }}
-                          className="group-hover:scale-105 transition-transform duration-500 h-36 object-cover"
-                          alt={item.title}
-                        />
-                      </div>
-                      <div className="p-4">
-                        <div className="flex items-center gap-3 text-xs text-slate-400 mb-2">
-                          <span className="flex items-center gap-1">
-                            <FiCalendar className="h-4 w-4 text-slate-600 dark:text-white" />
-                            {new Date(item.publishedAt || item.createdAt).toLocaleDateString()}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <FiClock className="h-4 w-4 text-slate-600 dark:text-white" />
-                            {'5 min'}
-                          </span>
-                        </div>
-                        <Link
-                          href={`/blog-detalle/${item.slug}`}
-                          className="block text-sm font-semibold hover:text-fourth-base transition-colors leading-snug"
-                        >
-                          {item.title}
-                        </Link>
-                      </div>
-                    </div>
-                  ))}
+                  {/* Related posts will be implemented later */}
+                  <div className="text-center text-slate-400 p-8">
+                    <p>Más artículos próximamente...</p>
+                  </div>
                 </div>
               </div>
             </div>

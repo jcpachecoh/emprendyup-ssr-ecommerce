@@ -4,19 +4,11 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { gql, useQuery } from '@apollo/client';
-import {
-  FiHeart,
-  FiEye,
-  FiBookmark,
-  FiChevronLeft,
-  FiChevronRight,
-} from '../../assets/icons/vander';
 import Cta from '../../components/cta';
 import Client from '../../components/client';
 import Switcher from '../../components/switcher';
 import ScrollToTop from '../../components/scroll-to-top';
 import toast from 'react-hot-toast';
-import { Heart, ShoppingCart } from 'lucide-react';
 import { cartService } from '@/lib/Cart';
 import ProductListClientWrapper from '../../components/ProductListClientWrapper';
 

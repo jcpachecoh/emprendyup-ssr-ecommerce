@@ -3,10 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import Switcher from '../components/switcher';
-
-import { blogData } from '../data/data';
-// import { blogPosts } from '../data/blogData';
-// server-side fetch for paginated posts
+import { getBlogPosts } from '../../lib/blogService';
 
 import { FiCalendar, FiClock, FiChevronLeft, FiChevronRight } from '../assets/icons/vander';
 import ScrollToTop from '../components/scroll-to-top';
@@ -16,41 +13,8 @@ export default async function Blogs(props: any) {
   const page = parseInt((searchParams?.page as string) || '1', 10) || 1;
   const pageSize = 9;
 
-  const query = `query ListPostsPaginated($categoryId: String, $page: Int, $pageSize: Int) { 
-    listPostsPaginated(categoryId: $categoryId, page: $page, pageSize: $pageSize) { 
-      items { 
-        id 
-        title 
-        slug 
-        excerpt 
-        content 
-        status 
-        createdAt 
-        updatedAt 
-        publishedAt 
-        creator { id name email } 
-        blogCategory { id name slug } 
-        tags { tag { id name slug } } 
-        relatedPosts { id title slug } 
-        coverImageUrl 
-      } 
-      total 
-      page 
-      pageSize 
-      totalPages 
-      hasNextPage 
-      hasPrevPage 
-    } 
-  }`;
-  const endpoint = process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || 'http://localhost:4000/graphql';
-  const resp = await fetch(endpoint, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query, variables: { categoryId: null, page, pageSize } }),
-    next: { revalidate: 60 },
-  });
-  const json = await resp.json();
-  const data = json?.data?.listPostsPaginated;
+  // Fetch blog posts using the new blog service (supports Strapi + GraphQL fallback)
+  const data = await getBlogPosts({ page, pageSize });
   const items = data?.items || [];
   const totalPages = data?.totalPages || 1;
 
@@ -91,15 +55,11 @@ export default async function Blogs(props: any) {
               <div className="group relative overflow-hidden" key={item.id || index}>
                 <div className="relative overflow-hidden rounded-md shadow dark:shadow-gray-800">
                   <Image
-                    src={
-                      item.coverImageUrl?.startsWith('http')
-                        ? item.coverImageUrl
-                        : `https://emprendyup-images.s3.us-east-1.amazonaws.com/${item.coverImageUrl}`
-                    }
+                    src={item.image || '/images/blog/default.jpg'}
                     width={300}
-                    height={50}
-                    className="group-hover:scale-110 duration-500"
-                    alt={item.title}
+                    height={200}
+                    className="rounded-md shadow dark:shadow-gray-800 group-hover:scale-105 duration-500"
+                    alt={item.imageAlt || item.title}
                   />
                 </div>
 
@@ -107,21 +67,21 @@ export default async function Blogs(props: any) {
                   <div className="flex mb-4">
                     <span className="flex items-center text-slate-400 text-sm">
                       <FiCalendar className="size-4 text-slate-900 dark:text-white me-1.5"></FiCalendar>
-                      {new Date(item.publishedAt || item.createdAt).toLocaleDateString()}
+                      {item.date}
                     </span>
                     <span className="flex items-center text-slate-400 text-sm ms-3">
-                      <FiClock className="size-4 text-slate-900 dark:text-white me-1.5"></FiClock>5
-                      min leyendo
+                      <FiClock className="size-4 text-slate-900 dark:text-white me-1.5"></FiClock>
+                      {item.readTime}
                     </span>
                   </div>
 
                   <Link
-                    href={`/blog-detalle/${item.slug}`}
+                    href={item.slug}
                     className="title text-lg font-semibold hover:text-fourth-base duration-500 ease-in-out"
                   >
                     {item.title}
                   </Link>
-                  <p className="text-slate-400 mt-2">{item.excerpt || ''}</p>
+                  <p className="text-slate-400 mt-2">{item.desc || ''}</p>
 
                   <div className="mt-3">
                     <span className="text-slate-400">
@@ -130,7 +90,7 @@ export default async function Blogs(props: any) {
                         href="/"
                         className="text-slate-900 dark:text-white hover:text-fourth-base dark:hover:text-fourth-base font-medium"
                       >
-                        {item.creator?.name || 'EmprendyUp'}
+                        {item.author || 'EmprendyUp'}
                       </Link>
                     </span>
                   </div>

@@ -182,7 +182,15 @@ export default function MarketplaceClient() {
   return (
     <>
       {/* HERO SECTION */}
-      <section className="relative table w-full h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-rose-900 to-purple-900 overflow-hidden">
+      <section className="relative table w-full h-screen flex py-36 items-center justify-center bg-gradient-to-br from-slate-900 via-rose-900 to-purple-900 overflow-hidden">
+        <Image
+          src="/images/marketplace/marketplace-hero-bg.webp"
+          alt=""
+          aria-hidden="true"
+          role="presentation"
+          fill
+          className="object-cover object-center opacity-20"
+        />
         {/* Efectos de fondo mejorados */}
         <div className="absolute inset-0">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-fourth-base/10 rounded-full blur-3xl animate-pulse"></div>

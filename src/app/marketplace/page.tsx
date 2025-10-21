@@ -59,18 +59,18 @@ export const metadata: Metadata = {
     locale: 'es_ES',
     images: [
       {
-        url: 'https://emprendyup.com/images/seo/marketplace-og.jpg',
+        url: 'https://emprendyup.com/images/marketplace/marketplace-hero-bg.webp',
         width: 1200,
         height: 630,
-        alt: 'Marketplace EmprendyUp - Productos Únicos de Emprendedores',
-        type: 'image/jpeg',
+        alt: 'Marketplace EmprendyUp - Hero image',
+        type: 'image/webp',
       },
       {
-        url: 'https://emprendyup.com/images/seo/marketplace-square.jpg',
+        url: 'https://emprendyup.com/images/marketplace/marketplace-hero-bg.webp',
         width: 1080,
         height: 1080,
-        alt: 'Tienda Digital EmprendyUp - Compra Online',
-        type: 'image/jpeg',
+        alt: 'Marketplace EmprendyUp - Square hero',
+        type: 'image/webp',
       },
     ],
   },
@@ -83,7 +83,7 @@ export const metadata: Metadata = {
     title: 'Marketplace EmprendyUp | Productos Únicos Online',
     description:
       '🛒 Miles de productos únicos, artesanales y de calidad. Compra directo de emprendedores con envío gratis.',
-    images: ['https://emprendyup.com/images/seo/marketplace-og.jpg'],
+    images: ['https://emprendyup.com/images/marketplace/marketplace-hero-bg.webp'],
   },
 
   // Datos estructurados mejorados

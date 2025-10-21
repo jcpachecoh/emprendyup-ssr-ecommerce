@@ -89,16 +89,16 @@ export default async function Blogs(props: any) {
           <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
             {items.map((item: any, index: number) => (
               <div className="group relative overflow-hidden" key={item.id || index}>
-                <div className="relative overflow-hidden rounded-md shadow dark:shadow-gray-800">
+                <div className="relative overflow-hidden rounded-md shadow dark:shadow-gray-800 h-48">
                   <Image
                     src={
                       item.coverImageUrl?.startsWith('http')
                         ? item.coverImageUrl
                         : `https://emprendyup-images.s3.us-east-1.amazonaws.com/${item.coverImageUrl}`
                     }
-                    width={300}
-                    height={50}
-                    className="group-hover:scale-110 duration-500"
+                    width={400}
+                    height={192}
+                    className="w-full h-full object-cover group-hover:scale-110 duration-500"
                     alt={item.title}
                   />
                 </div>

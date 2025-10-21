@@ -300,8 +300,6 @@ export default function CrearTiendaClient() {
         </div>
       </section>
 
-      <Footer />
-      <ChatTienda />
       <Switcher />
       <ScrollToTop />
     </>

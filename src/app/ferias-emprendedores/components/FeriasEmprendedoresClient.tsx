@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 export default function FeriasEmprendedoresClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-pink-900 to-rose-900">
+    <div className="min-h-screen bg-gradient-to-br py-36 from-purple-900 via-pink-900 to-rose-900">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto text-center">

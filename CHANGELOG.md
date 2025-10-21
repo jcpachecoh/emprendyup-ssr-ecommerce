@@ -1,3 +1,9 @@
+## [1.27.1](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.27.0...v1.27.1) (2025-10-21)
+
+### Bug Fixes
+
+- ecommerce sitemap ([21042be](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/21042be5d663d8f58421189bdae8bd9e9bbddda2))
+
 # [1.27.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.26.1...v1.27.0) (2025-10-21)
 
 ### Features

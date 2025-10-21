@@ -1,3 +1,9 @@
+# [1.27.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.26.1...v1.27.0) (2025-10-21)
+
+### Features
+
+- add image marketplace, bug crear-tienda ([#26](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/issues/26)) ([de62df9](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/de62df939a078f67b5cc5f2d860e9f57fd2f8b3a))
+
 ## [1.26.1](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.26.0...v1.26.1) (2025-10-17)
 
 ### Bug Fixes

@@ -6,6 +6,7 @@ import ScrollToTop from './components/scroll-to-top';
 import NewHeroSection from './components/NewHeroSection';
 import FeaturesSection from './components/FeaturesSection';
 import HowItWorksSection from './components/HowItWorksSection';
+import AdvantagesPreviewSection from './components/AdvantagesPreviewSection';
 import LeadCaptureSectionNew from './components/LeadCaptureSectionNew';
 import TestimonialsSection from './components/TestimonialsSection';
 import SEOHomepage from './components/SEOHomepage';
@@ -35,6 +36,11 @@ function HomeComponent() {
 
         <section aria-label="Economía colaborativa">
           <SharingEconomyNetwork />
+        </section>
+
+        {/* Advantages Preview Section */}
+        <section aria-label="Ventajas competitivas de EmprendyUp">
+          <AdvantagesPreviewSection />
         </section>
 
         {/* Lead Capture Section */}

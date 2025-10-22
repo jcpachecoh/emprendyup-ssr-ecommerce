@@ -1,3 +1,9 @@
+# [1.28.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.27.3...v1.28.0) (2025-10-22)
+
+### Features
+
+- new section for advantages ([#28](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/issues/28)) ([70828bb](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/70828bb82a98a386a10ba596aabfa8423ea703e8))
+
 ## [1.27.3](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.27.2...v1.27.3) (2025-10-22)
 
 ### Bug Fixes

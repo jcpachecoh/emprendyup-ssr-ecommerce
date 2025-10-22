@@ -47,7 +47,7 @@ The component creates an enhanced referral source that includes UTM context:
 ### Example 1: Google Ads Campaign
 
 ```
-URL: /captura-leads?utm_source=google&utm_medium=cpc&utm_campaign=emprendedores-2024&utm_term=crear-tienda-online
+URL: /impulsa-tu-emprendimiento?utm_source=google&utm_medium=cpc&utm_campaign=emprendedores-2024&utm_term=crear-tienda-online
 
 Auto-filled:
 - Referral Source: "Google" (in the dropdown)
@@ -57,7 +57,7 @@ Auto-filled:
 ### Example 2: Facebook Social Campaign
 
 ```
-URL: /captura-leads?utm_source=facebook&utm_medium=social&utm_campaign=entrepreneurs-fb
+URL: /impulsa-tu-emprendimiento?utm_source=facebook&utm_medium=social&utm_campaign=entrepreneurs-fb
 
 Auto-filled:
 - Referral Source: "Redes Sociales" (in the dropdown)
@@ -67,7 +67,7 @@ Auto-filled:
 ### Example 3: Email Newsletter
 
 ```
-URL: /captura-leads?utm_source=newsletter&utm_medium=email&utm_campaign=monthly-newsletter
+URL: /impulsa-tu-emprendimiento?utm_source=newsletter&utm_medium=email&utm_campaign=monthly-newsletter
 
 Auto-filled:
 - Referral Source: "Otro" (in the dropdown)
@@ -126,25 +126,25 @@ Test the UTM tracking with these example URLs:
 ### Google Ads
 
 ```
-http://localhost:3000/captura-leads?utm_source=google&utm_medium=cpc&utm_campaign=emprendedores-2024&utm_term=crear-tienda-online&utm_content=anuncio-principal
+http://localhost:3000/impulsa-tu-emprendimiento?utm_source=google&utm_medium=cpc&utm_campaign=emprendedores-2024&utm_term=crear-tienda-online&utm_content=anuncio-principal
 ```
 
 ### Facebook Ads
 
 ```
-http://localhost:3000/captura-leads?utm_source=facebook&utm_medium=social&utm_campaign=emprendedores-facebook&utm_content=carousel-video
+http://localhost:3000/impulsa-tu-emprendimiento?utm_source=facebook&utm_medium=social&utm_campaign=emprendedores-facebook&utm_content=carousel-video
 ```
 
 ### Email Marketing
 
 ```
-http://localhost:3000/captura-leads?utm_source=newsletter&utm_medium=email&utm_campaign=newsletter-mensual&utm_content=cta-principal
+http://localhost:3000/impulsa-tu-emprendimiento?utm_source=newsletter&utm_medium=email&utm_campaign=newsletter-mensual&utm_content=cta-principal
 ```
 
 ### LinkedIn Ads
 
 ```
-http://localhost:3000/captura-leads?utm_source=linkedin&utm_medium=social&utm_campaign=emprendedores-b2b&utm_content=sponsored-post
+http://localhost:3000/impulsa-tu-emprendimiento?utm_source=linkedin&utm_medium=social&utm_campaign=emprendedores-b2b&utm_content=sponsored-post
 ```
 
 ## Visual Feedback

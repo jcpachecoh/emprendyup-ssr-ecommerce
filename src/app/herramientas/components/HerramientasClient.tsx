@@ -37,7 +37,7 @@ export default function HerramientasClient() {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             <Link
-              href="/captura-leads"
+              href="/impulsa-tu-emprendimiento"
               className="inline-block bg-gradient-to-r from-fourth-base to-purple-600 text-white font-bold text-xl px-8 py-4 rounded-full shadow-2xl hover:shadow-fourth-base/25 transition-all duration-300"
             >
               🛠️ Quiero Estas Herramientas
@@ -158,7 +158,7 @@ export default function HerramientasClient() {
                   plataforma.
                 </p>
                 <Link
-                  href="/captura-leads"
+                  href="/impulsa-tu-emprendimiento"
                   className="inline-block bg-gradient-to-r from-fourth-base to-purple-600 text-white font-bold text-lg px-6 py-3 rounded-full shadow-xl hover:shadow-fourth-base/25 transition-all duration-300"
                 >
                   🚀 Mostrar Mi Interés

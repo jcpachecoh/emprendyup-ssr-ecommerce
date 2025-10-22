@@ -58,7 +58,7 @@ NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
 ### 3. Estructura de Archivos
 
 ```
-src/app/captura-leads/
+src/app/impulsa-tu-emprendimiento/
 ├── page.tsx                 # Página principal de la landing
 ├── components/
 │   ├── LandingHeader.tsx    # Header minimalista
@@ -78,7 +78,7 @@ src/types/
 
 ```bash
 # Ejemplo de URL con parámetros UTM
-https://emprendyup.com/captura-leads?utm_source=google&utm_medium=cpc&utm_campaign=emprendedores-2024&utm_term=crear-tienda&utm_content=anuncio-principal
+https://emprendyup.com/impulsa-tu-emprendimiento?utm_source=google&utm_medium=cpc&utm_campaign=emprendedores-2024&utm_term=crear-tienda&utm_content=anuncio-principal
 
 # Parámetros soportados:
 # utm_source    - Fuente del tráfico (google, facebook, email, etc.)
@@ -163,7 +163,7 @@ Puedes personalizar las notificaciones editando:
 ```bash
 npm run dev
 # La landing estará disponible en:
-# http://localhost:3000/captura-leads
+# http://localhost:3000/impulsa-tu-emprendimiento
 ```
 
 ### Producción

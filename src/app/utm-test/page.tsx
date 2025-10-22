@@ -5,8 +5,8 @@ import { useState } from 'react';
 export default function UTMTestUrls() {
   const [baseUrl] = useState(() =>
     typeof window !== 'undefined'
-      ? `${window.location.protocol}//${window.location.host}/captura-leads`
-      : 'http://localhost:3000/captura-leads'
+      ? `${window.location.protocol}//${window.location.host}/impulsa-tu-emprendimiento`
+      : 'http://localhost:3000/impulsa-tu-emprendimiento'
   );
 
   const testCampaigns = [

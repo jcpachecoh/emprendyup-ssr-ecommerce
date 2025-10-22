@@ -140,7 +140,7 @@ export default function ChatWidget({ onClose }: { onClose?: () => void }) {
         return true;
       case '¡Sí, por favor!':
         sendLocalAssistant(
-          '¡Genial! Para generar la publicación, llena este [formulario →](https://emprendyup.com/captura-leads).',
+          '¡Genial! Para generar la publicación, llena este [formulario →](https://emprendyup.com/impulsa-tu-emprendimiento).',
           []
         );
         return true;

@@ -139,7 +139,7 @@ curl -X POST http://localhost:3000/api/send-slack-notification \
 
 ### 3. **Test via Lead Form**
 
-1. Visit: `http://localhost:3000/captura-leads`
+1. Visit: `http://localhost:3000/impulsa-tu-emprendimiento`
 2. Fill out the lead capture form
 3. Submit the form
 4. Check Slack for notification

@@ -36,7 +36,7 @@ export default function FeriasEmprendedoresClient() {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             <Link
-              href="/captura-leads"
+              href="/impulsa-tu-emprendimiento"
               className="inline-block bg-gradient-to-r from-fourth-base to-pink-600 text-white font-bold text-xl px-8 py-4 rounded-full shadow-2xl hover:shadow-fourth-base/25 transition-all duration-300"
             >
               🎪 Participar en Ferias
@@ -112,7 +112,7 @@ export default function FeriasEmprendedoresClient() {
             Regístrate para recibir invitaciones exclusivas a nuestras ferias de emprendedores.
           </p>
           <Link
-            href="/captura-leads"
+            href="/impulsa-tu-emprendimiento"
             className="inline-block bg-gradient-to-r from-fourth-base to-pink-600 text-white font-bold text-xl px-8 py-4 rounded-full shadow-2xl hover:shadow-fourth-base/25 transition-all duration-300"
           >
             📝 Quiero Participar

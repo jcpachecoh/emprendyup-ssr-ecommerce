@@ -37,7 +37,7 @@ export default function AutomatizacionWhatsAppClient() {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             <Link
-              href="/captura-leads"
+              href="/impulsa-tu-emprendimiento"
               className="inline-block bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-xl px-8 py-4 rounded-full shadow-2xl hover:shadow-green-500/25 transition-all duration-300"
             >
               💬 Quiero Mi Bot de WhatsApp
@@ -152,7 +152,7 @@ export default function AutomatizacionWhatsAppClient() {
                   Únete a la lista de espera y sé de los primeros en tener tu bot funcionando.
                 </p>
                 <Link
-                  href="/captura-leads"
+                  href="/impulsa-tu-emprendimiento"
                   className="inline-block bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg px-6 py-3 rounded-full shadow-xl hover:shadow-green-500/25 transition-all duration-300"
                 >
                   🚀 Registrar Mi Interés

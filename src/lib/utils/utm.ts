@@ -83,7 +83,9 @@ export const campaignUrls = {
 /**
  * Genera URLs de ejemplo para testing
  */
-export function generateTestUrls(baseUrl: string = 'https://emprendyup.com/captura-leads') {
+export function generateTestUrls(
+  baseUrl: string = 'https://emprendyup.com/impulsa-tu-emprendimiento'
+) {
   return Object.entries(campaignUrls).reduce(
     (acc, [key, params]) => {
       acc[key] = generateUTMUrl(baseUrl, params);

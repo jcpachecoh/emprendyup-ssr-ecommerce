@@ -261,7 +261,7 @@ function PricingClientContent() {
 
                       <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                         <Link
-                          href="/captura-leads"
+                          href="/impulsa-tu-emprendimiento"
                           className={`w-full py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 inline-block text-center ${
                             plan.popular
                               ? 'bg-gradient-to-r from-fourth-base to-blue-600 text-white hover:shadow-xl hover:shadow-fourth-base/25'

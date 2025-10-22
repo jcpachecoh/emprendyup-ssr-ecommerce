@@ -183,7 +183,7 @@ export default function CrearTiendaClient() {
                 Ver Guía Completa
               </Link>
               <Link
-                href="/captura-leads"
+                href="/impulsa-tu-emprendimiento"
                 className="py-4 px-8 inline-flex items-center justify-center font-semibold tracking-wide align-middle duration-500 text-lg text-center rounded-full border-2 border-fourth-base text-fourth-base hover:bg-fourth-base hover:text-white transition-all"
               >
                 Comenzar Ahora
@@ -283,7 +283,7 @@ export default function CrearTiendaClient() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/captura-leads"
+                href="/impulsa-tu-emprendimiento"
                 className="py-4 px-8 inline-flex items-center justify-center font-semibold tracking-wide align-middle duration-500 text-lg text-center bg-white text-fourth-base rounded-full hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
               >
                 <FiCheckCircle className="me-2 text-lg" />

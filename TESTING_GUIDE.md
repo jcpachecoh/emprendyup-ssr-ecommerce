@@ -52,7 +52,7 @@ npm run dev
 2. **Prueba con parámetros UTM:**
 
    ```
-   http://localhost:3000/captura-leads?utm_source=google&utm_medium=cpc&utm_campaign=test&utm_term=emprendedores&utm_content=hero-cta
+   http://localhost:3000/impulsa-tu-emprendimiento?utm_source=google&utm_medium=cpc&utm_campaign=test&utm_term=emprendedores&utm_content=hero-cta
    ```
 
 3. **Verifica que:**
@@ -90,7 +90,7 @@ npm run dev
    - Navega a Reports > Realtime
 
 2. **Generar eventos:**
-   - Visita `/captura-leads` con parámetros UTM
+   - Visita `/impulsa-tu-emprendimiento` con parámetros UTM
    - Completa y envía el formulario
    - Navega por la página
 
@@ -104,31 +104,31 @@ npm run dev
 ### Campañas de Google Ads
 
 ```
-http://localhost:3000/captura-leads?utm_source=google&utm_medium=cpc&utm_campaign=emprendedores-2024&utm_term=crear-tienda-online&utm_content=anuncio-principal
+http://localhost:3000/impulsa-tu-emprendimiento?utm_source=google&utm_medium=cpc&utm_campaign=emprendedores-2024&utm_term=crear-tienda-online&utm_content=anuncio-principal
 ```
 
 ### Campañas de Facebook
 
 ```
-http://localhost:3000/captura-leads?utm_source=facebook&utm_medium=social&utm_campaign=emprendedores-facebook&utm_content=carousel-video
+http://localhost:3000/impulsa-tu-emprendimiento?utm_source=facebook&utm_medium=social&utm_campaign=emprendedores-facebook&utm_content=carousel-video
 ```
 
 ### Email Marketing
 
 ```
-http://localhost:3000/captura-leads?utm_source=newsletter&utm_medium=email&utm_campaign=newsletter-mensual&utm_content=cta-principal
+http://localhost:3000/impulsa-tu-emprendimiento?utm_source=newsletter&utm_medium=email&utm_campaign=newsletter-mensual&utm_content=cta-principal
 ```
 
 ### Instagram Orgánico
 
 ```
-http://localhost:3000/captura-leads?utm_source=instagram&utm_medium=social&utm_campaign=contenido-organico&utm_content=stories
+http://localhost:3000/impulsa-tu-emprendimiento?utm_source=instagram&utm_medium=social&utm_campaign=contenido-organico&utm_content=stories
 ```
 
 ### LinkedIn Ads
 
 ```
-http://localhost:3000/captura-leads?utm_source=linkedin&utm_medium=social&utm_campaign=emprendedores-b2b&utm_content=sponsored-post
+http://localhost:3000/impulsa-tu-emprendimiento?utm_source=linkedin&utm_medium=social&utm_campaign=emprendedores-b2b&utm_content=sponsored-post
 ```
 
 ## 🐛 Solución de Problemas
@@ -219,7 +219,7 @@ curl -X GET "http://localhost:3000/api/test-slack"
 
 ### Tracking de Conversión
 
-- **Page Views:** Visitas a `/captura-leads`
+- **Page Views:** Visitas a `/impulsa-tu-emprendimiento`
 - **Form Starts:** Usuarios que comienzan el formulario
 - **Form Completions:** Envíos exitosos
 - **Slack Notifications:** Notificaciones enviadas exitosamente

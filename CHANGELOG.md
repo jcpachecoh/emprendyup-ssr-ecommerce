@@ -1,3 +1,9 @@
+## [1.27.3](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.27.2...v1.27.3) (2025-10-22)
+
+### Bug Fixes
+
+- image design ([#27](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/issues/27)) ([51a133c](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/51a133c863f5a35b478ba67864bd7a66c3ed56e3))
+
 ## [1.27.2](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.27.1...v1.27.2) (2025-10-22)
 
 ### Bug Fixes

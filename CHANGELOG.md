@@ -1,3 +1,9 @@
+## [1.27.2](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.27.1...v1.27.2) (2025-10-22)
+
+### Bug Fixes
+
+- rename captura leads ([0c2565d](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/0c2565d5daf47b7c41073c704bb1ada48e10604a))
+
 ## [1.27.1](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.27.0...v1.27.1) (2025-10-21)
 
 ### Bug Fixes

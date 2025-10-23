@@ -1,8 +1,84 @@
 import { MetadataRoute } from 'next';
 import { serverGraphQLClient, BlogPostsPaginatedResponse } from '@/lib/graphql/client';
 import { LIST_POSTS_PAGINATED } from '@/lib/graphql/queries';
+import { gql } from '@apollo/client';
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.emprendyup.com';
+
+// GraphQL query for products
+const PAGINATED_PRODUCTS_QUERY = gql`
+  query GetPaginatedProducts($page: Int, $pageSize: Int) {
+    paginatedProducts(pagination: { page: $page, pageSize: $pageSize }) {
+      items {
+        id
+        title
+        available
+        createdAt
+        updatedAt
+      }
+      total
+      page
+      pageSize
+    }
+  }
+`;
+
+// Types for products sitemap
+interface ProductSitemap {
+  id: string;
+  title: string;
+  available: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface ProductsPaginatedResponse {
+  paginatedProducts: {
+    items: ProductSitemap[];
+    total: number;
+    page: number;
+    pageSize: number;
+  };
+}
+
+// Función para obtener todos los productos disponibles desde GraphQL
+async function getAllAvailableProducts() {
+  try {
+    const allProducts: ProductSitemap[] = [];
+    let page = 1;
+    const pageSize = 50;
+    let hasMore = true;
+
+    while (hasMore) {
+      const { data } = await serverGraphQLClient.query<ProductsPaginatedResponse>({
+        query: PAGINATED_PRODUCTS_QUERY,
+        variables: {
+          page,
+          pageSize,
+        },
+        fetchPolicy: 'no-cache',
+      });
+
+      const products = data.paginatedProducts.items.filter((product) => product.available);
+      allProducts.push(...products);
+
+      hasMore = data.paginatedProducts.items.length === pageSize;
+      page++;
+
+      // Safety break to avoid infinite loops
+      if (page > 100) {
+        console.warn('Breaking pagination loop at 100 pages for safety');
+        break;
+      }
+    }
+
+    return allProducts;
+  } catch (error) {
+    console.error('Error fetching products for sitemap:', error);
+    // Return empty array if there's an error
+    return [];
+  }
+}
 
 // Función para obtener todos los posts publicados desde GraphQL
 async function getAllPublishedPosts() {
@@ -203,6 +279,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Obtener posts dinámicamente desde GraphQL
   const blogPosts = await getAllPublishedPosts();
 
+  // Obtener productos dinámicamente desde GraphQL
+  const products = await getAllAvailableProducts();
+
   // Generar rutas de blog dinámicamente
   const blogRoutes = blogPosts.map((post) => ({
     url: `${baseUrl}/blog-detalle/${post.slug}`,
@@ -211,5 +290,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...routes, ...blogRoutes];
+  // Generar rutas de productos dinámicamente
+  const productRoutes = products.map((product) => ({
+    url: `${baseUrl}/producto/${product.id}`,
+    lastModified: new Date(product.updatedAt || product.createdAt),
+    changeFrequency: 'weekly' as const,
+    priority: 0.7,
+  }));
+
+  return [...routes, ...blogRoutes, ...productRoutes];
 }

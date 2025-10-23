@@ -1,3 +1,9 @@
+# [1.29.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.28.0...v1.29.0) (2025-10-23)
+
+### Features
+
+- sitemap seo posts and product ([#29](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/issues/29)) ([c5ff2ec](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/c5ff2ec5284f7357938dad0df30941a661d076aa))
+
 # [1.28.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.27.3...v1.28.0) (2025-10-22)
 
 ### Features

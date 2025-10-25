@@ -1,3 +1,10 @@
+## [1.29.1](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.29.0...v1.29.1) (2025-10-25)
+
+### Bug Fixes
+
+- font ([aaa277b](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/aaa277baac2e93dadeec12f3d37669ec1c1b45a2))
+- font ([31c79fe](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/31c79fef1df4af71a962ead887fe3945719ad4b5))
+
 # [1.29.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.28.0...v1.29.0) (2025-10-23)
 
 ### Features

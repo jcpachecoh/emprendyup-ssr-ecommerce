@@ -64,7 +64,7 @@ const CapturaLeads = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <h1 className="text-5xl lg:text-7xl font-extrabold text-white mb-6 leading-tight">
+            <h1 className="text-4xl lg:text-7xl font-extrabold text-white mb-6 leading-tight">
               La plataforma que
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-fourth-base to-blue-400">
                 Transformará tu Emprendimiento

@@ -1,3 +1,27 @@
+# [1.29.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.28.0...v1.29.0) (2025-10-23)
+
+### Features
+
+- sitemap seo posts and product ([#29](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/issues/29)) ([c5ff2ec](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/c5ff2ec5284f7357938dad0df30941a661d076aa))
+
+# [1.28.0](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.27.3...v1.28.0) (2025-10-22)
+
+### Features
+
+- new section for advantages ([#28](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/issues/28)) ([70828bb](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/70828bb82a98a386a10ba596aabfa8423ea703e8))
+
+## [1.27.3](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.27.2...v1.27.3) (2025-10-22)
+
+### Bug Fixes
+
+- image design ([#27](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/issues/27)) ([51a133c](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/51a133c863f5a35b478ba67864bd7a66c3ed56e3))
+
+## [1.27.2](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.27.1...v1.27.2) (2025-10-22)
+
+### Bug Fixes
+
+- rename captura leads ([0c2565d](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/commit/0c2565d5daf47b7c41073c704bb1ada48e10604a))
+
 ## [1.27.1](https://github.com/jcpachecoh/emprendyup-ssr-ecommerce/compare/v1.27.0...v1.27.1) (2025-10-21)
 
 ### Bug Fixes

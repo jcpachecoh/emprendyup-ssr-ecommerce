@@ -274,6 +274,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             });
           `}
         </Script>
+        <Script src="https://checkout.epayco.co/checkout.js" strategy="beforeInteractive" />
       </head>
 
       <body className={`${dm_sans.variable} dark:bg-slate-900`}>

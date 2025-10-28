@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import crypto from 'crypto';
 import { CREATE_PAYMENT } from '@/lib/graphql/queries';
 import { useWompiPayment } from '@/lib/hooks/usePayments';
+import { useEpaycoStandardCheckout } from '@/lib/hooks/useEpaycoStandarChackout';
 import { useStorePaymentConfiguration } from '@/lib/hooks/useStorePaymentConfiguration';
 import { PaymentMethod, PaymentProvider } from '@/app/utils/types/payment';
 
@@ -294,6 +295,12 @@ export default function Order() {
 
   // Payment hooks
   const { createWompiPayment, loading: paymentLoading, error: paymentError } = useWompiPayment();
+  const {
+    openCheckout,
+    createOrderCheckout,
+    isLoading: epaycoCheckoutLoading,
+    error: epaycoCheckoutError,
+  } = useEpaycoStandardCheckout();
   const {
     configuration: paymentConfig,
     isWompiEnabled,
@@ -679,6 +686,93 @@ export default function Order() {
       } else {
         alert('Error al crear la orden y procesar el pago. Por favor intenta nuevamente.');
       }
+    } finally {
+      setIsSubmittingOrder(false);
+    }
+  };
+
+  // ePayco Standard Checkout handler: crea orden y pago, luego abre el checkout estándar
+  const handleEpaycoPayment = async (e: React.MouseEvent | React.FormEvent) => {
+    e.preventDefault();
+    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+
+    if (!userData?.id) {
+      alert('Debes iniciar sesión para completar la orden');
+      return;
+    }
+
+    const addressId = address.id || selectedAddressId;
+    if (!addressId) {
+      alert('Debes seleccionar o guardar una dirección antes de completar la orden');
+      return;
+    }
+
+    setIsSubmittingOrder(true);
+    try {
+      // Preparar items y crear la orden (misma lógica que en handlePaymentSubmit)
+      const orderItems: OrderItemInput[] = cart.items.map((item: CartItem) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        unitPrice: item.price,
+      }));
+
+      const orderInput: CreateOrderInput = {
+        addressId: addressId,
+        items: orderItems,
+        total: cart.total,
+        subtotal: cart.subtotal,
+        tax: cart.tax,
+        shipping: cart.shipping,
+        ...(userData?.storeId && !userData?.id && { storeId: userData.storeId }),
+        ...(userData?.id && { storeId: userData.id }),
+      };
+
+      const { data } = await createOrder({ variables: { input: orderInput } });
+      const createdOrder = data.createOrder;
+
+      // Crear registro de pago en el sistema
+      const selectedAddress = selectedAddressId
+        ? addressesData?.addressesByUser?.find((addr: Address) => addr.id === selectedAddressId) ||
+          address
+        : address;
+
+      const paymentInput = {
+        amount: cart.total,
+        currency: 'COP',
+        provider: PaymentProvider.EPAYCO,
+        paymentMethod: PaymentMethod.CREDIT_CARD,
+        description: `Pago ePayco orden ${createdOrder.id}`,
+        customerEmail: userData.email || '',
+        customerPhone: selectedAddress?.phone || '',
+        orderId: createdOrder.id,
+        externalReference: createdOrder.id,
+        ...(userData?.id && { storeId: userData.id }),
+        ...(userData?.storeId && !userData?.id && { storeId: userData.storeId }),
+      };
+
+      const { data: paymentData } = await createPayment({ variables: { input: paymentInput } });
+      const paymentRecord = paymentData.createPayment;
+
+      // Usar el hook de ePayco Standard Checkout para abrir el checkout
+      await createOrderCheckout({
+        orderId: String(createdOrder.id),
+        amount: Math.round(cart.total),
+        tax: Math.round(cart.tax),
+        taxBase: Math.max(0, Math.round(cart.subtotal - cart.tax)),
+        description: `Pago ePayco orden ${createdOrder.id}`,
+        customerName: userData?.name || selectedAddress?.name || 'Cliente',
+        customerEmail: userData?.email || '',
+        customerPhone: selectedAddress?.phone || userData?.phone || '',
+        customerDocType: 'CC',
+        customerDocument: userData?.document || '',
+        customerAddress: selectedAddress?.street || '',
+      });
+
+      // Marcar paso completado (el checkout abrirá y finalizará el pago fuera del flujo)
+      setCompletedSteps([...completedSteps.filter((s) => s !== 3), 3]);
+    } catch (err) {
+      console.error('Error iniciando ePayco Standard Checkout:', err);
+      toast.error('Error al iniciar pago con ePayco. Revisa la consola.');
     } finally {
       setIsSubmittingOrder(false);
     }
@@ -1158,6 +1252,18 @@ export default function Order() {
                                   {isSubmittingOrder
                                     ? 'Creando orden y redirigiendo...'
                                     : `Crear Orden y Pagar ${cart.total.toLocaleString('es-CO')}`}
+                                </span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={handleEpaycoPayment}
+                                disabled={isSubmittingOrder || epaycoCheckoutLoading}
+                                className="w-full mt-3 px-6 py-3 text-white bg-green-600 rounded-md hover:bg-green-700 transition-colors flex items-center justify-center space-x-2 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                <span>
+                                  {epaycoCheckoutLoading
+                                    ? 'Abriendo ePayco...'
+                                    : 'Pagar con ePayco'}
                                 </span>
                               </button>
                             </div>
